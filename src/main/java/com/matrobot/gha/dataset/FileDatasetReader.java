@@ -75,6 +75,7 @@ public class FileDatasetReader implements IDatasetReader{
 		}
 		fileContents = contents.toString();
 		if(fileContents.indexOf("\n") == -1){
+			System.out.println("Problem with: " + filename);
 			fileContents = fileContents.replace("}{", "}\n{");
 		}
 	}
@@ -92,9 +93,6 @@ public class FileDatasetReader implements IDatasetReader{
 				}catch(JsonSyntaxException e){
 					System.err.println(e);
 					System.err.println(filename);
-//					System.out.println("Length:" + line.length());
-					// try next record
-//					data = readNextRecord();
 				}
 			}
 		} catch (IOException e) {
@@ -121,51 +119,6 @@ public class FileDatasetReader implements IDatasetReader{
 			}
 		}
 		
-		return line;
-	}
-	
-	private String readLine2() throws IOException {
-		
-		String line = null;
-		
-		for(int i = 0; i < fileContents.length(); i++){
-			if(fileContents.charAt(i) == '{'){
-				if(i > 0){
-					fileContents = fileContents.substring(i);
-					System.out.println(">" + fileContents.substring(0, 50).trim());
-					
-				}
-				break;
-			}
-		}
-		
-		int counter = 0;
-		int lastChar = ' ';
-		boolean isString = false;
-		for(int i = 0; i < fileContents.length(); i++){
-			if(fileContents.charAt(i) == '{'){
-				if(!isString){
-					counter ++;
-				}
-			}
-			else if(fileContents.charAt(i) == '}'){
-				if(!isString){
-					counter --;
-					if( counter == 0){
-						line = fileContents.substring(0, i+1);
-						fileContents = fileContents.substring(i+1);
-						break;
-					}
-				}
-			}
-			else if(fileContents.charAt(i) == '\"' && lastChar != '\\'){
-				isString = !isString;
-			}
-			
-			lastChar = fileContents.charAt(i);
-		}
-
-		System.out.println(line);
 		return line;
 	}
 	

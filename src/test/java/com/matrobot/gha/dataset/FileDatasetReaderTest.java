@@ -32,4 +32,18 @@ public class FileDatasetReaderTest {
 		assertEquals(7981, count);
 	}
 
+
+	@Test
+	public void testRecordCount2() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-10-13-0.json.gz");
+		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		
+		int count = 0;
+		while(reader.readNextRecord() != null){
+			count ++;
+		}
+		
+		assertEquals(3086, count);
+	}
+
 }

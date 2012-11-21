@@ -21,14 +21,16 @@ public class ActivityApp {
 		
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
-			Integer value = repos.get(recordData.repo.url);
-			if(value != null){
-				value += 1;
+			if(recordData.repo != null){
+				Integer value = repos.get(recordData.repo.url);
+				if(value != null){
+					value += 1;
+				}
+				else{
+					value = 1;
+				}
+				repos.put(recordData.repo.url, value);
 			}
-			else{
-				value = new Integer(1);
-			}
-			repos.put(recordData.repo.url, value);
 		}
 		
 		time = (System.currentTimeMillis()-time)/1000;
