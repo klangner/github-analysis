@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
@@ -52,8 +53,8 @@ public class FileDatasetReader implements IDatasetReader{
 	 */
 	public FileDatasetReader(String filePath) throws IOException{
 	
-		this(new FileInputStream(filePath));
 		filename = filePath;
+		initContent(new FileInputStream(filePath));
 	}
 	
 	
@@ -64,6 +65,12 @@ public class FileDatasetReader implements IDatasetReader{
 	 */
 	public FileDatasetReader(InputStream inputStream) throws IOException{
 
+		initContent(inputStream);
+	}
+
+
+	private void initContent(InputStream inputStream) throws IOException,
+			UnsupportedEncodingException {
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		Reader reader = new InputStreamReader(gzipStream, "UTF-8");
 		char[] buffer = new char[100000];
@@ -75,7 +82,6 @@ public class FileDatasetReader implements IDatasetReader{
 		}
 		fileContents = contents.toString();
 		if(fileContents.indexOf("\n") == -1){
-			System.out.println("Problem with: " + filename);
 			fileContents = fileContents.replace("}{", "}\n{");
 		}
 	}
@@ -92,7 +98,9 @@ public class FileDatasetReader implements IDatasetReader{
 					data = gson.fromJson(line, DataRecord.class);
 				}catch(JsonSyntaxException e){
 					System.err.println(e);
+					System.err.println(line);
 					System.err.println(filename);
+					System.err.println();
 				}
 			}
 		} catch (IOException e) {

@@ -11,5 +11,5 @@ public class DataRecord {
 	
 	public String created_at;
 	public Repo repo;
-	String type;
+	public String type;
 }
