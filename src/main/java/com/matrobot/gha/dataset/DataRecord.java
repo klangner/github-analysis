@@ -11,5 +11,16 @@ public class DataRecord {
 	
 	public String created_at;
 	public Repo repo;
+	public Repo repository;
 	public String type;
+	
+	public String getRepositoryURL(){
+		if(repo != null){
+			return repo.url;
+		}
+		else if(repository != null){
+			return repository.url;
+		}
+		return null;
+	}
 }

@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import com.google.gson.Gson;
 import com.matrobot.gha.dataset.ActivityRecord;
 import com.matrobot.gha.dataset.DataRecord;
@@ -21,28 +23,32 @@ public class ActivityApp {
 
 		long time = System.currentTimeMillis();
 		ActivityApp app = new ActivityApp();
-		app.scanMonth(2);
-		app.scanMonth(3);
+		int feb = app.scanMonth(2);
+		int march = app.scanMonth(3);
 		
 		app.saveAsJson();
 		app.saveAsCSV();
 
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Found Count: " + app.repos.size() + " in: " + time + "sec.");
+		System.out.println("Feb: " + feb + " Mar: " + march + " in: " + time + "sec.");
+		
+		app.printStats();
 	}
 	
-	private void scanMonth(int month) throws IOException{
+	private int scanMonth(int month) throws IOException{
 		
 		IDatasetReader datasetReader = new FolderDatasetReader(DATASET_PATH+month);
 		DataRecord	recordData;
 		
+		int count = 0;
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
-			if(recordData.repo != null){
-				ActivityRecord data = repos.get(recordData.repo.url);
+			String url = recordData.getRepositoryURL();
+			if(url != null){
+				ActivityRecord data = repos.get(url);
 				if(data == null){
 					data = new ActivityRecord();
-					data.repository = recordData.repo.url;
+					data.repository = url;
 				}
 				
 				if(month == 2){
@@ -51,10 +57,12 @@ public class ActivityApp {
 				else if(month == 3){
 					data.march += 1;
 				}
-				repos.put(recordData.repo.url, data);
+				repos.put(url, data);
 			}
+			count ++;
 		}
 		
+		return count;
 	}
 
 	private void saveAsJson() {
@@ -91,6 +99,23 @@ public class ActivityApp {
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
 		}
+	}
+
+	private void printStats() {
+		
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		for(ActivityRecord record : repos.values()){
+			if(record.february > 0){
+				double diff = (record.march-record.february)/record.february;
+				stats.addValue(diff);
+			}
+		}
+
+		// Compute some statistics
+		double mean = stats.getMean();
+		double std = stats.getStandardDeviation();
+		
+		System.out.println("Mean: " + mean + " SD: " + std);
 	}
 
 }
