@@ -20,6 +20,16 @@ public class FileDatasetReaderTest {
 
 
 	@Test
+	public void testRepositoryId() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		
+		DataRecord data = reader.readNextRecord();
+		assertEquals("azonwan/rable", data.getRepositoryId());
+	}
+
+
+	@Test
 	public void testRecordCount() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
 		FileDatasetReader reader = new FileDatasetReader(inputStream);

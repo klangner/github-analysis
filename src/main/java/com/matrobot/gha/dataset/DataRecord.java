@@ -14,13 +14,27 @@ public class DataRecord {
 	public Repo repository;
 	public String type;
 	
-	public String getRepositoryURL(){
+	
+	/**
+	 * Get repository id as: "username/repository_name"
+	 */
+	public String getRepositoryId(){
+		
+		String id;
 		if(repo != null){
-			return repo.url;
+			id = repo.url;
 		}
 		else if(repository != null){
-			return repository.url;
+			id = repository.url;
 		}
-		return null;
+		else{
+			return null;
+		}
+		
+		int index = id.indexOf("/repos/");
+		if(index > 0){
+			id = id.substring(index+7);
+		}
+		return id;
 	}
 }

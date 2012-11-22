@@ -43,7 +43,7 @@ public class ActivityApp {
 		int count = 0;
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
-			String url = recordData.getRepositoryURL();
+			String url = recordData.getRepositoryId();
 			if(url != null){
 				ActivityRecord data = repos.get(url);
 				if(data == null){
