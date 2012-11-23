@@ -5,15 +5,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.matrobot.gha.dataset.ActivityRecord;
 import com.matrobot.gha.dataset.DataRecord;
 import com.matrobot.gha.dataset.FolderDatasetReader;
 import com.matrobot.gha.dataset.IDatasetReader;
 
-public class ActivityApp {
+public class ParseActivityApp {
 
 	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/";
 	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
@@ -22,20 +21,18 @@ public class ActivityApp {
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		ActivityApp app = new ActivityApp();
-		int feb = app.scanMonth(2);
-		int march = app.scanMonth(3);
+		ParseActivityApp app = new ParseActivityApp();
+		int feb = app.scanMonth(2, true);
+		int march = app.scanMonth(3, false);
 		
 		app.saveAsJson();
-		app.saveAsCSV();
+//		app.saveAsCSV();
 
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Feb: " + feb + " Mar: " + march + " in: " + time + "sec.");
-		
-		app.printStats();
 	}
 	
-	private int scanMonth(int month) throws IOException{
+	private int scanMonth(int month, boolean isFirst) throws IOException{
 		
 		IDatasetReader datasetReader = new FolderDatasetReader(DATASET_PATH+month);
 		DataRecord	recordData;
@@ -51,11 +48,11 @@ public class ActivityApp {
 					data.repository = url;
 				}
 				
-				if(month == 2){
-					data.february += 1;
+				if(isFirst){
+					data.currentMonth += 1;
 				}
-				else if(month == 3){
-					data.march += 1;
+				else{
+					data.nextMonth += 1;
 				}
 				repos.put(url, data);
 			}
@@ -67,23 +64,20 @@ public class ActivityApp {
 
 	private void saveAsJson() {
 
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		try{
-			FileWriter fstream = new FileWriter(DATASET_PATH+"activity.json");
-			BufferedWriter out = new BufferedWriter(fstream);
-			for(ActivityRecord record : repos.values()){
-				String json = gson.toJson(record);
-				out.write(json + "\n");
-			}
-			out.close();
+			FileWriter writer = new FileWriter(DATASET_PATH+"activity.json");
+			String json = gson.toJson(repos.values());
+			writer.write(json);
+			writer.close();
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
 
 
-	private void saveAsCSV() {
+	protected void saveAsCSV() {
 
 		try{
 			FileWriter fstream = new FileWriter(DATASET_PATH+"activity.csv");
@@ -91,31 +85,14 @@ public class ActivityApp {
 			out.write("Repository URL, february, march\n");
 			for(ActivityRecord record : repos.values()){
 				String line = record.repository + ", " + 
-								record.february + ", " + 
-								record.march + "\n";
+								record.currentMonth + ", " + 
+								record.nextMonth + "\n";
 				out.write(line);
 			}
 			out.close();
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
 		}
-	}
-
-	private void printStats() {
-		
-		DescriptiveStatistics stats = new DescriptiveStatistics();
-		for(ActivityRecord record : repos.values()){
-			if(record.february > 0){
-				double diff = (record.march-record.february)/record.february;
-				stats.addValue(diff);
-			}
-		}
-
-		// Compute some statistics
-		double mean = stats.getMean();
-		double std = stats.getStandardDeviation();
-		
-		System.out.println("Mean: " + mean + " SD: " + std);
 	}
 
 }
