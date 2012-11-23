@@ -1,17 +1,9 @@
 package com.matrobot.gha.app;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.matrobot.gha.dataset.ActivityDataset;
 import com.matrobot.gha.dataset.ActivityRecord;
 import com.matrobot.gha.model.IModel;
 import com.matrobot.gha.model.StaticModel;
@@ -19,7 +11,7 @@ import com.matrobot.gha.model.StaticModel;
 public class ModelActivityEvaluatorApp {
 
 	private static final int MIN_ACTIVITY = 10;
-	private static final double PRECISION = .1;
+	private static final double PRECISION = .05;
 	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
 	private HashMap<String, ActivityRecord> firstDataset;
 	private HashMap<String, ActivityRecord> secondDataset;
@@ -36,36 +28,10 @@ public class ModelActivityEvaluatorApp {
 	
 	protected ModelActivityEvaluatorApp(String firstPath, String secondPath) throws IOException{
 		
-		firstDataset = loadData(firstPath);
-		secondDataset = loadData(secondPath);
+		ActivityDataset datasetReader = new ActivityDataset();
+		firstDataset = datasetReader.loadData(firstPath);
+		secondDataset = datasetReader.loadData(secondPath);
 	}
-	
-	/**
-	 * Load json dataset created by ParseActivityApp
-	 * 
-	 * @param filename
-	 * @throws IOException
-	 */
-	private HashMap<String, ActivityRecord> loadData(String filePath) throws IOException{
-		
-		List<ActivityRecord> rows = new ArrayList<ActivityRecord>();
-		Gson gson = new Gson();
-		Type datasetType = new TypeToken<Collection<ActivityRecord>>(){}.getType();
-
-		FileInputStream fis = new FileInputStream(filePath+"activity.json");
-		Reader reader = new InputStreamReader(fis, "UTF-8");
-		rows = gson.fromJson(reader, datasetType);
-		
-		reader.close();
-
-		HashMap<String, ActivityRecord> dataset = new HashMap<String, ActivityRecord>();
-		for(ActivityRecord row : rows){
-			dataset.put(row.repository, row);
-		}
-		
-		return dataset;
-	}
-
 	
 	private double evaluate() {
 
@@ -97,9 +63,9 @@ public class ModelActivityEvaluatorApp {
 
 	private boolean isInRange(double guessValue, int correctValue) {
 
-		double range = correctValue*PRECISION;
+		double range = guessValue*PRECISION;
 		
-		return (guessValue < correctValue+range && guessValue > correctValue-range);
+		return (correctValue < guessValue+range && correctValue > guessValue-range);
 	}
 
 }
