@@ -19,7 +19,7 @@ public class AnalizeActivityApp {
 
 		long time = System.currentTimeMillis();
 		AnalizeActivityApp app = new AnalizeActivityApp(DATASET_PATH+"2012/2/", DATASET_PATH+"2012/3/");
-		app.printStats(10);
+//		app.printStats(10);
 		app.printStats(100);
 
 		time = (System.currentTimeMillis()-time)/1000;
