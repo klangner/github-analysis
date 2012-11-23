@@ -1,4 +1,4 @@
-package com.matrobot.gha.cmd;
+package com.matrobot.gha.app;
 
 import java.io.FileWriter;
 import java.io.IOException;

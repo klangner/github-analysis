@@ -1,4 +1,4 @@
-package com.matrobot.gha.cmd;
+package com.matrobot.gha.app;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,14 +10,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.matrobot.gha.dataset.ActivityRecord;
+import com.matrobot.gha.model.IModel;
+import com.matrobot.gha.model.StaticModel;
 
-public class AnalizeActivityApp {
+public class ModelActivityEvaluatorApp {
 
+	private static final int MIN_ACTIVITY = 10;
+	private static final double PRECISION = .1;
 	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
 	private HashMap<String, ActivityRecord> firstDataset;
 	private HashMap<String, ActivityRecord> secondDataset;
@@ -25,17 +27,14 @@ public class AnalizeActivityApp {
 	
 	public static void main(String[] args) throws IOException {
 
-		long time = System.currentTimeMillis();
-		AnalizeActivityApp app = new AnalizeActivityApp(DATASET_PATH+"2012/2/", DATASET_PATH+"2012/3/");
-		app.printStats(10);
-		app.printStats(100);
+		ModelActivityEvaluatorApp app = new ModelActivityEvaluatorApp(DATASET_PATH+"2012/2/", DATASET_PATH+"2012/3/");
+		double score = Math.floor(app.evaluate()*1000)/10;
 
-		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Time: " + time + "sec.");
+		System.out.println("Score: " + score + "%");
 		
 	}
 	
-	protected AnalizeActivityApp(String firstPath, String secondPath) throws IOException{
+	protected ModelActivityEvaluatorApp(String firstPath, String secondPath) throws IOException{
 		
 		firstDataset = loadData(firstPath);
 		secondDataset = loadData(secondPath);
@@ -68,23 +67,39 @@ public class AnalizeActivityApp {
 	}
 
 	
-	private void printStats(int minActivity) {
-		
-		DescriptiveStatistics stats = new DescriptiveStatistics();
+	private double evaluate() {
+
+		IModel model = new StaticModel();
+		float score = 0;
+		float maxScore = 0;
 		for(ActivityRecord record : firstDataset.values()){
 			ActivityRecord nextRecord = secondDataset.get(record.repository); 
-			if(record.activity > minActivity && nextRecord != null){
-				double diff = (nextRecord.activity-record.activity)/record.activity;
-				stats.addValue(diff);
+			if(record.activity > MIN_ACTIVITY && nextRecord != null){
+				double expected = model.makePrediction(record.activity);
+				if(isInRange(expected, nextRecord.activity)){
+					score += 1;
+				}
+				
+				maxScore += 1;
 			}
 		}
 
-		// Compute some statistics
-		int count = (int) stats.getN();
-		double mean = Math.floor(stats.getMean()*1000)/1000;
-		double std = Math.floor(stats.getStandardDeviation()*100)/1000;
+		float modelScore;
+		if(maxScore > 0){
+			modelScore = score/maxScore; 
+		}
+		else{
+			modelScore = 0;
+		}
 		
-		System.out.println("Mean: " + mean + " SD: " + std + " records: " + count);
+		return modelScore;
+	}
+
+	private boolean isInRange(double guessValue, int correctValue) {
+
+		double range = correctValue*PRECISION;
+		
+		return (guessValue < correctValue+range && guessValue > correctValue-range);
 	}
 
 }
