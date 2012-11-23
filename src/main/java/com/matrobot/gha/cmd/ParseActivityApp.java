@@ -13,29 +13,32 @@ import com.matrobot.gha.dataset.IDatasetReader;
 
 public class ParseActivityApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
+	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/3/";
 	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
+	private int eventsFound = 0;
 	
 	
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		ParseActivityApp app = new ParseActivityApp();
-		int beforeCount = app.scanMonth(DATASET_PATH+"2012/2/", true);
-		int afterCount = app.scanMonth(DATASET_PATH+"2012/3/", false);
-		
-		app.saveAsJson(DATASET_PATH+"2012/3/");
-
+		ParseActivityApp app = new ParseActivityApp(DATASET_PATH);
+		app.saveAsJson(DATASET_PATH);
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Before: " + beforeCount + " After: " + afterCount + " in: " + time + "sec.");
+		System.out.println("Events: " + app.eventsFound + " parse time: " + time + "sec.");
 	}
 	
-	private int scanMonth(String folder, boolean isFirst) throws IOException{
+	
+	public ParseActivityApp(String folder) throws IOException{
+		
+		parseFolder(folder);
+	}
+	
+	private void parseFolder(String folder) throws IOException{
 		
 		IDatasetReader datasetReader = new FolderDatasetReader(folder);
 		DataRecord	recordData;
 		
-		int count = 0;
+		eventsFound = 0;
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
 			String url = recordData.getRepositoryId();
@@ -46,18 +49,11 @@ public class ParseActivityApp {
 					data.repository = url;
 				}
 				
-				if(isFirst){
-					data.currentMonth += 1;
-				}
-				else{
-					data.nextMonth += 1;
-				}
+				data.activity += 1;
 				repos.put(url, data);
+				eventsFound ++;
 			}
-			count ++;
 		}
-		
-		return count;
 	}
 
 	private void saveAsJson(String path) {
@@ -65,7 +61,7 @@ public class ParseActivityApp {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		try{
-			FileWriter writer = new FileWriter(path+"activity_changes.json");
+			FileWriter writer = new FileWriter(path+"activity.json");
 			String json = gson.toJson(repos.values());
 			writer.write(json);
 			writer.close();

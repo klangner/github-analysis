@@ -1,6 +1,7 @@
 package com.matrobot.gha.dataset;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,14 @@ public class FolderDatasetReader implements IDatasetReader{
 	private void initFileNames(String folder) {
 
 		File rootFolder = new File(folder);
-		List<File> files = Arrays.asList(rootFolder.listFiles());
+		FilenameFilter filter = new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				return (name.endsWith(".gz"));
+			}
+		};
+		List<File> files = Arrays.asList(rootFolder.listFiles(filter));
 		Collections.sort(files);
 		
 		for(File file : files){
