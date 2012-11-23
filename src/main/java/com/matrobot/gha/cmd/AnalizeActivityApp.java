@@ -17,7 +17,7 @@ import com.matrobot.gha.dataset.ActivityRecord;
 
 public class AnalizeActivityApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/activity.json";
+	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
 	private List<ActivityRecord> dataset = new ArrayList<ActivityRecord>();
 	
 	
@@ -25,8 +25,9 @@ public class AnalizeActivityApp {
 
 		long time = System.currentTimeMillis();
 		AnalizeActivityApp app = new AnalizeActivityApp();
-		app.loadData(DATASET_PATH);
-		app.printStats();
+		app.loadData(DATASET_PATH+"2012/3/");
+		app.printStats(0);
+		app.printStats(100);
 
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");
@@ -44,7 +45,7 @@ public class AnalizeActivityApp {
 		Gson gson = new Gson();
 		Type datasetType = new TypeToken<Collection<ActivityRecord>>(){}.getType();
 
-		FileInputStream fis = new FileInputStream(filePath);
+		FileInputStream fis = new FileInputStream(filePath+"activity_changes.json");
 		Reader reader = new InputStreamReader(fis, "UTF-8");
 		dataset = gson.fromJson(reader, datasetType);
 		
@@ -53,21 +54,22 @@ public class AnalizeActivityApp {
 	}
 
 	
-	private void printStats() {
+	private void printStats(int minActivity) {
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		for(ActivityRecord record : dataset){
-			if(record.currentMonth > 0){
+			if(record.currentMonth > minActivity){
 				double diff = (record.nextMonth-record.currentMonth)/record.currentMonth;
 				stats.addValue(diff);
 			}
 		}
 
 		// Compute some statistics
-		double mean = stats.getMean();
-		double std = stats.getStandardDeviation();
+		int count = (int) stats.getN();
+		double mean = Math.floor(stats.getMean()*1000)/1000;
+		double std = Math.floor(stats.getStandardDeviation()*100)/1000;
 		
-		System.out.println("Mean: " + mean + " SD: " + std);
+		System.out.println("Mean: " + mean + " SD: " + std + " records: " + count);
 	}
 
 }

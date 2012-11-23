@@ -1,6 +1,5 @@
 package com.matrobot.gha.cmd;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ import com.matrobot.gha.dataset.IDatasetReader;
 
 public class ParseActivityApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/";
+	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
 	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
 	
 	
@@ -22,19 +21,18 @@ public class ParseActivityApp {
 
 		long time = System.currentTimeMillis();
 		ParseActivityApp app = new ParseActivityApp();
-		int feb = app.scanMonth(2, true);
-		int march = app.scanMonth(3, false);
+		int beforeCount = app.scanMonth(DATASET_PATH+"2012/2/", true);
+		int afterCount = app.scanMonth(DATASET_PATH+"2012/3/", false);
 		
-		app.saveAsJson();
-//		app.saveAsCSV();
+		app.saveAsJson(DATASET_PATH+"2012/3/");
 
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Feb: " + feb + " Mar: " + march + " in: " + time + "sec.");
+		System.out.println("Before: " + beforeCount + " After: " + afterCount + " in: " + time + "sec.");
 	}
 	
-	private int scanMonth(int month, boolean isFirst) throws IOException{
+	private int scanMonth(String folder, boolean isFirst) throws IOException{
 		
-		IDatasetReader datasetReader = new FolderDatasetReader(DATASET_PATH+month);
+		IDatasetReader datasetReader = new FolderDatasetReader(folder);
 		DataRecord	recordData;
 		
 		int count = 0;
@@ -62,34 +60,15 @@ public class ParseActivityApp {
 		return count;
 	}
 
-	private void saveAsJson() {
+	private void saveAsJson(String path) {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		try{
-			FileWriter writer = new FileWriter(DATASET_PATH+"activity.json");
+			FileWriter writer = new FileWriter(path+"activity_changes.json");
 			String json = gson.toJson(repos.values());
 			writer.write(json);
 			writer.close();
-		}catch (Exception e){
-			System.err.println("Error: " + e.getMessage());
-		}
-	}
-
-
-	protected void saveAsCSV() {
-
-		try{
-			FileWriter fstream = new FileWriter(DATASET_PATH+"activity.csv");
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write("Repository URL, february, march\n");
-			for(ActivityRecord record : repos.values()){
-				String line = record.repository + ", " + 
-								record.currentMonth + ", " + 
-								record.nextMonth + "\n";
-				out.write(line);
-			}
-			out.close();
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
 		}
