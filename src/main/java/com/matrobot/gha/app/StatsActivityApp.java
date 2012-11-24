@@ -14,18 +14,6 @@ public class StatsActivityApp {
 	private HashMap<String, ActivityRecord> secondDataset;
 	
 	
-	public static void main(String[] args) throws IOException {
-
-		long time = System.currentTimeMillis();
-		StatsActivityApp app = new StatsActivityApp(
-				Settings.DATASET_PATH+"2012/9/", Settings.DATASET_PATH+"2012/10/");
-		app.printStats(Settings.MIN_ACTIVITY);
-
-		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Time: " + time + "sec.");
-		
-	}
-	
 	protected StatsActivityApp(String firstPath, String secondPath) throws IOException{
 		
 		ActivityDataset datasetReader = new ActivityDataset();
@@ -62,4 +50,17 @@ public class StatsActivityApp {
 		System.out.println("Mean: " + mean + "% SD: " + std + "% repositories: " + count);
 	}
 
+	
+	public static void main(String[] args) throws IOException {
+
+		long time = System.currentTimeMillis();
+		StatsActivityApp app = new StatsActivityApp(
+				Settings.DATASET_PATH+"2012/2/", Settings.DATASET_PATH+"2012/3/");
+		app.printStats(Settings.MIN_ACTIVITY);
+
+		time = (System.currentTimeMillis()-time)/1000;
+		System.out.println("Time: " + time + "sec.");
+		
+	}
+	
 }

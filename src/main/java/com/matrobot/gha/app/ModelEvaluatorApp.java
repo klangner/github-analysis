@@ -47,7 +47,7 @@ public class ModelEvaluatorApp {
 	public static void main(String[] args) throws IOException {
 
 		ModelEvaluatorApp app = new ModelEvaluatorApp(
-				Settings.DATASET_PATH+"2012/9/", Settings.DATASET_PATH+"2012/10/");
+				Settings.DATASET_PATH+"2012/2/", Settings.DATASET_PATH+"2012/3/");
 		double score;
 
 		// Static model
@@ -55,7 +55,7 @@ public class ModelEvaluatorApp {
 		System.out.println("Static model score: " + score);
 		
 		// Constant model
-		score = app.evaluate(new LinearModel(0.32, 0), Settings.MIN_ACTIVITY);
+		score = app.evaluate(new LinearModel(0.42, 0), Settings.MIN_ACTIVITY);
 		System.out.println("Linear model score: " + score);
 		
 	}
