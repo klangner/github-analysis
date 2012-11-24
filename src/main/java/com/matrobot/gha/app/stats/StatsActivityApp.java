@@ -1,10 +1,11 @@
-package com.matrobot.gha.app;
+package com.matrobot.gha.app.stats;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.dataset.ActivityDataset;
 import com.matrobot.gha.dataset.ActivityRecord;
 

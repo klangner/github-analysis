@@ -1,4 +1,4 @@
-package com.matrobot.gha.app;
+package com.matrobot.gha.app.stats;
 
 import java.awt.Dimension;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.dataset.ActivityDataset;
 import com.matrobot.gha.dataset.ActivityRecord;
 

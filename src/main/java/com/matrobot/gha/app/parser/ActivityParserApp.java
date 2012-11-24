@@ -15,7 +15,7 @@ import com.matrobot.gha.dataset.IDatasetReader;
 
 public class ActivityParserApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/3/";
+	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/1/";
 	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
 	List<String> newRepositoriesThisMonth = new ArrayList<String>();
 	private int eventsFound = 0;
