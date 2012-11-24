@@ -15,17 +15,26 @@ import com.matrobot.gha.dataset.IDatasetReader;
 
 public class ActivityParserApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/10/";
+	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/3/";
 	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
-	List<String> createEvents = new ArrayList<String>();
+	List<String> newRepositoriesThisMonth = new ArrayList<String>();
 	private int eventsFound = 0;
 	
 	
-	public ActivityParserApp(String folder) throws IOException{
-		
-		parseFolder(folder);
-	}
+	public void saveAsJson(String path) {
 	
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		
+		try{
+			FileWriter writer = new FileWriter(path+"activity.json");
+			String json = gson.toJson(repos.values());
+			writer.write(json);
+			writer.close();
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
 	private void parseFolder(String folder) throws IOException{
 		
 		IDatasetReader datasetReader = new FolderDatasetReader(folder);
@@ -38,7 +47,7 @@ public class ActivityParserApp {
 			if(url != null){
 				
 				if(recordData.type.equals("CreateEvent")){
-					createEvents.add(url);
+					newRepositoriesThisMonth.add(url);
 				}
 				else if(recordData.type.equals("PushEvent")){
 					ActivityRecord data = repos.get(url);
@@ -55,28 +64,26 @@ public class ActivityParserApp {
 		}
 	}
 
-	private void saveAsJson(String path) {
+	private void removeNewRepos() {
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		
-		try{
-			FileWriter writer = new FileWriter(path+"activity.json");
-			String json = gson.toJson(repos.values());
-			writer.write(json);
-			writer.close();
-		}catch (Exception e){
-			System.err.println("Error: " + e.getMessage());
+		for(String repositoryName : newRepositoriesThisMonth){
+			repos.remove(repositoryName);
 		}
 	}
 
-	
+	public ActivityParserApp(String folder) throws IOException{
+		
+		parseFolder(folder);
+		removeNewRepos();
+	}
+
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
 		ActivityParserApp app = new ActivityParserApp(DATASET_PATH);
 		app.saveAsJson(DATASET_PATH);
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Create events: " + app.createEvents.size() + " Repos: " + app.repos.size());
+		System.out.println("Create events: " + app.newRepositoriesThisMonth.size() + " Repos: " + app.repos.size());
 		System.out.println("Events: " + app.eventsFound + " parse time: " + time + "sec.");
 	}
 }

@@ -36,11 +36,19 @@ public class StatsActivityApp {
 	private void printStats(int minActivity) {
 		
 		DescriptiveStatistics stats = new DescriptiveStatistics();
+		int before = 0;
+		int after = 0;
+		double normalized = 0;
+		int counter = 0;
 		for(ActivityRecord record : firstDataset.values()){
 			ActivityRecord nextRecord = secondDataset.get(record.repository); 
 			if(record.activity > minActivity && nextRecord != null){
-				double diff = (nextRecord.activity-record.activity)/record.activity;
+				double diff = (nextRecord.activity-record.activity)/(double)record.activity;
 				stats.addValue(diff);
+				before += record.activity;
+				after += nextRecord.activity;
+				normalized += diff;
+				counter += 1;
 			}
 		}
 
@@ -49,7 +57,9 @@ public class StatsActivityApp {
 		double mean = Math.floor(stats.getMean()*1000)/10;
 		double std = Math.floor(stats.getStandardDeviation()*100)/10;
 		
-		System.out.println("Mean: " + mean + "% SD: " + std + "% records: " + count);
+		System.out.println("Before: " + (before/counter) + " After: " + (after/counter) + 
+				" normalized: " + (normalized/counter));
+		System.out.println("Mean: " + mean + "% SD: " + std + "% repositories: " + count);
 	}
 
 }
