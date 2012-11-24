@@ -11,25 +11,24 @@ import com.matrobot.gha.model.StaticModel;
 
 public class ModelActivityEvaluatorApp {
 
-	private static final int MIN_ACTIVITY = 100;
-	private static final double PRECISION = .10;
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
+	private static final double PRECISION = .20;
 	private HashMap<String, ActivityRecord> firstDataset;
 	private HashMap<String, ActivityRecord> secondDataset;
 	
 	
 	public static void main(String[] args) throws IOException {
 
-		ModelActivityEvaluatorApp app = new ModelActivityEvaluatorApp(DATASET_PATH+"2012/2/", DATASET_PATH+"2012/3/");
+		ModelActivityEvaluatorApp app = new ModelActivityEvaluatorApp(
+				Settings.DATASET_PATH+"2012/9/", Settings.DATASET_PATH+"2012/10/");
 		double score;
 
 		// Static model
-		score = app.evaluate(new StaticModel());
+		score = app.evaluate(new StaticModel(), Settings.MIN_ACTIVITY);
 		score = Math.floor(score*1000)/10;
 		System.out.println("Static model score: " + score + "%");
 		
 		// Constant model
-		score = app.evaluate(new LinearModel(1.032, 0));
+		score = app.evaluate(new LinearModel(1.032, 0), Settings.MIN_ACTIVITY);
 		score = Math.floor(score*1000)/10;
 		System.out.println("Linear model score: " + score + "%");
 		
@@ -42,13 +41,13 @@ public class ModelActivityEvaluatorApp {
 		secondDataset = datasetReader.loadData(secondPath);
 	}
 	
-	private double evaluate(IModel model) {
+	private double evaluate(IModel model, int minActivity) {
 
 		float score = 0;
 		float maxScore = 0;
 		for(ActivityRecord record : firstDataset.values()){
 			ActivityRecord nextRecord = secondDataset.get(record.repository); 
-			if(record.activity > MIN_ACTIVITY && nextRecord != null){
+			if(record.activity > minActivity && nextRecord != null){
 				double expected = model.makePrediction(record.activity);
 				if(isInRange(expected, nextRecord.activity)){
 					score += 1;

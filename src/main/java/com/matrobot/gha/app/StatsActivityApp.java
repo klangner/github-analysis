@@ -8,9 +8,8 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import com.matrobot.gha.dataset.ActivityDataset;
 import com.matrobot.gha.dataset.ActivityRecord;
 
-public class AnalizeActivityApp {
+public class StatsActivityApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/";
 	private HashMap<String, ActivityRecord> firstDataset;
 	private HashMap<String, ActivityRecord> secondDataset;
 	
@@ -18,16 +17,16 @@ public class AnalizeActivityApp {
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		AnalizeActivityApp app = new AnalizeActivityApp(DATASET_PATH+"2012/2/", DATASET_PATH+"2012/3/");
-//		app.printStats(10);
-		app.printStats(100);
+		StatsActivityApp app = new StatsActivityApp(
+				Settings.DATASET_PATH+"2012/9/", Settings.DATASET_PATH+"2012/10/");
+		app.printStats(Settings.MIN_ACTIVITY);
 
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");
 		
 	}
 	
-	protected AnalizeActivityApp(String firstPath, String secondPath) throws IOException{
+	protected StatsActivityApp(String firstPath, String secondPath) throws IOException{
 		
 		ActivityDataset datasetReader = new ActivityDataset();
 		firstDataset = datasetReader.loadData(firstPath);

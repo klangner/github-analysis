@@ -14,7 +14,7 @@ public class FileDatasetReaderTest {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
 		FileDatasetReader reader = new FileDatasetReader(inputStream);
 		
-		DataRecord data = reader.readNextRecord();
+		DataRecord data = reader.next();
 		assertEquals("2012-04-01T00:00:00Z", data.created_at);
 	}
 
@@ -24,8 +24,18 @@ public class FileDatasetReaderTest {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
 		FileDatasetReader reader = new FileDatasetReader(inputStream);
 		
-		DataRecord data = reader.readNextRecord();
+		DataRecord data = reader.next();
 		assertEquals("azonwan/rable", data.getRepositoryId());
+	}
+
+
+	@Test
+	public void testEventType() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		
+		DataRecord data = reader.next();
+		assertEquals("CreateEvent", data.type);
 	}
 
 
@@ -35,7 +45,7 @@ public class FileDatasetReaderTest {
 		FileDatasetReader reader = new FileDatasetReader(inputStream);
 		
 		int count = 0;
-		while(reader.readNextRecord() != null){
+		while(reader.next() != null){
 			count ++;
 		}
 		
@@ -49,7 +59,7 @@ public class FileDatasetReaderTest {
 		FileDatasetReader reader = new FileDatasetReader(inputStream);
 		
 		int count = 0;
-		while(reader.readNextRecord() != null){
+		while(reader.next() != null){
 			count ++;
 		}
 		

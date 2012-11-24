@@ -4,12 +4,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 
 
 /**
@@ -39,11 +41,11 @@ import com.google.gson.JsonSyntaxException;
         "id": "1536460828"
     }
  */
-public class FileDatasetReader implements IDatasetReader{
+public class FileDatasetReader implements Iterator<DataRecord>{
 
-	private String fileContents;
-	private Gson gson = new Gson();
-	private String filename;
+	private List<DataRecord> records;
+	private Iterator<DataRecord> iterator;
+//	private String filename;
 	
 	
 	/**
@@ -53,7 +55,7 @@ public class FileDatasetReader implements IDatasetReader{
 	 */
 	public FileDatasetReader(String filePath) throws IOException{
 	
-		filename = filePath;
+//		filename = filePath;
 		initContent(new FileInputStream(filePath));
 	}
 	
@@ -69,67 +71,44 @@ public class FileDatasetReader implements IDatasetReader{
 	}
 
 
-	private void initContent(InputStream inputStream) throws IOException,
-			UnsupportedEncodingException {
+	private void initContent(InputStream inputStream) throws IOException{
+		
+		Gson gson = new Gson();
 		InputStream gzipStream = new GZIPInputStream(inputStream);
-		Reader reader = new InputStreamReader(gzipStream, "UTF-8");
-		char[] buffer = new char[100000];
-		int count;
-		
-		StringBuilder contents = new StringBuilder();
-		while((count=reader.read(buffer)) > 0){
-			contents.append(buffer, 0, count);
+		JsonReader reader = new JsonReader(new InputStreamReader(gzipStream, "UTF-8"));
+		reader.setLenient(true);
+	    records = new ArrayList<DataRecord>();
+	    while (reader.hasNext() && reader.peek() != JsonToken.END_DOCUMENT) {
+	    	DataRecord record = gson.fromJson(reader, DataRecord.class);
+	        records.add(record);
+	    }
+	    
+	    reader.close();
+	    iterator = records.iterator();
+	}
+
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+
+	@Override
+	public DataRecord next() {
+		if(iterator.hasNext()){
+			return iterator.next();
 		}
-		fileContents = contents.toString();
-		if(fileContents.indexOf("\n") == -1){
-			fileContents = fileContents.replace("}{", "}\n{");
+		else{
+			return null;
 		}
 	}
 
 
-	public DataRecord readNextRecord(){
-		
-		DataRecord data = null;
-		
-		try {
-			String line = readLine();
-			if(line != null){
-				try{
-					data = gson.fromJson(line, DataRecord.class);
-				}catch(JsonSyntaxException e){
-					System.err.println(e);
-					System.err.println(line);
-					System.err.println(filename);
-					System.err.println();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return data;
+	@Override
+	public void remove() {
 	}
 
-
-	private String readLine() throws IOException {
-		
-		String line = null;
-		
-		if(fileContents.length() > 0){
-			int index = fileContents.indexOf("\n");
-			if(index > 0){
-				line = fileContents.substring(0, index);
-				fileContents = fileContents.substring(index).trim();
-			}
-			else{
-				line = fileContents;
-				fileContents = "";
-			}
-		}
-		
-		return line;
-	}
-	
 }
 
 
