@@ -7,6 +7,7 @@ Important links
 ===============
 
 - Data: http://githubarchive.org
+- [Google groups for githubarchive.org](https://groups.google.com/forum/?fromgroups=#!forum/github-archive)
 
 
 Dependencies
