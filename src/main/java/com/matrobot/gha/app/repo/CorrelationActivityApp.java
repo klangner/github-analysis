@@ -74,9 +74,9 @@ public class CorrelationActivityApp extends ApplicationFrame {
 
 		for(RepositoryRecord record : currentDataset.values()){
 			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
-			if(record.activity > minActivity && nextRecord != null)
+			if(record.eventCount > minActivity && nextRecord != null)
 			{
-				int category = ActivityRating.estimateCategory(record.activity, nextRecord.activity);
+				int category = ActivityRating.estimateCategory(record.eventCount, nextRecord.eventCount);
 				int oldCategory = getOldActivityRating(record);
 		        series.add(oldCategory, category);
 			}
@@ -94,10 +94,10 @@ public class CorrelationActivityApp extends ApplicationFrame {
 		
 		for(RepositoryRecord record : currentDataset.values()){
 			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
-			if(record.activity > minActivity && nextRecord != null && 
-					record.activity < 5000 && nextRecord.activity < 5000)
+			if(record.eventCount > minActivity && nextRecord != null && 
+					record.eventCount < 5000 && nextRecord.eventCount < 5000)
 			{
-				int category = ActivityRating.estimateCategory(record.activity, nextRecord.activity);
+				int category = ActivityRating.estimateCategory(record.eventCount, nextRecord.eventCount);
 				x.add((double) getOldActivityRating(record));
 				y.add((double) category);
 			}
@@ -125,7 +125,7 @@ public class CorrelationActivityApp extends ApplicationFrame {
 		}
 		else{
 			oldCategory = ActivityRating.estimateCategory(
-					prevRecord.activity, current.activity);
+					prevRecord.eventCount, current.eventCount);
 		}
 		return oldCategory;
 	}

@@ -2,9 +2,7 @@ package com.matrobot.gha.app.parser;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,19 +12,17 @@ import com.matrobot.gha.dataset.FolderDatasetReader;
 import com.matrobot.gha.dataset.RepositoryRecord;
 import com.matrobot.gha.dataset.SummaryRecord;
 
-public class ActivityParserApp {
+public class RepositoryParserApp {
 
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
-	List<String> newRepositoriesThisMonth = new ArrayList<String>();
 	private SummaryRecord info = new SummaryRecord();
 	
 	
-	public ActivityParserApp(int year, int month) throws IOException{
+	public RepositoryParserApp(int year, int month) throws IOException{
 		
 		datasetPath = Settings.DATASET_PATH + year + "-" + month; 
 		parseFolder();
-		removeNewRepos();
 	}
 
 	private void parseFolder() throws IOException{
@@ -35,39 +31,43 @@ public class ActivityParserApp {
 		DatasetRecord	recordData;
 		
 		info.eventCount = 0;
+		info.newRepositoryCount = 0;
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
-			String url = recordData.getRepositoryId();
-			if(url != null){
-				
-				if(recordData.type.equals("CreateEvent")){
-					newRepositoriesThisMonth.add(url);
-				}
-				else if(recordData.type.equals("PushEvent")){
-					RepositoryRecord data = repos.get(url);
-					if(data == null){
-						data = new RepositoryRecord();
-						data.repository = url;
-					}
-					
-					data.activity += 1;
-					repos.put(url, data);
-				}
-				info.eventCount ++;
-			}
+			updateRepositoryData(recordData);
 		}
 		
 		info.repositoryCount = repos.size();
-		info.newRepositoryCount = newRepositoriesThisMonth.size();
 	}
 
-	private void removeNewRepos() {
+	
+	private void updateRepositoryData(DatasetRecord recordData) {
+	
+		String url = recordData.getRepositoryId();
+		if(url != null){
+			
+			RepositoryRecord data = repos.get(url);
+			if(data == null){
+				data = new RepositoryRecord();
+				data.repository = url;
+			}
 
-		for(String repositoryName : newRepositoriesThisMonth){
-			repos.remove(repositoryName);
+			if(recordData.type.equals("CreateEvent")){
+				data.isNew = true;
+				info.newRepositoryCount += 1;
+			}
+			else if(recordData.type.equals("PushEvent")){
+				data.pushEventCount += 1;
+			}
+
+			data.eventCount += 1;
+			repos.put(url, data);
+			
+			info.eventCount ++;
 		}
 	}
 
+	
 	public void saveAsJson() {
 	
 		FileWriter writer;
@@ -90,13 +90,30 @@ public class ActivityParserApp {
 		}
 	}
 
+	
 	public static void main(String[] args) throws IOException {
 
+		// Parse 2011
+		for(int i = 10; i <= 12; i++){
+//			parseMonth(2011, i);
+		}
+
+		// Parse 2012
+		for(int i = 1; i <= 10; i++){
+			parseMonth(2012, i);
+		}
+	}
+
+	
+	private static void parseMonth(int year, int month) throws IOException {
+		
 		long time = System.currentTimeMillis();
-		ActivityParserApp app = new ActivityParserApp(2012, 10);
+		RepositoryParserApp app = new RepositoryParserApp(year, month);
 		app.saveAsJson();
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Push events: " + app.newRepositoriesThisMonth.size() + " Repos: " + app.repos.size());
-		System.out.println("Events: " + app.info.eventCount + " parse time: " + time + "sec.");
+		System.out.println("Dataset: " + year + "-" + month);
+		System.out.println("Repos: " + app.repos.size() + " Events: " + app.info.eventCount);
+		System.out.println("Parse time: " + time + "sec.");
+		System.out.println();
 	}
 }

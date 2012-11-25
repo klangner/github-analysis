@@ -33,9 +33,9 @@ public class ClassifierEvaluatorApp {
 		double sum = 0;
 		for(RepositoryRecord record : currentDataset.values()){
 			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
-			double currentActivity = record.activity;
-			double nextActivity = (nextRecord != null) ? nextRecord.activity : 0;
-			if(record.activity > minActivity){
+			double currentActivity = record.eventCount;
+			double nextActivity = (nextRecord != null) ? nextRecord.eventCount : 0;
+			if(record.eventCount > minActivity){
 				
 				int expected = getExpectedCategory(currentActivity, nextActivity);
 				int[] featureVector = createFeatureVector(record);
@@ -71,14 +71,14 @@ public class ClassifierEvaluatorApp {
 	private int[] createFeatureVector(RepositoryRecord currentRecord) {
 		
 		int[] featureVector = new int[2];
-		featureVector[0] = (int) Math.log10(currentRecord.activity);
+		featureVector[0] = (int) Math.log10(currentRecord.eventCount);
 		RepositoryRecord prevRecord = prevDataset.get(currentRecord.repository);
 		if(prevRecord == null){
 			featureVector[1] = ActivityRating.UNKNOWN;
 		}
 		else{
 			featureVector[1] = ActivityRating.estimateCategory(
-					prevRecord.activity, currentRecord.activity);
+					prevRecord.eventCount, currentRecord.eventCount);
 		}
 		return featureVector;
 	}

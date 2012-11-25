@@ -27,9 +27,9 @@ public class ModelEvaluatorApp {
 		double sum = 0;
 		for(RepositoryRecord record : firstDataset.values()){
 			RepositoryRecord nextRecord = secondDataset.get(record.repository); 
-			if(record.activity > minActivity && nextRecord != null){
-				double expected = model.makePrediction(record.activity);
-				sum += relativeDistancePow(expected, nextRecord.activity);
+			if(record.eventCount > minActivity && nextRecord != null){
+				double expected = model.makePrediction(record.eventCount);
+				sum += relativeDistancePow(expected, nextRecord.eventCount);
 				counter += 1;
 			}
 		}

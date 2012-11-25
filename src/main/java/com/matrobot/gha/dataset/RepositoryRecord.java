@@ -16,7 +16,9 @@ import com.google.gson.reflect.TypeToken;
 public class RepositoryRecord {
 
 	public String repository;
-	public int activity = 0;
+	public int eventCount = 0;
+	public int pushEventCount = 0;
+	public boolean isNew = false;
 	
 	
 	/**

@@ -35,8 +35,8 @@ public class StatsActivityApp {
 		initCategoryProbabilities();
 		for(RepositoryRecord record : currentDataset.values()){
 			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
-			double currentActivity = record.activity;
-			double nextActivity = (nextRecord != null) ? nextRecord.activity : 0;
+			double currentActivity = record.eventCount;
+			double nextActivity = (nextRecord != null) ? nextRecord.eventCount : 0;
 			if(currentActivity > minActivity){
 				double diff = (nextActivity-currentActivity)/currentActivity;
 				stats.addValue(diff);
@@ -72,8 +72,8 @@ public class StatsActivityApp {
 
 	private void updateCategoryProbability(RepositoryRecord current, double nextActivity) {
 		
-		int category = ActivityRating.estimateCategory(current.activity, nextActivity);
-		int activity = (int) Math.log(current.activity);
+		int category = ActivityRating.estimateCategory(current.eventCount, nextActivity);
+		int activity = (int) Math.log(current.eventCount);
 		activity2category[activity][category] += 1;
 		
 		int oldCategory = getOldActivityRating(current);
@@ -89,7 +89,7 @@ public class StatsActivityApp {
 		}
 		else{
 			oldCategory = ActivityRating.estimateCategory(
-					prevRecord.activity, current.activity);
+					prevRecord.eventCount, current.eventCount);
 		}
 		return oldCategory;
 	}
