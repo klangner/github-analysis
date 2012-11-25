@@ -13,31 +13,36 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class ActivityDataset {
+public class RepositoryRecord {
 
+	public String repository;
+	public int activity = 0;
+	
+	
 	/**
 	 * Load activity.json
 	 * 
 	 * @param filename
 	 * @throws IOException
 	 */
-	public HashMap<String, ActivityRecord> loadData(String filePath) throws IOException{
+	public static HashMap<String, RepositoryRecord> loadData(String filePath) throws IOException{
 		
-		List<ActivityRecord> rows = new ArrayList<ActivityRecord>();
+		List<RepositoryRecord> rows = new ArrayList<RepositoryRecord>();
 		Gson gson = new Gson();
-		Type datasetType = new TypeToken<Collection<ActivityRecord>>(){}.getType();
+		Type datasetType = new TypeToken<Collection<RepositoryRecord>>(){}.getType();
 
-		FileInputStream fis = new FileInputStream(filePath+"activity.json");
+		FileInputStream fis = new FileInputStream(filePath+"repositories.json");
 		Reader reader = new InputStreamReader(fis, "UTF-8");
 		rows = gson.fromJson(reader, datasetType);
 		
 		reader.close();
 
-		HashMap<String, ActivityRecord> dataset = new HashMap<String, ActivityRecord>();
-		for(ActivityRecord row : rows){
+		HashMap<String, RepositoryRecord> dataset = new HashMap<String, RepositoryRecord>();
+		for(RepositoryRecord row : rows){
 			dataset.put(row.repository, row);
 		}
 		
 		return dataset;
 	}
+	
 }

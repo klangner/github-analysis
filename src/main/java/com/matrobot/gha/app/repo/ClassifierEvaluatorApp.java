@@ -8,24 +8,22 @@ import com.matrobot.gha.category.ActivityRating;
 import com.matrobot.gha.classifier.IClassifier;
 import com.matrobot.gha.classifier.ManualRepoClassifier;
 import com.matrobot.gha.classifier.StaticClassifier;
-import com.matrobot.gha.dataset.ActivityDataset;
-import com.matrobot.gha.dataset.ActivityRecord;
+import com.matrobot.gha.dataset.RepositoryRecord;
 
 public class ClassifierEvaluatorApp {
 
-	private HashMap<String, ActivityRecord> prevDataset;
-	private HashMap<String, ActivityRecord> currentDataset;
-	private HashMap<String, ActivityRecord> nextDataset;
+	private HashMap<String, RepositoryRecord> prevDataset;
+	private HashMap<String, RepositoryRecord> currentDataset;
+	private HashMap<String, RepositoryRecord> nextDataset;
 	private int errorCount;
 	private int counter;
 	
 	
 	protected ClassifierEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		ActivityDataset datasetReader = new ActivityDataset();
-		prevDataset = datasetReader.loadData(firstPath);
-		currentDataset = datasetReader.loadData(secondPath);
-		nextDataset = datasetReader.loadData(thirdPath);
+		prevDataset = RepositoryRecord.loadData(firstPath);
+		currentDataset = RepositoryRecord.loadData(secondPath);
+		nextDataset = RepositoryRecord.loadData(thirdPath);
 	}
 	
 	private double evaluate(IClassifier classifier, int minActivity) {
@@ -33,8 +31,8 @@ public class ClassifierEvaluatorApp {
 		counter = 0;
 		errorCount = 0;
 		double sum = 0;
-		for(ActivityRecord record : currentDataset.values()){
-			ActivityRecord nextRecord = nextDataset.get(record.repository); 
+		for(RepositoryRecord record : currentDataset.values()){
+			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
 			double currentActivity = record.activity;
 			double nextActivity = (nextRecord != null) ? nextRecord.activity : 0;
 			if(record.activity > minActivity){
@@ -70,11 +68,11 @@ public class ClassifierEvaluatorApp {
 	 *  feature[0] = currentActivity in log10 scale
 	 *  feature[1] = current activity rating (from previous month)
 	 */
-	private int[] createFeatureVector(ActivityRecord currentRecord) {
+	private int[] createFeatureVector(RepositoryRecord currentRecord) {
 		
 		int[] featureVector = new int[2];
 		featureVector[0] = (int) Math.log10(currentRecord.activity);
-		ActivityRecord prevRecord = prevDataset.get(currentRecord.repository);
+		RepositoryRecord prevRecord = prevDataset.get(currentRecord.repository);
 		if(prevRecord == null){
 			featureVector[1] = ActivityRating.UNKNOWN;
 		}

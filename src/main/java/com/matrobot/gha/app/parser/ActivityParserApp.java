@@ -8,39 +8,33 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.matrobot.gha.dataset.ActivityRecord;
-import com.matrobot.gha.dataset.DataRecord;
+import com.matrobot.gha.app.Settings;
+import com.matrobot.gha.dataset.DatasetRecord;
 import com.matrobot.gha.dataset.FolderDatasetReader;
-import com.matrobot.gha.dataset.IDatasetReader;
+import com.matrobot.gha.dataset.RepositoryRecord;
+import com.matrobot.gha.dataset.SummaryRecord;
 
 public class ActivityParserApp {
 
-	private static final String DATASET_PATH = "/home/klangner/datasets/github/2012/1/";
-	HashMap<String, ActivityRecord> repos = new HashMap<String, ActivityRecord>();
+	private String datasetPath;
+	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	List<String> newRepositoriesThisMonth = new ArrayList<String>();
-	private int eventsFound = 0;
+	private SummaryRecord info = new SummaryRecord();
 	
 	
-	public void saveAsJson(String path) {
-	
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	public ActivityParserApp(int year, int month) throws IOException{
 		
-		try{
-			FileWriter writer = new FileWriter(path+"activity.json");
-			String json = gson.toJson(repos.values());
-			writer.write(json);
-			writer.close();
-		}catch (Exception e){
-			System.err.println("Error: " + e.getMessage());
-		}
+		datasetPath = Settings.DATASET_PATH + year + "-" + month; 
+		parseFolder();
+		removeNewRepos();
 	}
 
-	private void parseFolder(String folder) throws IOException{
+	private void parseFolder() throws IOException{
 		
-		IDatasetReader datasetReader = new FolderDatasetReader(folder);
-		DataRecord	recordData;
+		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
+		DatasetRecord	recordData;
 		
-		eventsFound = 0;
+		info.eventCount = 0;
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
 			String url = recordData.getRepositoryId();
@@ -50,18 +44,21 @@ public class ActivityParserApp {
 					newRepositoriesThisMonth.add(url);
 				}
 				else if(recordData.type.equals("PushEvent")){
-					ActivityRecord data = repos.get(url);
+					RepositoryRecord data = repos.get(url);
 					if(data == null){
-						data = new ActivityRecord();
+						data = new RepositoryRecord();
 						data.repository = url;
 					}
 					
 					data.activity += 1;
 					repos.put(url, data);
 				}
-				eventsFound ++;
+				info.eventCount ++;
 			}
 		}
+		
+		info.repositoryCount = repos.size();
+		info.newRepositoryCount = newRepositoriesThisMonth.size();
 	}
 
 	private void removeNewRepos() {
@@ -71,19 +68,35 @@ public class ActivityParserApp {
 		}
 	}
 
-	public ActivityParserApp(String folder) throws IOException{
+	public void saveAsJson() {
+	
+		FileWriter writer;
+		String json;
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
-		parseFolder(folder);
-		removeNewRepos();
+		try{
+			writer = new FileWriter(datasetPath+"/repositories.json");
+			json = gson.toJson(repos.values());
+			writer.write(json);
+			writer.close();
+			
+			writer = new FileWriter(datasetPath+"/summary.json");
+			json = gson.toJson(info);
+			writer.write(json);
+			writer.close();
+			
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		ActivityParserApp app = new ActivityParserApp(DATASET_PATH);
-		app.saveAsJson(DATASET_PATH);
+		ActivityParserApp app = new ActivityParserApp(2012, 10);
+		app.saveAsJson();
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Create events: " + app.newRepositoriesThisMonth.size() + " Repos: " + app.repos.size());
-		System.out.println("Events: " + app.eventsFound + " parse time: " + time + "sec.");
+		System.out.println("Push events: " + app.newRepositoriesThisMonth.size() + " Repos: " + app.repos.size());
+		System.out.println("Events: " + app.info.eventCount + " parse time: " + time + "sec.");
 	}
 }

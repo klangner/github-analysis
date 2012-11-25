@@ -4,31 +4,29 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.ActivityDataset;
-import com.matrobot.gha.dataset.ActivityRecord;
+import com.matrobot.gha.dataset.RepositoryRecord;
 import com.matrobot.gha.model.IModel;
 import com.matrobot.gha.model.LinearModel;
 import com.matrobot.gha.model.StaticModel;
 
 public class ModelEvaluatorApp {
 
-	private HashMap<String, ActivityRecord> firstDataset;
-	private HashMap<String, ActivityRecord> secondDataset;
+	private HashMap<String, RepositoryRecord> firstDataset;
+	private HashMap<String, RepositoryRecord> secondDataset;
 	
 	
 	protected ModelEvaluatorApp(String firstPath, String secondPath) throws IOException{
 		
-		ActivityDataset datasetReader = new ActivityDataset();
-		firstDataset = datasetReader.loadData(firstPath);
-		secondDataset = datasetReader.loadData(secondPath);
+		firstDataset = RepositoryRecord.loadData(firstPath);
+		secondDataset = RepositoryRecord.loadData(secondPath);
 	}
 	
 	private double evaluate(IModel model, int minActivity) {
 
 		int counter = 0;
 		double sum = 0;
-		for(ActivityRecord record : firstDataset.values()){
-			ActivityRecord nextRecord = secondDataset.get(record.repository); 
+		for(RepositoryRecord record : firstDataset.values()){
+			RepositoryRecord nextRecord = secondDataset.get(record.repository); 
 			if(record.activity > minActivity && nextRecord != null){
 				double expected = model.makePrediction(record.activity);
 				sum += relativeDistancePow(expected, nextRecord.activity);

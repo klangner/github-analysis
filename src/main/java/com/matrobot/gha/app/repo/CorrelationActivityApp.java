@@ -20,8 +20,7 @@ import org.jfree.ui.RefineryUtilities;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.category.ActivityRating;
-import com.matrobot.gha.dataset.ActivityDataset;
-import com.matrobot.gha.dataset.ActivityRecord;
+import com.matrobot.gha.dataset.RepositoryRecord;
 
 /**
  * Checked correlation:
@@ -33,9 +32,9 @@ import com.matrobot.gha.dataset.ActivityRecord;
 @SuppressWarnings("serial")
 public class CorrelationActivityApp extends ApplicationFrame {
 
-	private HashMap<String, ActivityRecord> prevDataset;
-	private HashMap<String, ActivityRecord> currentDataset;
-	private HashMap<String, ActivityRecord> nextDataset;
+	private HashMap<String, RepositoryRecord> prevDataset;
+	private HashMap<String, RepositoryRecord> currentDataset;
+	private HashMap<String, RepositoryRecord> nextDataset;
 	private int minActivity = Settings.MIN_ACTIVITY;
 	
 	
@@ -52,10 +51,9 @@ public class CorrelationActivityApp extends ApplicationFrame {
 
 	private void loadDatasets(String firstPath, String secondPath, String thirdPath) throws IOException {
 		
-		ActivityDataset datasetReader = new ActivityDataset();
-		prevDataset = datasetReader.loadData(firstPath);
-		currentDataset = datasetReader.loadData(secondPath);
-		nextDataset = datasetReader.loadData(thirdPath);
+		prevDataset = RepositoryRecord.loadData(firstPath);
+		currentDataset = RepositoryRecord.loadData(secondPath);
+		nextDataset = RepositoryRecord.loadData(thirdPath);
 	}
 
 	
@@ -74,8 +72,8 @@ public class CorrelationActivityApp extends ApplicationFrame {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
         XYSeries series = new XYSeries("Activity");
 
-		for(ActivityRecord record : currentDataset.values()){
-			ActivityRecord nextRecord = nextDataset.get(record.repository); 
+		for(RepositoryRecord record : currentDataset.values()){
+			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
 			if(record.activity > minActivity && nextRecord != null)
 			{
 				int category = ActivityRating.estimateCategory(record.activity, nextRecord.activity);
@@ -94,8 +92,8 @@ public class CorrelationActivityApp extends ApplicationFrame {
 		Vector<Double> x = new Vector<Double>();
 		Vector<Double> y = new Vector<Double>();
 		
-		for(ActivityRecord record : currentDataset.values()){
-			ActivityRecord nextRecord = nextDataset.get(record.repository); 
+		for(RepositoryRecord record : currentDataset.values()){
+			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
 			if(record.activity > minActivity && nextRecord != null && 
 					record.activity < 5000 && nextRecord.activity < 5000)
 			{
@@ -119,9 +117,9 @@ public class CorrelationActivityApp extends ApplicationFrame {
 	}
 
 	
-	private int getOldActivityRating(ActivityRecord current) {
+	private int getOldActivityRating(RepositoryRecord current) {
 		int oldCategory;
-		ActivityRecord prevRecord = prevDataset.get(current.repository);
+		RepositoryRecord prevRecord = prevDataset.get(current.repository);
 		if(prevRecord == null){
 			oldCategory = ActivityRating.UNKNOWN;
 		}

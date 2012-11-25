@@ -1,6 +1,6 @@
 package com.matrobot.gha.dataset;
 
-public class DataRecord {
+public class DatasetRecord {
 
 	public class Repo{
 		public String id;

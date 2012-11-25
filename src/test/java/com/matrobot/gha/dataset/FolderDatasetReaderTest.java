@@ -12,9 +12,9 @@ public class FolderDatasetReaderTest {
 	@Test
 	public void testFirstRecord() throws IOException {
 		URL url = getClass().getResource("testdata");
-		IDatasetReader reader = new FolderDatasetReader(url.getPath());
+		FolderDatasetReader reader = new FolderDatasetReader(url.getPath());
 		
-		DataRecord data = reader.readNextRecord();
+		DatasetRecord data = reader.readNextRecord();
 		assertEquals("2012-04-01T00:00:00Z", data.created_at);
 	}
 
@@ -22,7 +22,7 @@ public class FolderDatasetReaderTest {
 	@Test
 	public void testRecordCount() throws IOException {
 		URL url = getClass().getResource("testdata");
-		IDatasetReader reader = new FolderDatasetReader(url.getPath());
+		FolderDatasetReader reader = new FolderDatasetReader(url.getPath());
 		
 		int count = 0;
 		while(reader.readNextRecord() != null){

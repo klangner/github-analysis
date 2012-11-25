@@ -11,10 +11,10 @@ import java.util.List;
 
 
 
-public class FolderDatasetReader implements IDatasetReader{
+public class FolderDatasetReader{
 
 	private List<String> filePaths = new ArrayList<String>();
-	private Iterator<DataRecord> datasetReader;
+	private Iterator<DatasetRecord> datasetReader;
 			
 			
 	/**
@@ -64,9 +64,9 @@ public class FolderDatasetReader implements IDatasetReader{
 	}
 
 
-	public DataRecord readNextRecord(){
+	public DatasetRecord readNextRecord(){
 		
-		DataRecord data = null;
+		DatasetRecord data = null;
 		
 		if(datasetReader != null){
 		

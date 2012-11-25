@@ -7,24 +7,22 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.category.ActivityRating;
-import com.matrobot.gha.dataset.ActivityDataset;
-import com.matrobot.gha.dataset.ActivityRecord;
+import com.matrobot.gha.dataset.RepositoryRecord;
 
 public class StatsActivityApp {
 
-	private HashMap<String, ActivityRecord> prevDataset;
-	private HashMap<String, ActivityRecord> currentDataset;
-	private HashMap<String, ActivityRecord> nextDataset;
+	private HashMap<String, RepositoryRecord> prevDataset;
+	private HashMap<String, RepositoryRecord> currentDataset;
+	private HashMap<String, RepositoryRecord> nextDataset;
 	private int[][] activity2category = new int[10][6];
 	private int[][] category2category = new int[10][6];
 	
 	
 	protected StatsActivityApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		ActivityDataset datasetReader = new ActivityDataset();
-		prevDataset = datasetReader.loadData(firstPath);
-		currentDataset = datasetReader.loadData(secondPath);
-		nextDataset = datasetReader.loadData(thirdPath);
+		prevDataset = RepositoryRecord.loadData(firstPath);
+		currentDataset = RepositoryRecord.loadData(secondPath);
+		nextDataset = RepositoryRecord.loadData(thirdPath);
 	}
 	
 	private void printStats(int minActivity) {
@@ -35,8 +33,8 @@ public class StatsActivityApp {
 		double normalized = 0;
 		int counter = 0;
 		initCategoryProbabilities();
-		for(ActivityRecord record : currentDataset.values()){
-			ActivityRecord nextRecord = nextDataset.get(record.repository); 
+		for(RepositoryRecord record : currentDataset.values()){
+			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
 			double currentActivity = record.activity;
 			double nextActivity = (nextRecord != null) ? nextRecord.activity : 0;
 			if(currentActivity > minActivity){
@@ -72,7 +70,7 @@ public class StatsActivityApp {
 		}
 	}
 
-	private void updateCategoryProbability(ActivityRecord current, double nextActivity) {
+	private void updateCategoryProbability(RepositoryRecord current, double nextActivity) {
 		
 		int category = ActivityRating.estimateCategory(current.activity, nextActivity);
 		int activity = (int) Math.log(current.activity);
@@ -83,9 +81,9 @@ public class StatsActivityApp {
 		category2category[oldCategory][category] += 1;
 	}
 
-	private int getOldActivityRating(ActivityRecord current) {
+	private int getOldActivityRating(RepositoryRecord current) {
 		int oldCategory;
-		ActivityRecord prevRecord = prevDataset.get(current.repository);
+		RepositoryRecord prevRecord = prevDataset.get(current.repository);
 		if(prevRecord == null){
 			oldCategory = ActivityRating.UNKNOWN;
 		}

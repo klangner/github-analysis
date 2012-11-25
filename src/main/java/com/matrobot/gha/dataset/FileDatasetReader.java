@@ -41,10 +41,10 @@ import com.google.gson.stream.JsonToken;
         "id": "1536460828"
     }
  */
-public class FileDatasetReader implements Iterator<DataRecord>{
+public class FileDatasetReader implements Iterator<DatasetRecord>{
 
-	private List<DataRecord> records;
-	private Iterator<DataRecord> iterator;
+	private List<DatasetRecord> records;
+	private Iterator<DatasetRecord> iterator;
 //	private String filename;
 	
 	
@@ -77,9 +77,9 @@ public class FileDatasetReader implements Iterator<DataRecord>{
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		JsonReader reader = new JsonReader(new InputStreamReader(gzipStream, "UTF-8"));
 		reader.setLenient(true);
-	    records = new ArrayList<DataRecord>();
+	    records = new ArrayList<DatasetRecord>();
 	    while (reader.hasNext() && reader.peek() != JsonToken.END_DOCUMENT) {
-	    	DataRecord record = gson.fromJson(reader, DataRecord.class);
+	    	DatasetRecord record = gson.fromJson(reader, DatasetRecord.class);
 	        records.add(record);
 	    }
 	    
@@ -95,7 +95,7 @@ public class FileDatasetReader implements Iterator<DataRecord>{
 
 
 	@Override
-	public DataRecord next() {
+	public DatasetRecord next() {
 		if(iterator.hasNext()){
 			return iterator.next();
 		}
