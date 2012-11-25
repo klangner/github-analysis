@@ -19,6 +19,7 @@ public class RepositoryRecord {
 	public int eventCount = 0;
 	public int pushEventCount = 0;
 	public boolean isNew = false;
+	public boolean isFork = false;
 	
 	
 	/**
