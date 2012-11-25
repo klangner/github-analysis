@@ -1,19 +1,19 @@
 package com.matrobot.gha.category;
 
-public class ActivityChangeCategory {
+public class ActivityRating {
 
 	/** Grow bigger then 100% of previous month */
-	public static final int A = 5;
+	public static final int EXPLODING = 5;
 	/** Growing. Grow in range +10% - +100% */
-	public static final int B = 4;
+	public static final int GROWING = 4;
 	/** Active. Activity in range -10% +10% of previous month */
-	public static final int C = 3;
+	public static final int STABLE = 3;
 	/** Falling activity. Activity in range 90% - 10% when comparing to previous month */
-	public static final int D = 2;
+	public static final int DECAYING = 2;
 	/** Dying. Activity lower 10% of previous month */
-	public static final int E = 1; 		
+	public static final int DYING = 1; 		
 	/** Dead. 0 activity in the project */
-	public static final int F = 0; 		
+	public static final int UNKNOWN = 0; 		
 	
 	/**
 	 * 
@@ -23,27 +23,27 @@ public class ActivityChangeCategory {
 	public static int estimateCategory(double before, double after){
 		
 		if(before == 0){
-			return F;
+			return UNKNOWN;
 		}
 		
 		double diff = after/before;
 		
 		if(diff > 2){
-			return A;
+			return EXPLODING;
 		}
-		else if(diff > 1.1){
-			return B;
+		else if(diff > 1.2){
+			return GROWING;
 		}
-		else if(diff > 0.9){
-			return C;
+		else if(diff >= 0.8){
+			return STABLE;
 		}
-		else if(diff > 0.1){
-			return D;
+		else if(diff >= 0.1){
+			return DECAYING;
 		}
 		else if(diff > 0){
-			return E;
+			return DYING;
 		}
 		
-		return F;
+		return UNKNOWN;
 	}
 }

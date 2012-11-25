@@ -4,62 +4,70 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.matrobot.gha.category.ActivityChangeCategory;
+import com.matrobot.gha.category.ActivityRating;
 
 
 public class ActivityRatingTest {
 
 	@Test
 	public void testZero() {
-		int category = ActivityChangeCategory.estimateCategory(0, 1);
+		int category = ActivityRating.estimateCategory(0, 1);
 		
-		assertEquals(ActivityChangeCategory.F, category);
+		assertEquals(ActivityRating.UNKNOWN, category);
 	}
 
 	@Test
 	public void testA() {
-		int category = ActivityChangeCategory.estimateCategory(10, 30);
+		int category = ActivityRating.estimateCategory(10, 30);
 		
-		assertEquals(ActivityChangeCategory.A, category);
+		assertEquals(ActivityRating.EXPLODING, category);
 	}
 
 
 	@Test
 	public void testB() {
-		int category = ActivityChangeCategory.estimateCategory(10, 18);
+		int category = ActivityRating.estimateCategory(10, 18);
 		
-		assertEquals(ActivityChangeCategory.B, category);
+		assertEquals(ActivityRating.GROWING, category);
 	}
 
 
 	@Test
 	public void testC() {
-		int category = ActivityChangeCategory.estimateCategory(10, 11);
+		int category = ActivityRating.estimateCategory(10, 12);
 		
-		assertEquals(ActivityChangeCategory.C, category);
+		assertEquals(ActivityRating.STABLE, category);
+	}
+
+
+	@Test
+	public void testC2() {
+		int category = ActivityRating.estimateCategory(10, 8);
+		
+		assertEquals(ActivityRating.STABLE, category);
 	}
 
 
 	@Test
 	public void testD() {
-		int category = ActivityChangeCategory.estimateCategory(10, 8);
+		int category = ActivityRating.estimateCategory(10, 7);
 		
-		assertEquals(ActivityChangeCategory.D, category);
+		assertEquals(ActivityRating.DECAYING, category);
 	}
 
 
 	@Test
 	public void testE() {
-		int category = ActivityChangeCategory.estimateCategory(10, 1);
+		int category = ActivityRating.estimateCategory(11, 1);
 		
-		assertEquals(ActivityChangeCategory.E, category);
+		assertEquals(ActivityRating.DYING, category);
 	}
 
 
 	@Test
 	public void testF() {
-		int category = ActivityChangeCategory.estimateCategory(10, 0);
+		int category = ActivityRating.estimateCategory(10, 0);
 		
-		assertEquals(ActivityChangeCategory.F, category);
+		assertEquals(ActivityRating.UNKNOWN, category);
 	}
 }

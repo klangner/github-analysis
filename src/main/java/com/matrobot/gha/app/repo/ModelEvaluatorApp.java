@@ -1,4 +1,4 @@
-package com.matrobot.gha.app.stats;
+package com.matrobot.gha.app.repo;
 
 import java.io.IOException;
 import java.util.HashMap;
