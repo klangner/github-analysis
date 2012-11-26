@@ -7,7 +7,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.category.ActivityRating;
-import com.matrobot.gha.dataset.RepositoryRecord;
+import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 /**
  * Check repository activity throw 12 month.

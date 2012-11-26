@@ -7,10 +7,10 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.DatasetRecord;
+import com.matrobot.gha.dataset.EventRecord;
 import com.matrobot.gha.dataset.FolderDatasetReader;
-import com.matrobot.gha.dataset.RepositoryRecord;
 import com.matrobot.gha.dataset.SummaryRecord;
+import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 public class RepositoryParserApp {
 
@@ -28,7 +28,7 @@ public class RepositoryParserApp {
 	private void parseFolder() throws IOException{
 		
 		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
-		DatasetRecord	recordData;
+		EventRecord	recordData;
 		
 		info.eventCount = 0;
 		info.newRepositoryCount = 0;
@@ -41,7 +41,7 @@ public class RepositoryParserApp {
 	}
 
 	
-	private void updateRepositoryData(DatasetRecord recordData) {
+	private void updateRepositoryData(EventRecord recordData) {
 	
 		String url = recordData.getRepositoryId();
 		if(url != null){

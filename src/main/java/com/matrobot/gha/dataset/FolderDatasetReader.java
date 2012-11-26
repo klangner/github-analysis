@@ -14,7 +14,7 @@ import java.util.List;
 public class FolderDatasetReader{
 
 	private List<String> filePaths = new ArrayList<String>();
-	private Iterator<DatasetRecord> datasetReader;
+	private Iterator<EventRecord> datasetReader;
 			
 			
 	/**
@@ -64,9 +64,9 @@ public class FolderDatasetReader{
 	}
 
 
-	public DatasetRecord readNextRecord(){
+	public EventRecord readNextRecord(){
 		
-		DatasetRecord data = null;
+		EventRecord data = null;
 		
 		if(datasetReader != null){
 		

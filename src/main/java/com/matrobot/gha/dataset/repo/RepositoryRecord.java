@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.dataset.repo;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -20,7 +20,7 @@ import org.jfree.ui.RefineryUtilities;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.category.ActivityRating;
-import com.matrobot.gha.dataset.RepositoryRecord;
+import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 /**
  * Checked correlation:
