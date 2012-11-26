@@ -1,28 +1,26 @@
 package com.matrobot.gha.app.repo;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.category.ActivityRating;
+import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 public class StatsActivityApp {
 
-	private HashMap<String, RepositoryRecord> prevDataset;
-	private HashMap<String, RepositoryRecord> currentDataset;
-	private HashMap<String, RepositoryRecord> nextDataset;
+	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	private int[][] activity2category = new int[10][6];
 	private int[][] category2category = new int[10][6];
 	
 	
 	protected StatsActivityApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		prevDataset = RepositoryRecord.loadData(firstPath);
-		currentDataset = RepositoryRecord.loadData(secondPath);
-		nextDataset = RepositoryRecord.loadData(thirdPath);
+		datasets.addFromFile(firstPath);
+		datasets.addFromFile(secondPath);
+		datasets.addFromFile(thirdPath);
 	}
 	
 	private void printStats(int minActivity) {
@@ -33,10 +31,10 @@ public class StatsActivityApp {
 		double normalized = 0;
 		int counter = 0;
 		initCategoryProbabilities();
-		for(RepositoryRecord record : currentDataset.values()){
-			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
+		for(RepositoryRecord record : datasets.getDataset(1).values()){
+			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
 			double currentActivity = record.eventCount;
-			double nextActivity = (nextRecord != null) ? nextRecord.eventCount : 0;
+			double nextActivity = nextRecord.eventCount;
 			if(currentActivity > minActivity){
 				double diff = (nextActivity-currentActivity)/currentActivity;
 				stats.addValue(diff);
@@ -82,16 +80,9 @@ public class StatsActivityApp {
 	}
 
 	private int getOldActivityRating(RepositoryRecord current) {
-		int oldCategory;
-		RepositoryRecord prevRecord = prevDataset.get(current.repository);
-		if(prevRecord == null){
-			oldCategory = ActivityRating.UNKNOWN;
-		}
-		else{
-			oldCategory = ActivityRating.estimateCategory(
-					prevRecord.eventCount, current.eventCount);
-		}
-		return oldCategory;
+		
+		RepositoryRecord prevRecord = datasets.findRepository(0, current.repository);
+		return ActivityRating.estimateCategory(prevRecord.eventCount, current.eventCount);
 	}
 
 	
