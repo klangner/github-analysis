@@ -38,4 +38,9 @@ public class RepositoryDatasetList {
 		
 		return repository;
 	}
+
+
+	public int size() {
+		return datasets.size();
+	}
 }

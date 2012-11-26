@@ -1,16 +1,16 @@
 package com.matrobot.gha.app.insight;
 
 import java.io.IOException;
-import java.util.HashMap;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.category.ActivityRating;
+import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 /**
- * Check repository activity throw 12 month.
+ * Check repository activity for 12 months.
  * 1. Select repositories created on month 1
  * 2. For each month add project to the count if there is any activity
  * 3. Show number of active repositories for each month 
@@ -18,116 +18,94 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
  */
 public class RepositoryLifetimeInsight {
 
-	private HashMap<String, RepositoryRecord> prevDataset;
-	private HashMap<String, RepositoryRecord> currentDataset;
-	private HashMap<String, RepositoryRecord> nextDataset;
-	private int[][] activity2category = new int[10][6];
-	private int[][] category2category = new int[10][6];
+	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	
 	
-	protected RepositoryLifetimeInsight(String firstPath, String secondPath, String thirdPath) throws IOException{
+	protected void printMonthlyActivity() {
 		
-		prevDataset = RepositoryRecord.loadData(firstPath);
-		currentDataset = RepositoryRecord.loadData(secondPath);
-		nextDataset = RepositoryRecord.loadData(thirdPath);
-	}
-	
-	private void printStats(int minActivity) {
-		
-		DescriptiveStatistics stats = new DescriptiveStatistics();
-		int before = 0;
-		int after = 0;
-		double normalized = 0;
-		int counter = 0;
-		initCategoryProbabilities();
-		for(RepositoryRecord record : currentDataset.values()){
-			RepositoryRecord nextRecord = nextDataset.get(record.repository); 
-			double currentActivity = record.eventCount;
-			double nextActivity = (nextRecord != null) ? nextRecord.eventCount : 0;
-			if(currentActivity > minActivity){
-				double diff = (nextActivity-currentActivity)/currentActivity;
-				stats.addValue(diff);
-				updateCategoryProbability(record, nextActivity);
-				before += currentActivity;
-				after += nextActivity;
-				normalized += diff;
-				counter += 1;
+		List<String> createdRepositories = new ArrayList<String>();
+		for(RepositoryRecord repository : datasets.getDataset(0).values()){
+			if(repository.isNew){
+				createdRepositories.add(repository.repository);
 			}
 		}
-	
-		// Compute some statistics
-		int count = (int) stats.getN();
-		double mean = Math.floor(stats.getMean()*1000)/10;
-		double std = Math.floor(stats.getStandardDeviation()*100)/10;
 		
-		System.out.println("Before: " + (before/counter) + " After: " + (after/counter) + 
-				" normalized: " + (normalized/counter));
-		System.out.println("Mean: " + mean + "% SD: " + std + "% repositories: " + count);
+		System.out.println("Found: " + createdRepositories.size() + " new repositories.");
 		
-		printCategoryProbabilities();
+		for(int i = 1; i < datasets.size(); i++){
+			
+			int activeRepositoryCount = 0;
+			for(String name : createdRepositories){
+				RepositoryRecord record = datasets.findRepository(i, name);
+				if(record.pushEventCount > 0){
+					activeRepositoryCount += 1;
+				}
+			}
+			
+			System.out.println("Month: " + i + " active: " + activeRepositoryCount);
+		}
 	}
 
-	private void initCategoryProbabilities() {
+
+	protected void randomCheck( int projectCount) {
 		
-		for(int i = 0; i < 10; i++){
-			for(int j = 0; j < 6; j++){
-				activity2category[i][j] = 0;
-				category2category[i][j] = 0;
+		List<RepositoryRecord> createdRepositories = new ArrayList<RepositoryRecord>();
+		for(RepositoryRecord repository : datasets.getDataset(0).values()){
+			if(repository.isNew){
+				createdRepositories.add(repository);
 			}
 		}
-	}
 
-	private void updateCategoryProbability(RepositoryRecord current, double nextActivity) {
+		Random random = new Random();
 		
-		int category = ActivityRating.estimateCategory(current.eventCount, nextActivity);
-		int activity = (int) Math.log(current.eventCount);
-		activity2category[activity][category] += 1;
-		
-		int oldCategory = getOldActivityRating(current);
-		
-		category2category[oldCategory][category] += 1;
-	}
-
-	private int getOldActivityRating(RepositoryRecord current) {
-		int oldCategory;
-		RepositoryRecord prevRecord = prevDataset.get(current.repository);
-		if(prevRecord == null){
-			oldCategory = ActivityRating.UNKNOWN;
+		for(int i = 0; i < projectCount; i++){
+			
+			String name = createdRepositories.get(random.nextInt(createdRepositories.size())).repository;
+			int lastActivity = 0;
+			for(int j = datasets.size()-1; j > 0; j--){
+				RepositoryRecord record = datasets.findRepository(j, name);
+				if(record.pushEventCount > 0){
+					lastActivity = j;
+					break;
+				}
+			}
+			
+			System.out.println("Repository: " + name + " last activity month: " + lastActivity);
 		}
-		else{
-			oldCategory = ActivityRating.estimateCategory(
-					prevRecord.eventCount, current.eventCount);
-		}
-		return oldCategory;
-	}
 
-	
-	private void printCategoryProbabilities() {
-
-//		for(int i = 1; i < 7; i++){
-//			for(int j = 0; j < 6; j++){
-//				System.out.println("Activity: " + i + " category: " + j + " count: " + activity2category[i][j]);
-//			}
-//		}
 		
-		for(int i = 0; i < 6; i++){
-			for(int j = 0; j < 6; j++){
-				System.out.println("From: " + i + " to: " + j + 
-						" count: " + category2category[i][j]);
+		for(RepositoryRecord record : createdRepositories){
+			
+			RepositoryRecord lastRecord = datasets.findRepository(datasets.size()-1, record.repository);
+			if(lastRecord.pushEventCount > 0){
+				System.out.println("Still active: " + record.repository);
 			}
 		}
 		
 	}
 
+	
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		RepositoryLifetimeInsight app = new RepositoryLifetimeInsight(
-				Settings.DATASET_PATH+"2012/1/", 
-				Settings.DATASET_PATH+"2012/2/",
-				Settings.DATASET_PATH+"2012/3/");
-		app.printStats(Settings.MIN_ACTIVITY);
-
+		RepositoryLifetimeInsight app = new RepositoryLifetimeInsight();
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-10/"); 
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-11/"); 
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-12/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-1/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-2/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-3/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-4/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-5/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-6/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-7/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-8/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-9/");
+		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-10/");
+		
+//		app.printMonthlyActivity();
+		app.randomCheck(5);
+		
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");
 		
