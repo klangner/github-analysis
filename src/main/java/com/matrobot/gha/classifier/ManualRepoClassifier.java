@@ -21,16 +21,6 @@ public class ManualRepoClassifier implements IClassifier {
 		else{
 			return ActivityRating.DECAYING;
 		}
-		
-//		if(features[0] <= 1){
-//			return ActivityChangeCategory.DECAYING;
-//		}
-//		else if(features[0] <= 2){
-//			return ActivityChangeCategory.DECAYING;
-//		}
-//		else{
-//			return ActivityChangeCategory.STABLE;
-//		}
 	}
 
 }
