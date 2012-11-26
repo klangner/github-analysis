@@ -1,4 +1,4 @@
-package com.matrobot.gha.app.insight;
+package com.matrobot.gha.app.repo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
  * 3. Show number of active repositories for each month 
  * 4. Show how many repositories stay active after full year
  */
-public class RepositoryLifetimeInsight {
+public class RepositoryLifetimeApp {
 
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	
@@ -88,7 +88,7 @@ public class RepositoryLifetimeInsight {
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		RepositoryLifetimeInsight app = new RepositoryLifetimeInsight();
+		RepositoryLifetimeApp app = new RepositoryLifetimeApp();
 		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-10/"); 
 		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-11/"); 
 		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-12/");

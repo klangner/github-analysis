@@ -11,11 +11,13 @@ import com.matrobot.gha.dataset.EventRecord;
 import com.matrobot.gha.dataset.FolderDatasetReader;
 import com.matrobot.gha.dataset.SummaryRecord;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.dataset.user.UserRecord;
 
 public class RepositoryParserApp {
 
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
+	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
 	private SummaryRecord info = new SummaryRecord();
 	
 	
@@ -35,15 +37,16 @@ public class RepositoryParserApp {
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
 			updateRepositoryData(recordData);
+			updateUserData(recordData);
 		}
 		
 		info.repositoryCount = repos.size();
 	}
 
 	
-	private void updateRepositoryData(EventRecord recordData) {
+	private void updateRepositoryData(EventRecord event) {
 	
-		String url = recordData.getRepositoryId();
+		String url = event.getRepositoryId();
 		if(url != null){
 			
 			RepositoryRecord data = repos.get(url);
@@ -52,11 +55,11 @@ public class RepositoryParserApp {
 				data.repository = url;
 			}
 
-			if(recordData.isCreateRepository()){
+			if(event.isCreateRepository()){
 				data.isNew = true;
 				info.newRepositoryCount += 1;
 			}
-			else if(recordData.type.equals("PushEvent")){
+			else if(event.type.equals("PushEvent")){
 				data.pushEventCount += 1;
 			}
 
@@ -65,6 +68,23 @@ public class RepositoryParserApp {
 			
 			info.eventCount ++;
 		}
+	}
+
+	
+	private void updateUserData(EventRecord event) {
+	
+		UserRecord user = users.get(event.actor.login);
+		if( user == null){
+			user = new UserRecord();
+			user.name = event.actor.login;
+		}
+		
+		if(event.type.equals("PushEvent")){
+			user.pushEventCount += 1;
+		}
+		
+		user.eventCount += 1;
+		users.put(user.name, user);
 	}
 
 	
@@ -77,6 +97,11 @@ public class RepositoryParserApp {
 		try{
 			writer = new FileWriter(datasetPath+"/repositories.json");
 			json = gson.toJson(repos.values());
+			writer.write(json);
+			writer.close();
+			
+			writer = new FileWriter(datasetPath+"/users.json");
+			json = gson.toJson(users.values());
 			writer.write(json);
 			writer.close();
 			
@@ -93,6 +118,8 @@ public class RepositoryParserApp {
 	
 	public static void main(String[] args) throws IOException {
 
+//		parseMonth(2011, 10);
+		
 		// Parse 2011
 		for(int i = 10; i <= 12; i++){
 			parseMonth(2011, i);
@@ -100,7 +127,7 @@ public class RepositoryParserApp {
 
 		// Parse 2012
 		for(int i = 1; i <= 10; i++){
-			parseMonth(2012, i);
+//			parseMonth(2012, i);
 		}
 	}
 
@@ -112,7 +139,9 @@ public class RepositoryParserApp {
 		app.saveAsJson();
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Dataset: " + year + "-" + month);
-		System.out.println("Repos: " + app.repos.size() + " Events: " + app.info.eventCount);
+		System.out.println(	"Repos: " + app.repos.size() + 
+							" Users: " + app.users.size() + 
+							" Events: " + app.info.eventCount);
 		System.out.println("Parse time: " + time + "sec.");
 		System.out.println();
 	}

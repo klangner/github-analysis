@@ -12,7 +12,7 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
 public class StatsActivityApp {
 
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
-	private int[][] activity2category = new int[10][6];
+	private int[][] activity2category = new int[20][6];
 	private int[][] category2category = new int[10][6];
 	
 	
@@ -107,9 +107,9 @@ public class StatsActivityApp {
 
 		long time = System.currentTimeMillis();
 		StatsActivityApp app = new StatsActivityApp(
-				Settings.DATASET_PATH+"2012/1/", 
-				Settings.DATASET_PATH+"2012/2/",
-				Settings.DATASET_PATH+"2012/3/");
+				Settings.DATASET_PATH+"2011-10/", 
+				Settings.DATASET_PATH+"2011-11/",
+				Settings.DATASET_PATH+"2011-12/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
 		time = (System.currentTimeMillis()-time)/1000;
