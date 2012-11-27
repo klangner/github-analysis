@@ -5,23 +5,23 @@ import java.io.IOException;
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
-import com.matrobot.gha.model.IModel;
-import com.matrobot.gha.model.StaticModel;
+import com.matrobot.gha.regression.IRegression;
+import com.matrobot.gha.regression.StaticRegression;
 
-public class ModelEvaluatorApp {
+public class RegressionEvaluatorApp {
 
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	private int counter;
 	
 	
-	protected ModelEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
+	protected RegressionEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
 		datasets.addFromFile(firstPath);
 		datasets.addFromFile(secondPath);
 //		datasets.addFromFile(thirdPath);
 	}
 	
-	private double evaluate(IModel model, int minActivity) {
+	private double evaluate(IRegression model, int minActivity) {
 
 		counter = 0;
 		double sum = 0;
@@ -57,14 +57,14 @@ public class ModelEvaluatorApp {
 
 	public static void main(String[] args) throws IOException {
 
-		ModelEvaluatorApp app = new ModelEvaluatorApp(
+		RegressionEvaluatorApp app = new RegressionEvaluatorApp(
 				Settings.DATASET_PATH+"2012-1/", 
 				Settings.DATASET_PATH+"2012-2/",
 				Settings.DATASET_PATH+"2012-3/");
 		double score;
 
 		// Static classifier
-		score = app.evaluate(new StaticModel(0.6), Settings.MIN_ACTIVITY);
+		score = app.evaluate(new StaticRegression(0.32), Settings.MIN_ACTIVITY);
 		System.out.println("Static model: ");
 		System.out.println("  Error: " + score);
 		System.out.println();

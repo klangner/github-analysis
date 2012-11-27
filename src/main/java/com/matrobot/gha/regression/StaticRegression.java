@@ -1,10 +1,10 @@
-package com.matrobot.gha.model;
+package com.matrobot.gha.regression;
 
-public class StaticModel implements IModel {
+public class StaticRegression implements IRegression {
 
 	private double staticValue;
 	
-	public StaticModel(double value){
+	public StaticRegression(double value){
 		staticValue = value;
 	}
 	

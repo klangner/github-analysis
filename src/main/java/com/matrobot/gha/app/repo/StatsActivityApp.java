@@ -54,8 +54,6 @@ public class StatsActivityApp {
 		System.out.println("Before: " + (before/counter) + " After: " + (after/counter) + 
 				" normalized: " + (normalized/counter));
 		System.out.println("Mean: " + mean + "% SD: " + std + "% repositories: " + count);
-		
-		printCategoryProbabilities();
 	}
 
 	private void initCategoryProbabilities() {
@@ -86,7 +84,7 @@ public class StatsActivityApp {
 	}
 
 	
-	private void printCategoryProbabilities() {
+	protected void printCategoryProbabilities() {
 
 //		for(int i = 1; i < 7; i++){
 //			for(int j = 0; j < 6; j++){
@@ -107,9 +105,9 @@ public class StatsActivityApp {
 
 		long time = System.currentTimeMillis();
 		StatsActivityApp app = new StatsActivityApp(
-				Settings.DATASET_PATH+"2011-10/", 
-				Settings.DATASET_PATH+"2011-11/",
-				Settings.DATASET_PATH+"2011-12/");
+				Settings.DATASET_PATH+"2012-8/", 
+				Settings.DATASET_PATH+"2012-9/",
+				Settings.DATASET_PATH+"2012-10/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
 		time = (System.currentTimeMillis()-time)/1000;

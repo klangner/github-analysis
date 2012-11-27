@@ -138,12 +138,12 @@ public class RepositoryParserApp {
 		
 		// Parse 2011
 		for(int i = 10; i <= 12; i++){
-//			parseMonth(2011, i);
+			parseMonth(2011, i);
 		}
 
 		// Parse 2012
 		for(int i = 1; i <= 10; i++){
-			parseMonth(2012, i);
+//			parseMonth(2012, i);
 		}
 	}
 

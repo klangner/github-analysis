@@ -1,9 +1,11 @@
-package com.matrobot.gha.model;
+package com.matrobot.gha.regression;
 
-public interface IModel {
+public interface IRegression {
 
 	/**
 	 * Make forecast about future 
+	 * Param vector:
+	 *  params[0] = number of pushes
 	 */
 	public double makeForecast(double[] params);
 	
