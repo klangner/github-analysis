@@ -8,7 +8,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +22,8 @@ public class RepositoryRecord {
 	public int pushEventCount = 0;
 	public boolean isNew = false;
 	public boolean isFork = false;
+	
+	public Set<String> commiters = new HashSet<String>();
 	
 	
 	/**

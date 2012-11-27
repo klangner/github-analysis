@@ -2,11 +2,10 @@ package com.matrobot.gha.app.repo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
 
 /**
@@ -18,93 +17,76 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
  */
 public class RepositoryLifetimeApp {
 
-	private RepositoryDatasetList datasets = new RepositoryDatasetList();
+	private List<String> createdRepositories = new ArrayList<String>();
+	private List<Integer> activeProjectCounts = new ArrayList<Integer>();
+
 	
-	
-	protected void printMonthlyActivity() {
+	public RepositoryLifetimeApp(String firstMonthPath) throws IOException{
 		
-		List<String> createdRepositories = new ArrayList<String>();
-		for(RepositoryRecord repository : datasets.getDataset(0).values()){
-			if(repository.isNew){
-				createdRepositories.add(repository.repository);
+		initRepositories(firstMonthPath);
+	}
+	
+	
+	private void initRepositories(String filePath) throws IOException {
+
+		HashMap<String, RepositoryRecord> dataset = RepositoryRecord.loadData(filePath);
+		
+		for(RepositoryRecord repository : dataset.values()){
+			createdRepositories.add(repository.repository);
+		}
+		
+		activeProjectCounts.add(createdRepositories.size());
+	}
+
+
+	public void addMonth(String filePath) throws IOException {
+
+		HashMap<String, RepositoryRecord> dataset = RepositoryRecord.loadData(filePath);
+		List<String> nextRepositories = new ArrayList<String>();
+		
+		int activeRepositoryCount = 0;
+		for(String name : createdRepositories){
+			RepositoryRecord record = dataset.get(name);
+			if(record != null && record.pushEventCount > 0){
+				activeRepositoryCount += 1;
+				nextRepositories.add(name);
 			}
 		}
 		
-		System.out.println("Found: " + createdRepositories.size() + " new repositories.");
+		activeProjectCounts.add(activeRepositoryCount);
+		createdRepositories = nextRepositories;
+	}
+
+
+	public void printMonthlyActivity() {
 		
-		for(int i = 1; i < datasets.size(); i++){
+		for(int month = 0; month < activeProjectCounts.size(); month ++){
 			
-			int activeRepositoryCount = 0;
-			for(String name : createdRepositories){
-				RepositoryRecord record = datasets.findRepository(i, name);
-				if(record.pushEventCount > 0){
-					activeRepositoryCount += 1;
-				}
-			}
-			
-			System.out.println("Month: " + i + " active: " + activeRepositoryCount);
+			System.out.println("Month: " + month + " active: " + activeProjectCounts.get(month));
 		}
 	}
 
 
-	protected void randomCheck( int projectCount) {
-		
-		List<RepositoryRecord> createdRepositories = new ArrayList<RepositoryRecord>();
-		for(RepositoryRecord repository : datasets.getDataset(0).values()){
-			if(repository.isNew){
-				createdRepositories.add(repository);
-			}
-		}
-
-		Random random = new Random();
-		
-		for(int i = 0; i < projectCount; i++){
-			
-			String name = createdRepositories.get(random.nextInt(createdRepositories.size())).repository;
-			int lastActivity = 0;
-			for(int j = datasets.size()-1; j > 0; j--){
-				RepositoryRecord record = datasets.findRepository(j, name);
-				if(record.pushEventCount > 0){
-					lastActivity = j;
-					break;
-				}
-			}
-			
-			System.out.println("Repository: " + name + " last activity month: " + lastActivity);
-		}
-
-		
-		for(RepositoryRecord record : createdRepositories){
-			
-			RepositoryRecord lastRecord = datasets.findRepository(datasets.size()-1, record.repository);
-			if(lastRecord.pushEventCount > 0){
-				System.out.println("Still active: " + record.repository);
-			}
-		}
-		
-	}
-
-	
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		RepositoryLifetimeApp app = new RepositoryLifetimeApp();
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-10/"); 
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-11/"); 
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2011-12/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-1/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-2/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-3/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-4/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-5/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-6/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-7/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-8/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-9/");
-		app.datasets.addFromFile(Settings.DATASET_PATH+"2012-10/");
+		RepositoryLifetimeApp app = new RepositoryLifetimeApp(Settings.DATASET_PATH+"2011-10/");
 		
-//		app.printMonthlyActivity();
-		app.randomCheck(5);
+		app.addMonth(Settings.DATASET_PATH+"2011-11/"); 
+		app.addMonth(Settings.DATASET_PATH+"2011-12/");
+		app.addMonth(Settings.DATASET_PATH+"2012-1/");
+		app.addMonth(Settings.DATASET_PATH+"2012-2/");
+		app.addMonth(Settings.DATASET_PATH+"2012-3/");
+		app.addMonth(Settings.DATASET_PATH+"2012-4/");
+		app.addMonth(Settings.DATASET_PATH+"2012-5/");
+		app.addMonth(Settings.DATASET_PATH+"2012-6/");
+		app.addMonth(Settings.DATASET_PATH+"2012-7/");
+		app.addMonth(Settings.DATASET_PATH+"2012-8/");
+		app.addMonth(Settings.DATASET_PATH+"2012-9/");
+		app.addMonth(Settings.DATASET_PATH+"2012-10/");
+		
+		System.out.println("Create report");
+		app.printMonthlyActivity();
 		
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");

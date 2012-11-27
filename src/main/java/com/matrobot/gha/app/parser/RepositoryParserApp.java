@@ -61,6 +61,7 @@ public class RepositoryParserApp {
 			}
 			else if(event.type.equals("PushEvent")){
 				data.pushEventCount += 1;
+//				data.commiters.add(event.actor.login);
 			}
 
 			data.eventCount += 1;
@@ -88,6 +89,19 @@ public class RepositoryParserApp {
 	}
 
 	
+	private int getRepoCommiters() {
+
+		int count = 0;
+		for(RepositoryRecord record : repos.values()){
+			if(record.commiters.size() > 1){
+				count += 1;
+				System.out.println(record.repository);
+			}
+		}
+		
+		return count;
+	}
+
 	public void saveAsJson() {
 	
 		FileWriter writer;
@@ -118,11 +132,11 @@ public class RepositoryParserApp {
 	
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2011, 10);
+		parseMonth(2012, 10);
 		
 		// Parse 2011
 		for(int i = 10; i <= 12; i++){
-			parseMonth(2011, i);
+//			parseMonth(2011, i);
 		}
 
 		// Parse 2012
@@ -142,6 +156,7 @@ public class RepositoryParserApp {
 		System.out.println(	"Repos: " + app.repos.size() + 
 							" Users: " + app.users.size() + 
 							" Events: " + app.info.eventCount);
+		System.out.println("Repos with more then 1 commiter:" + app.getRepoCommiters());
 		System.out.println("Parse time: " + time + "sec.");
 		System.out.println();
 	}
