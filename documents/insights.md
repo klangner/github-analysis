@@ -4,7 +4,8 @@
 
 There is correlation between:
 
-  * Number of push events in old month and number of push events in next month r=0.655
+  * Number of push events next month and number of push events in previous month r=0.655
+  * Number of push next month and number open opened issue prev motnh r=0.250
 
 ## No correlations
 

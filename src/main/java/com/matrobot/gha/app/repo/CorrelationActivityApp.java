@@ -42,16 +42,26 @@ public class CorrelationActivityApp extends ApplicationFrame {
 		datasets.addFromFile(secondPath);
 		datasets.addFromFile(thirdPath);
 
-		JPanel jpanel = createChartPanel();
-        jpanel.setPreferredSize(new Dimension(800, 600));
-        add(jpanel);
     }
 
+	
+	public void showChart(){
+
+		ApplicationFrame frame = new ApplicationFrame("Correlation");
+		
+		JPanel jpanel = createChartPanel();
+        jpanel.setPreferredSize(new Dimension(800, 600));
+        frame.add(jpanel);
+		frame.pack();
+        RefineryUtilities.centerFrameOnScreen(frame);
+        frame.setVisible(true);
+
+	}
 
     private JPanel createChartPanel() {
     	
         JFreeChart jfreechart = ChartFactory.createScatterPlot(
-            "Activity correlation", "Month 1", "Month 2", createChartDataset(),
+            "Activity correlation", "Pushes", "Issues", createChartDataset(),
             PlotOrientation.VERTICAL, true, true, false);
         
         XYPlot plot = (XYPlot) jfreechart.getPlot();
@@ -67,9 +77,11 @@ public class CorrelationActivityApp extends ApplicationFrame {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
         XYSeries series = new XYSeries("Activity");
 
-		for(RepositoryRecord record : datasets.getDataset(1).values()){
-			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
-	        series.add(record.pushEventCount, nextRecord.pushEventCount);
+		for(RepositoryRecord record : datasets.getDataset(0).values()){
+			if(record.pushEventCount > 100){
+				RepositoryRecord nextRecord = datasets.findRepository(1, record.repository);
+				series.add(record.issueOpenEventCount, nextRecord.pushEventCount);
+			}
 		}
         
         xySeriesCollection.addSeries(series);
@@ -82,10 +94,12 @@ public class CorrelationActivityApp extends ApplicationFrame {
 		Vector<Double> x = new Vector<Double>();
 		Vector<Double> y = new Vector<Double>();
 		
-		for(RepositoryRecord record : datasets.getDataset(1).values()){
-			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
-			x.add((double) record.pushEventCount);
-			y.add((double) nextRecord.pushEventCount);
+		for(RepositoryRecord record : datasets.getDataset(0).values()){
+			RepositoryRecord nextRecord = datasets.findRepository(1, record.repository); 
+			if(nextRecord.pushEventCount > 10 && record.issueOpenEventCount > 0){
+				x.add((double) record.issueOpenEventCount);
+				y.add((double) nextRecord.pushEventCount);
+			}
 		}
 		
 		double[] a = new double[x.size()];
@@ -105,13 +119,12 @@ public class CorrelationActivityApp extends ApplicationFrame {
    public static void main(String args[]) throws IOException {
 	   
         CorrelationActivityApp app = new CorrelationActivityApp(
-        		Settings.DATASET_PATH+"2011-10/", 
-        		Settings.DATASET_PATH+"2011-11/",
-        		Settings.DATASET_PATH+"2011-12/");
+        		Settings.DATASET_PATH+"2012-8/", 
+        		Settings.DATASET_PATH+"2012-9/",
+        		Settings.DATASET_PATH+"2012-10/");
         
         System.out.println("Correlation=" + app.calculateCorrelationCoff());
-        app.pack();
-        RefineryUtilities.centerFrameOnScreen(app);
-        app.setVisible(true);
+        
+        app.showChart();
     }
 }

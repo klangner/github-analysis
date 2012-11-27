@@ -61,7 +61,9 @@ public class RepositoryParserApp {
 			}
 			else if(event.type.equals("PushEvent")){
 				data.pushEventCount += 1;
-//				data.commiters.add(event.actor.login);
+			}
+			else if(event.type.equals("IssuesEvent")){
+				data.issueOpenEventCount += 1;
 			}
 
 			data.eventCount += 1;
@@ -132,7 +134,7 @@ public class RepositoryParserApp {
 	
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2012, 10);
+//		parseMonth(2012, 10);
 		
 		// Parse 2011
 		for(int i = 10; i <= 12; i++){
@@ -141,7 +143,7 @@ public class RepositoryParserApp {
 
 		// Parse 2012
 		for(int i = 1; i <= 10; i++){
-//			parseMonth(2012, i);
+			parseMonth(2012, i);
 		}
 	}
 

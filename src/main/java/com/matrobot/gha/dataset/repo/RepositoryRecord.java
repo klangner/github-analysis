@@ -20,6 +20,7 @@ public class RepositoryRecord {
 	public String repository;
 	public int eventCount = 0;
 	public int pushEventCount = 0;
+	public int issueOpenEventCount = 0;
 	public boolean isNew = false;
 	public boolean isFork = false;
 	
