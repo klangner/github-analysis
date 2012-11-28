@@ -21,9 +21,10 @@ public class RegressionEvaluatorApp {
 //		datasets.addFromFile(thirdPath);
 	}
 	
-	private double evaluate(IRegression model, int minActivity) {
+	private void evaluate(IRegression model, int minActivity) {
 
 		counter = 0;
+		double sumOfErrors = 0;
 		double sum = 0;
 		for(RepositoryRecord record : datasets.getDataset(0).values()){
 			RepositoryRecord nextRecord = datasets.findRepository(1, record.repository); 
@@ -35,12 +36,14 @@ public class RegressionEvaluatorApp {
 				double forecast = model.makeForecast(params);
 				
 				double error = Math.pow(nextActivity-forecast, 2); 
-				sum += error;
+				sumOfErrors += error;
+				sum += forecast;
 				counter += 1;
 			}
 		}
 
-		return Math.sqrt(sum/counter);
+		System.out.println(" Forecast mean: " + (sum/counter));
+		System.out.println(" SE: " + Math.sqrt(sumOfErrors/counter));
 	}
 
 	
@@ -58,15 +61,13 @@ public class RegressionEvaluatorApp {
 	public static void main(String[] args) throws IOException {
 
 		RegressionEvaluatorApp app = new RegressionEvaluatorApp(
-				Settings.DATASET_PATH+"2012-1/", 
-				Settings.DATASET_PATH+"2012-2/",
-				Settings.DATASET_PATH+"2012-3/");
-		double score;
+				Settings.DATASET_PATH+"2011-10/", 
+				Settings.DATASET_PATH+"2011-11/",
+				Settings.DATASET_PATH+"2011-12/");
 
 		// Static classifier
-		score = app.evaluate(new StaticRegression(0.32), Settings.MIN_ACTIVITY);
 		System.out.println("Static model: ");
-		System.out.println("  Error: " + score);
+		app.evaluate(new StaticRegression(0.36), Settings.MIN_ACTIVITY);
 		System.out.println();
 	}
 	

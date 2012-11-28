@@ -134,11 +134,11 @@ public class RepositoryParserApp {
 	
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2012, 10);
+		parseMonth(2011, 9);
 		
 		// Parse 2011
-		for(int i = 10; i <= 12; i++){
-			parseMonth(2011, i);
+		for(int i = 9; i <= 12; i++){
+//			parseMonth(2011, i);
 		}
 
 		// Parse 2012
