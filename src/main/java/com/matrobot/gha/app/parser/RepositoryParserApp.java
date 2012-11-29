@@ -97,7 +97,7 @@ public class RepositoryParserApp {
 	}
 
 	
-	private int getRepoCommiters() {
+	protected int getRepoCommiters() {
 
 		int count = 0;
 		for(RepositoryRecord record : repos.values()){
@@ -117,7 +117,7 @@ public class RepositoryParserApp {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		try{
-			writer = new FileWriter(datasetPath+"/repositories.json");
+			writer = new FileWriter(datasetPath+"/repositories.json", false);
 			json = gson.toJson(repos.values());
 			writer.write(json);
 			writer.close();
@@ -138,10 +138,27 @@ public class RepositoryParserApp {
 	}
 
 	
+	public void saveAsCSV() {
+		
+		FileWriter writer;
+		
+		try{
+			writer = new FileWriter(datasetPath+"/repositories.csv", false);
+			for(RepositoryRecord record : repos.values()){
+				String line = record.repository + ", " + record.pushEventCount + "\n"; 
+				writer.write(line);
+			}
+			writer.close();
+			
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
+	
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2012, 3);
-		parseMonth(2012, 10);
+		parseMonth(2012, 3);
 		
 		// Parse 2011
 		for(int i = 9; i <= 12; i++){
@@ -160,12 +177,13 @@ public class RepositoryParserApp {
 		long time = System.currentTimeMillis();
 		RepositoryParserApp app = new RepositoryParserApp(year, month);
 		app.saveAsJson();
+		app.saveAsCSV();
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Dataset: " + year + "-" + month);
 		System.out.println(	"Repos: " + app.repos.size() + 
 							" Users: " + app.users.size() + 
 							" Events: " + app.info.eventCount);
-		System.out.println("Repos with more then 1 commiter:" + app.getRepoCommiters());
+//		System.out.println("Repos with more then 1 commiter:" + app.getRepoCommiters());
 		System.out.println("Parse time: " + time + "sec.");
 		System.out.println();
 	}

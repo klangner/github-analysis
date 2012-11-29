@@ -34,13 +34,13 @@ public class StatsActivityApp {
 		int activity = 0;
 		for(RepositoryRecord record : dataset1.values()){
 			RepositoryRecord nextRecord = dataset2.get(record.repository); 
-			double currentActivity = record.pushEventCount;
-			double nextActivity = (nextRecord!=null)? nextRecord.pushEventCount: 0;
-//			if(currentActivity > minActivity){
+			double currentActivity = record.eventCount;
+			double nextActivity = (nextRecord!=null)? nextRecord.eventCount: 0;
+			if(currentActivity > minActivity){
 				double diff = (nextActivity-currentActivity)/currentActivity;
 				stats.addValue(diff);
 				activity += currentActivity;
-//			}
+			}
 		}
 	
 		// Compute some statistics
@@ -55,59 +55,64 @@ public class StatsActivityApp {
 
 	public static void main(String[] args) throws IOException {
 
+//		StatsActivityApp app = new StatsActivityApp(Settings.DATASET_PATH+"2012-9/");
+//		app.setNextDataset(Settings.DATASET_PATH+"2012-10/");
+//		app.printStats(Settings.MIN_ACTIVITY);
+		
+		statsForAll();
+		
+	}
+
+	public static void statsForAll() throws IOException {
 		long time = System.currentTimeMillis();
 		StatsActivityApp app = new StatsActivityApp(Settings.DATASET_PATH+"2011-9/");
 		
-		System.out.println("2011-9");
+		System.out.println("2011-10");
 		app.setNextDataset(Settings.DATASET_PATH+"2011-10/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2011-10");
+		System.out.println("2011-11");
 		app.setNextDataset(Settings.DATASET_PATH+"2011-11/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2011-11");
+		System.out.println("2011-12");
 		app.setNextDataset(Settings.DATASET_PATH+"2011-12/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2011-12");
+		System.out.println("2012-1");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-1/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-1");
+		System.out.println("2012-2");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-2/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-2");
+		System.out.println("2012-3");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-3/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-3");
+		System.out.println("2012-4");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-4/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-4");
+		System.out.println("2012-5");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-5/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-5");
+		System.out.println("2012-6");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-6/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-6");
+		System.out.println("2012-7");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-7/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-7");
+		System.out.println("2012-8");
 		app.setNextDataset(Settings.DATASET_PATH+"2012-8/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
-		System.out.println("2012-8");
-		app.setNextDataset(Settings.DATASET_PATH+"2012-9/");
-		app.printStats(Settings.MIN_ACTIVITY);
-
 		System.out.println("2012-9");
-		app.setNextDataset(Settings.DATASET_PATH+"2012-10/");
+		app.setNextDataset(Settings.DATASET_PATH+"2012-9/");
 		app.printStats(Settings.MIN_ACTIVITY);
 
 		System.out.println("2012-10");
@@ -116,7 +121,6 @@ public class StatsActivityApp {
 
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");
-		
 	}
 	
 }

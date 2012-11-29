@@ -69,10 +69,12 @@ public class EventRecord {
 			return null;
 		}
 		
-		int index = id.indexOf("/repos/");
-		if(index > 0){
-			id = id.substring(index+7);
+		String[] tokens = id.split("\\/");
+		int count = tokens.length;
+		if(count > 2){
+			id = tokens[count-2] + "/" + tokens[count-1];
 		}
+		
 		return id;
 	}
 	
