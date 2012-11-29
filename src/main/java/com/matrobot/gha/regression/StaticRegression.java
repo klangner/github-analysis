@@ -10,7 +10,7 @@ public class StaticRegression implements IRegression {
 	
 	
 	@Override
-	public double makeForecast(double[] params){
+	public double predict(double[] params){
 		return staticValue*params[0];
 	}
 

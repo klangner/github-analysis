@@ -7,7 +7,7 @@ public interface IRegression {
 	 * Param vector:
 	 *  params[0] = number of pushes
 	 */
-	public double makeForecast(double[] params);
+	public double predict(double[] params);
 	
 	/**
 	 * Get expected error.
