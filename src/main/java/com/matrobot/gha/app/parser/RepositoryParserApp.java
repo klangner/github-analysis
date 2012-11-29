@@ -27,6 +27,12 @@ public class RepositoryParserApp {
 		parseFolder();
 	}
 
+	public RepositoryParserApp(String folder) throws IOException{
+		
+		datasetPath = Settings.DATASET_PATH + folder; 
+		parseFolder();
+	}
+
 	private void parseFolder() throws IOException{
 		
 		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
@@ -38,6 +44,7 @@ public class RepositoryParserApp {
 			
 			updateRepositoryData(recordData);
 			updateUserData(recordData);
+			info.eventCount ++;
 		}
 		
 		info.repositoryCount = repos.size();
@@ -69,25 +76,24 @@ public class RepositoryParserApp {
 			data.eventCount += 1;
 			repos.put(url, data);
 			
-			info.eventCount ++;
 		}
 	}
 
 	
 	private void updateUserData(EventRecord event) {
 	
-		UserRecord user = users.get(event.actor.login);
-		if( user == null){
-			user = new UserRecord();
-			user.name = event.actor.login;
-		}
-		
-		if(event.type.equals("PushEvent")){
-			user.pushEventCount += 1;
-		}
-		
-		user.eventCount += 1;
-		users.put(user.name, user);
+//		UserRecord user = users.get(event.actor.login);
+//		if( user == null){
+//			user = new UserRecord();
+//			user.name = event.actor.login;
+//		}
+//		
+//		if(event.type.equals("PushEvent")){
+//			user.pushEventCount += 1;
+//		}
+//		
+//		user.eventCount += 1;
+//		users.put(user.name, user);
 	}
 
 	
@@ -134,7 +140,8 @@ public class RepositoryParserApp {
 	
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2011, 9);
+//		parseMonth(2012, 3);
+		parseMonth(2012, 10);
 		
 		// Parse 2011
 		for(int i = 9; i <= 12; i++){

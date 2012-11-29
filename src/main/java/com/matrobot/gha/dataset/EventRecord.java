@@ -50,7 +50,7 @@ public class EventRecord {
 	public Repo repository;
 	public String type;
 	public Payload payload;
-	public Actor actor;
+//	public Actor actor;
 	
 	
 	/**
