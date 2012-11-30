@@ -15,16 +15,16 @@ There isn't any correlation between:
   * current activity rating and next activity rating
 
 ## Activity in repository after 1 year
-  * Month 0: 84322 repositories created
-  * Month 1 active: 15102
-  * Month 2 active: 8018
-  * Month 3 active: 6125
-  * Month 4 active: 5082
-  * Month 5 active: 3193
-  * Month 6 active: 3690
-  * Month 7 active: 3493
-  * Month 8 active: 2991
-  * Month 9 active: 2745
-  * Month 10 active: 2500
-  * Month 11 active: 2354
-  * Month 12 active: 1214
+  * Month: 0 active: 234906
+  * Month: 1 active: 60613
+  * Month: 2 active: 30853
+  * Month: 3 active: 20210
+  * Month: 4 active: 14956
+  * Month: 5 active: 11779
+  * Month: 6 active: 9576
+  * Month: 7 active: 8042
+  * Month: 8 active: 6815
+  * Month: 9 active: 5946
+  * Month: 10 active: 5268
+  * Month: 11 active: 4658
+  * Month: 12 active: 4229
