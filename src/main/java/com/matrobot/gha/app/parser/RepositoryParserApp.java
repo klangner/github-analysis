@@ -1,8 +1,12 @@
 package com.matrobot.gha.app.parser;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.zip.GZIPOutputStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,10 +23,14 @@ public class RepositoryParserApp {
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
 	private SummaryRecord info = new SummaryRecord();
+	private int year;
+	private int month;
 	
 	
 	public RepositoryParserApp(int year, int month) throws IOException{
 		
+		this.year = year;
+		this.month = month;
 		datasetPath = Settings.DATASET_PATH + year + "-" + month; 
 		parseFolder();
 	}
@@ -138,14 +146,16 @@ public class RepositoryParserApp {
 	}
 
 	
-	public void saveAsCSV() {
-		
-		FileWriter writer;
+public void saveAsCSV() {
 		
 		try{
-			writer = new FileWriter(datasetPath+"/repositories.csv", false);
+			String filename = "repositories-" + year + "-" + month + ".csv.gz";
+			FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+			Writer writer = new OutputStreamWriter(new GZIPOutputStream(fos), "UTF-8");
 			for(RepositoryRecord record : repos.values()){
-				String line = record.repository + ", " + record.pushEventCount + "\n"; 
+				String line = record.repository + "," +
+								year + "," + month  + "," +
+								record.pushEventCount + "\n"; 
 				writer.write(line);
 			}
 			writer.close();
@@ -154,11 +164,12 @@ public class RepositoryParserApp {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
+	
 
 	
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2012, 3);
+		parseMonth(2011, 9);
 		
 		// Parse 2011
 		for(int i = 9; i <= 12; i++){
