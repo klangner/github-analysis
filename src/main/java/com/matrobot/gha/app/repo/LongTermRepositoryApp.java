@@ -1,6 +1,9 @@
 package com.matrobot.gha.app.repo;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +18,13 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
  * 3. Show number of active repositories for each month 
  * 4. Show how many repositories stay active after full year
  */
-public class RepositoryLifetimeApp {
+public class LongTermRepositoryApp {
 
 	private List<String> createdRepositories = new ArrayList<String>();
 	private List<Integer> activeProjectCounts = new ArrayList<Integer>();
 
 	
-	public RepositoryLifetimeApp(String firstMonthPath) throws IOException{
+	public LongTermRepositoryApp(String firstMonthPath) throws IOException{
 		
 		initRepositories(firstMonthPath);
 	}
@@ -67,10 +70,31 @@ public class RepositoryLifetimeApp {
 	}
 
 
+	public void saveAsCSV() {
+		
+		try{
+			String filename = "top_projects.csv";
+			FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+			Writer writer = new OutputStreamWriter(fos, "UTF-8");
+			writer.write("name\n");
+			for(int i = 0; i < 100; i ++){
+			
+				int index = (int) (Math.random()*createdRepositories.size());
+				String name = createdRepositories.remove(index);
+				writer.write(name + "\n");
+			}
+			writer.close();
+			
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
+	
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		RepositoryLifetimeApp app = new RepositoryLifetimeApp(Settings.DATASET_PATH+"2011-10/");
+		LongTermRepositoryApp app = new LongTermRepositoryApp(Settings.DATASET_PATH+"2011-10/");
 		
 		app.addMonth(Settings.DATASET_PATH+"2011-11/"); 
 		app.addMonth(Settings.DATASET_PATH+"2011-12/");
@@ -84,9 +108,11 @@ public class RepositoryLifetimeApp {
 		app.addMonth(Settings.DATASET_PATH+"2012-8/");
 		app.addMonth(Settings.DATASET_PATH+"2012-9/");
 		app.addMonth(Settings.DATASET_PATH+"2012-10/");
+		app.addMonth(Settings.DATASET_PATH+"2012-10/");
 		
 		System.out.println("Create report");
 		app.printMonthlyActivity();
+		app.saveAsCSV();
 		
 		time = (System.currentTimeMillis()-time)/1000;
 		System.out.println("Time: " + time + "sec.");

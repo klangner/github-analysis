@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.zip.GZIPOutputStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +18,7 @@ import com.matrobot.gha.dataset.user.UserRecord;
 
 public class RepositoryParserApp {
 
+	private static final int MIN_ACTIVITY = 10;
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -130,11 +130,11 @@ public class RepositoryParserApp {
 			writer.write(json);
 			writer.close();
 			
-			writer = new FileWriter(datasetPath+"/users.json");
-			json = gson.toJson(users.values());
-			writer.write(json);
-			writer.close();
-			
+//			writer = new FileWriter(datasetPath+"/users.json");
+//			json = gson.toJson(users.values());
+//			writer.write(json);
+//			writer.close();
+//			
 			writer = new FileWriter(datasetPath+"/summary.json");
 			json = gson.toJson(info);
 			writer.write(json);
@@ -146,17 +146,20 @@ public class RepositoryParserApp {
 	}
 
 	
-public void saveAsCSV() {
+	public void saveAsCSV() {
 		
 		try{
-			String filename = "repositories-" + year + "-" + month + ".csv.gz";
+			String filename = "repositories-" + year + "-" + month + ".csv";
 			FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
-			Writer writer = new OutputStreamWriter(new GZIPOutputStream(fos), "UTF-8");
+			Writer writer = new OutputStreamWriter(fos, "UTF-8");
+			writer.write("name,year,month,push_count\n");
 			for(RepositoryRecord record : repos.values()){
-				String line = record.repository + "," +
-								year + "," + month  + "," +
-								record.pushEventCount + "\n"; 
-				writer.write(line);
+				if(record.pushEventCount >= MIN_ACTIVITY){
+					String line = record.repository + "," +
+									year + "," + month  + "," +
+									record.pushEventCount + "\n"; 
+					writer.write(line);
+				}
 			}
 			writer.close();
 			
@@ -169,7 +172,7 @@ public void saveAsCSV() {
 	
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2011, 9);
+		parseMonth(2012, 11);
 		
 		// Parse 2011
 		for(int i = 9; i <= 12; i++){
@@ -177,7 +180,7 @@ public void saveAsCSV() {
 		}
 
 		// Parse 2012
-		for(int i = 1; i <= 10; i++){
+		for(int i = 1; i <= 11; i++){
 //			parseMonth(2012, i);
 		}
 	}
@@ -186,15 +189,17 @@ public void saveAsCSV() {
 	private static void parseMonth(int year, int month) throws IOException {
 		
 		long time = System.currentTimeMillis();
+
+		System.out.println("Dataset: " + year + "-" + month);
 		RepositoryParserApp app = new RepositoryParserApp(year, month);
 		app.saveAsJson();
 		app.saveAsCSV();
 		time = (System.currentTimeMillis()-time)/1000;
-		System.out.println("Dataset: " + year + "-" + month);
 		System.out.println(	"Repos: " + app.repos.size() + 
 							" Users: " + app.users.size() + 
 							" Events: " + app.info.eventCount);
 //		System.out.println("Repos with more then 1 commiter:" + app.getRepoCommiters());
+		
 		System.out.println("Parse time: " + time + "sec.");
 		System.out.println();
 	}
