@@ -8,11 +8,4 @@ public interface IRegression {
 	 *  params[0] = number of pushes
 	 */
 	public double predict(double[] params);
-	
-	/**
-	 * Get expected error.
-	 * We assume that forecast outcome is taken from normal distribution (mean)
-	 * And error is normalized SD.
-	 */
-	public double getExpectedError();
 }

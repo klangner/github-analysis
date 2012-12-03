@@ -8,35 +8,43 @@ import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
 import com.matrobot.gha.regression.CustomLinearRegression;
 import com.matrobot.gha.regression.IRegression;
-import com.matrobot.gha.regression.ApacheLinearRegression;
+import com.matrobot.gha.regression.MultivariableRegression;
 import com.matrobot.gha.regression.StaticRegression;
 
 public class RegressionEvaluatorApp {
 
+	private static final int MIN_ACTIVITY = 10;
+	class TestSet{
+		double[][] inputs;
+		double[] outputs;
+	}
+	
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	private int counter;
+	protected TestSet testSet;
+
 	
 	
 	protected RegressionEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
 		datasets.addFromFile(firstPath);
 		datasets.addFromFile(secondPath);
-//		datasets.addFromFile(thirdPath);
+		datasets.addFromFile(thirdPath);
+		
+		testSet = getMultvariableTrainingData();
 	}
 	
-	private void evaluate(IRegression model, int minActivity) {
+	private void evaluate(IRegression model) {
 
 		counter = 0;
 		double sumOfErrors = 0;
 		double sum = 0;
-		double[][] trainingData = getTrainingData();
-		for(int i = 0; i < trainingData[0].length; i++){
+		
+		for(int i = 0; i < testSet.outputs.length; i++){
 			
-			double[] params = new double[1];
-			params[0] = trainingData[0][i];
-			double forecast = model.predict(params);
+			double forecast = model.predict(testSet.inputs[i]);
 			
-			double error = Math.pow(trainingData[1][i]-forecast, 2); 
+			double error = Math.pow(testSet.outputs[i]-forecast, 2); 
 			sumOfErrors += error;
 			sum += forecast;
 			counter += 1;
@@ -47,49 +55,60 @@ public class RegressionEvaluatorApp {
 	}
 
 	
-	private double[][] getTrainingData() {
+	/**
+	 * Training data for single feature vector
+	 * @return
+	 */
+	private TestSet getMultvariableTrainingData() {
 	
-		Vector<Double> x = new Vector<Double>();
+		Vector<Double> x1 = new Vector<Double>();
+		Vector<Double> x2 = new Vector<Double>();
 		Vector<Double> y = new Vector<Double>();
 		
-		for(RepositoryRecord record : datasets.getDataset(0).values()){
-			RepositoryRecord nextRecord = datasets.findRepository(1, record.repository); 
-			if(nextRecord.pushEventCount > 10){
-				x.add((double) record.pushEventCount);
+		for(RepositoryRecord record : datasets.getDataset(1).values()){
+			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
+			RepositoryRecord prevRecord = datasets.findRepository(0, record.repository); 
+			if(nextRecord.pushEventCount > MIN_ACTIVITY){
+				x1.add((double) record.pushEventCount);
+				double prevCount = (prevRecord!=null)?prevRecord.pushEventCount:0; 
+				x2.add(prevCount);
 				y.add((double) nextRecord.pushEventCount);
 			}
 		}
 		
-		double[][] data = new double[2][x.size()];
-		for(int i = 0; i < x.size(); i++){
-			data[0][i] = x.get(i);
-			data[1][i] = y.get(i);
+		TestSet testSet = new TestSet();
+		testSet.inputs = new double[y.size()][2];
+		testSet.outputs = new double[y.size()];
+		for(int i = 0; i < y.size(); i++){
+			testSet.inputs[i][0] = x1.get(i);
+			testSet.inputs[i][1] = x2.get(i);
+			testSet.outputs[i] = y.get(i);
 		}
 
-		return data;
+		return testSet;
 	}
 
+	
 	public static void main(String[] args) throws IOException {
 
 		RegressionEvaluatorApp app = new RegressionEvaluatorApp(
+				Settings.DATASET_PATH+"2012-8/", 
 				Settings.DATASET_PATH+"2012-9/", 
-				Settings.DATASET_PATH+"2012-10/",
-				Settings.DATASET_PATH+"2011-12/");
+				Settings.DATASET_PATH+"2012-10/");
 
 		// Static classifier
 		System.out.println("Static model: ");
-		app.evaluate(new StaticRegression(0.60), Settings.MIN_ACTIVITY);
+		app.evaluate(new StaticRegression(0.60));
 		System.out.println();
 		
-		double[][] trainingData = app.getTrainingData();
-		IRegression regression = CustomLinearRegression.train(trainingData[0], trainingData[1]);
+		IRegression regression = CustomLinearRegression.train(app.testSet.inputs, app.testSet.outputs);
 		System.out.println("Gradiant descend: ");
-		app.evaluate(regression, Settings.MIN_ACTIVITY);
+		app.evaluate(regression);
 		System.out.println();
 		
-		regression = ApacheLinearRegression.train(trainingData[0], trainingData[1]);
-		System.out.println("Simple descend: ");
-		app.evaluate(regression, Settings.MIN_ACTIVITY);
+		regression = MultivariableRegression.train(app.testSet.inputs, app.testSet.outputs);
+		System.out.println("Multivariable: ");
+		app.evaluate(regression);
 		System.out.println();
 		
 	}

@@ -13,11 +13,4 @@ public class StaticRegression implements IRegression {
 	public double predict(double[] params){
 		return staticValue*params[0];
 	}
-
-
-	@Override
-	public double getExpectedError() {
-		return 0;
-	}
-
 }

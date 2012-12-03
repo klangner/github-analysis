@@ -18,7 +18,7 @@ import com.matrobot.gha.dataset.user.UserRecord;
 
 public class RepositoryParserApp {
 
-	private static final int MIN_ACTIVITY = 10;
+	private static final int MIN_ACTIVITY = 5;
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -174,15 +174,16 @@ public class RepositoryParserApp {
 
 		parseMonth(2012, 11);
 		
+		// Parse 2012
+		for(int i = 1; i <= 11; i++){
+//			parseMonth(2012, i);
+		}
+		
 		// Parse 2011
 		for(int i = 9; i <= 12; i++){
 //			parseMonth(2011, i);
 		}
 
-		// Parse 2012
-		for(int i = 1; i <= 11; i++){
-//			parseMonth(2012, i);
-		}
 	}
 
 	
