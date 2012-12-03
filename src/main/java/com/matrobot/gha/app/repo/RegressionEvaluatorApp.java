@@ -3,8 +3,6 @@ package com.matrobot.gha.app.repo;
 import java.io.IOException;
 import java.util.Vector;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
@@ -70,7 +68,7 @@ public class RegressionEvaluatorApp {
 			testSet.outputs[i] = y.get(i);
 		}
 	
-		scaleFeatures(testSet.inputs);
+//		scaleFeatures(testSet.inputs);
 		
 		return testSet;
 	}
@@ -106,20 +104,20 @@ public class RegressionEvaluatorApp {
 		return (forecast<expected+size && forecast>expected-size);
 	}
 
-	private void scaleFeatures(double[][] inputs) {
-
-		for(int i = 0; i < inputs[0].length; i++){
-			
-			DescriptiveStatistics stats = new DescriptiveStatistics();
-			for(int j = 0; j < inputs.length; j++){
-				stats.addValue(inputs[j][i]);
-			}
-			
-			for(int j = 0; j < inputs.length; j++){
-				inputs[j][i] = (inputs[j][i]-stats.getMean())/stats.getStandardDeviation(); 
-			}
-		}
-	}
+//	private void scaleFeatures(double[][] inputs) {
+//
+//		for(int i = 0; i < inputs[0].length; i++){
+//			
+//			DescriptiveStatistics stats = new DescriptiveStatistics();
+//			for(int j = 0; j < inputs.length; j++){
+//				stats.addValue(inputs[j][i]);
+//			}
+//			
+//			for(int j = 0; j < inputs.length; j++){
+//				inputs[j][i] = (inputs[j][i]-stats.getMean())/stats.getStandardDeviation(); 
+//			}
+//		}
+//	}
 
 	protected void evalulateRandomRepos(IRegression regression, int count) {
 
@@ -144,7 +142,9 @@ public class RegressionEvaluatorApp {
 		
 		// Static classifier
 		System.out.println("Static model: ");
-		app.evaluate(new StaticRegression(6));
+		regression = new StaticRegression(0.8);
+		app.evaluate(regression);
+//		app.evalulateRandomRepos(regression, 20);
 		System.out.println();
 		
 //		regression = CustomLinearRegression.train(app.testSet.inputs, app.testSet.outputs);
@@ -152,11 +152,12 @@ public class RegressionEvaluatorApp {
 //		app.evaluate(regression);
 //		System.out.println();
 		
-		regression = MultivariableRegression.trainByNormalEquation(app.testSet.inputs, app.testSet.outputs);
+		MultivariableRegression model = MultivariableRegression.trainByNormalEquation(app.testSet.inputs, app.testSet.outputs);
+		model.save("models/mr1.model");
+		regression = MultivariableRegression.createFromFile("models/mr1.model");
 		System.out.println("Multivariable: ");
 //		app.evalulateRandomRepos(regression, 20);
 		app.evaluate(regression);
-//		regression.printModel();
 		System.out.println();
 	}
 	

@@ -1,5 +1,11 @@
 package com.matrobot.gha.regression;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 
 
@@ -123,5 +129,44 @@ public class MultivariableRegression implements IRegression{
 	}
 
 	
+	public void save(String filename){
+		
+		try{
+			FileOutputStream fos = new FileOutputStream(filename, false);
+			Writer writer = new OutputStreamWriter(fos, "UTF-8");
+			for(int i = 0; i < coefficients.length; i++){
+				writer.write(Double.toString(coefficients[i]));
+				if(i+1 < coefficients.length){
+					writer.write(",");
+				}
+			}
+			writer.close();
+			
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
 	
+	public static MultivariableRegression createFromFile(String filename){
+		
+		double[] coeff = null;
+		
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			String content = reader.readLine();
+			String[] tokens = content.split(",");
+			coeff = new double[tokens.length];
+			for(int i = 0; i < tokens.length; i++){
+				coeff[i] = Double.parseDouble(tokens[i]);
+			}
+			
+			reader.close();
+			
+		}catch (Exception e){
+			System.err.println("Error: " + e.getMessage());
+		}
+		
+		return new MultivariableRegression(coeff);
+	}
 }
