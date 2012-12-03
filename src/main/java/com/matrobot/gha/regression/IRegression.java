@@ -8,4 +8,6 @@ public interface IRegression {
 	 *  params[0] = number of pushes
 	 */
 	public double predict(double[] params);
+
+	public void printModel();
 }

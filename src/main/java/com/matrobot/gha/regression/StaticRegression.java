@@ -13,4 +13,11 @@ public class StaticRegression implements IRegression {
 	public double predict(double[] params){
 		return staticValue*params[0];
 	}
+
+
+	@Override
+	public void printModel() {
+
+		System.out.println("Static: " + staticValue);
+	}
 }

@@ -15,7 +15,9 @@ public class CustomLinearRegression implements IRegression{
 	
 	@Override
 	public double predict(double[] input) {
-		return slope*input[0]+intercept;
+		
+		double value = slope*input[0]+intercept;
+		return Math.max(value, 0);
 	}
 
 
@@ -53,6 +55,13 @@ public class CustomLinearRegression implements IRegression{
 		}
 		
 		return new CustomLinearRegression(slope, intercept);
+	}
+
+
+	@Override
+	public void printModel() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.matrobot.gha.regression;
 
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+
 
 
 
@@ -23,7 +25,7 @@ public class MultivariableRegression implements IRegression{
 			sum += coefficients[i]*x;
 		}
 		
-		return sum;
+		return Math.max(sum, 0);
 	}
 
 
@@ -33,12 +35,13 @@ public class MultivariableRegression implements IRegression{
 		double[] coefficients = new double[inputs[0].length+1];
 		double[] tempCoeffs = new double[inputs[0].length+1];
 		double maxGradient = 10;
-		double alpha = 0.0001;
+		double alpha = 1;
 
 		for(int i = 0; i < coefficients.length; i++){
 			coefficients[i] = 0;
 		}
-		
+
+		double oldCost = calculateCost(inputs, coefficients, outputs);
 		while(maxGradient > .0001){
 
 			maxGradient = 0;
@@ -58,12 +61,34 @@ public class MultivariableRegression implements IRegression{
 			for(int i = 0; i < coefficients.length; i++){
 				coefficients[i] = tempCoeffs[i];
 			}
+			
+			double newCost = calculateCost(inputs, coefficients, outputs);
+			if(newCost > oldCost){
+				System.out.println("Cost function incresing. Probably aplha too big");
+				break;
+			}
+			else{
+				oldCost = newCost;
+			}
 		}
 		
 		
 		System.out.println("Learning time: " + (System.currentTimeMillis()-time)/1000);
 		return new MultivariableRegression(coefficients);
 	}
+
+	
+	private static double calculateCost(double[][] inputs, double[] coeffs, double[] outputs) {
+
+		double sum = 0;
+		for(int j = 0; j < inputs.length; j++){
+			double h = functionValue(inputs[j], coeffs);
+			sum += Math.pow((h-outputs[j]), 2);
+		}
+		
+		return sum;
+	}
+
 
 	private static double functionValue(double[] params, double[] coefficients) {
 		
@@ -75,4 +100,28 @@ public class MultivariableRegression implements IRegression{
 		
 		return sum;
 	}
+
+
+	@Override
+	public void printModel() {
+
+		for(int i = 0; i < coefficients.length; i++){
+			System.out.println(i + ": " + coefficients[i]);
+		}
+	}
+	
+	public static MultivariableRegression trainByNormalEquation(double[][] inputs, double[] outputs){
+
+		long time = System.currentTimeMillis();
+		OLSMultipleLinearRegression regression = new OLSMultipleLinearRegression();
+
+		regression.newSampleData(outputs, inputs);
+		
+		System.out.println("Learning time: " + (System.currentTimeMillis()-time)/1000);
+		
+		return new MultivariableRegression(regression.estimateRegressionParameters());
+	}
+
+	
+	
 }
