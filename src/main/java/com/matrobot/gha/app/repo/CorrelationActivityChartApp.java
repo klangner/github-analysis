@@ -31,11 +31,11 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
  */
 
 @SuppressWarnings("serial")
-public class CorrelationActivityApp extends ApplicationFrame {
+public class CorrelationActivityChartApp extends ApplicationFrame {
 
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	
-	public CorrelationActivityApp(String firstPath, String secondPath, String thirdPath) throws IOException {
+	public CorrelationActivityChartApp(String firstPath, String secondPath, String thirdPath) throws IOException {
         super("Activity correlations");
 		
 		datasets.addFromFile(firstPath);
@@ -118,7 +118,7 @@ public class CorrelationActivityApp extends ApplicationFrame {
 	
    public static void main(String args[]) throws IOException {
 	   
-        CorrelationActivityApp app = new CorrelationActivityApp(
+        CorrelationActivityChartApp app = new CorrelationActivityChartApp(
         		Settings.DATASET_PATH+"2012-8/", 
         		Settings.DATASET_PATH+"2012-9/",
         		Settings.DATASET_PATH+"2012-10/");

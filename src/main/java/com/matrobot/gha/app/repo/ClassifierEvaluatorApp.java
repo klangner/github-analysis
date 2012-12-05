@@ -7,10 +7,11 @@ import com.matrobot.gha.classifier.BinaryStaticClassifier;
 import com.matrobot.gha.classifier.IBinaryClassifier;
 import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
-import com.matrobot.gha.features.RepositoryActivityFeatures;
+import com.matrobot.gha.features.RepositoryFeatures;
 
 public class ClassifierEvaluatorApp {
 
+	private static final int MIN_ACTIVITY = 0;
 	private RepositoryDatasetList datasets = new RepositoryDatasetList();
 	private int errorCount;
 	private int counter;
@@ -30,17 +31,15 @@ public class ClassifierEvaluatorApp {
 		double sum = 0;
 		for(RepositoryRecord record : datasets.getDataset(1).values()){
 			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
-			double currentActivity = record.eventCount;
-			double nextActivity = nextRecord.eventCount;
-			if(record.eventCount > minActivity){
+			if(record.eventCount > MIN_ACTIVITY){
 				
-				double expected = getExpectedValue(currentActivity, nextActivity);
-				RepositoryActivityFeatures features = new RepositoryActivityFeatures(record);
-				double confidence = classifier.classify(features.getValues());
+				double expected = RepositoryFeatures.getExpectedValue(record, nextRecord);
+				double[] features = RepositoryFeatures.getFeatures(record);
+				double confidence = classifier.classify(features);
 				
 				double error = Math.pow(expected-confidence, 2); 
 				sum += error;
-				if(error > 0){
+				if(error > 0.25){
 					errorCount++;
 				}
 				counter += 1;
@@ -51,23 +50,6 @@ public class ClassifierEvaluatorApp {
 	}
 
 	
-	/**
-	 * Positive value is when activity increases
-	 * 
-	 * @param currentActivity
-	 * @param nextActivity
-	 * @return
-	 */
-	private double getExpectedValue(double currentActivity, double nextActivity) {
-		
-		if(nextActivity >= currentActivity){
-			return 1;
-		}
-		else{
-			return 0;
-		}
-	}
-
 	/**
 	 * Feature vector:
 	 *  feature[0] = currentActivity in log10 scale
