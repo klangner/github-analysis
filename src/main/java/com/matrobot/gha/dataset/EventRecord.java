@@ -38,6 +38,8 @@ public class EventRecord {
 	public class Payload{
 		/** “repository”, “branch”, or “tag” */
         public String ref_type;
+        /** 03-05 2011: “repository”, “branch”, or “tag” */
+		public String object;
 	}
 	
 	public class Actor{
@@ -84,6 +86,15 @@ public class EventRecord {
 	 */
 	public boolean isCreateRepository(){
 		
-		return (type.equals("CreateEvent") && payload.ref_type.equals("repository"));
+		if(type.equals("CreateEvent")){
+			if(payload.ref_type != null){
+				return (payload.ref_type.equals("repository"));
+			}
+			else if(payload.object != null){
+				return (payload.object.equals("repository"));
+			}
+		}
+		
+		return false;
 	}
 }
