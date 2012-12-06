@@ -16,7 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class UserRecord {
 
-	public String name;
+	public String login;
 	public int eventCount = 0;
 	public int pushEventCount = 0;
 	
@@ -37,7 +37,7 @@ public class UserRecord {
 
 		HashMap<String, UserRecord> dataset = new HashMap<String, UserRecord>();
 		for(UserRecord row : rows){
-			dataset.put(row.name, row);
+			dataset.put(row.login, row);
 		}
 		
 		return dataset;

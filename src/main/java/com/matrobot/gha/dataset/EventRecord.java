@@ -46,12 +46,20 @@ public class EventRecord {
         public String login;
 	}
 	
+	public class ActorAttributes{
+        public String email;
+        public String type;
+        public String gravatar_id;
+        public String login;
+	}
+	
 	
 	public String created_at;
 	public Repo repo;
 	public Repo repository;
 	public String type;
 	public Payload payload;
+	public ActorAttributes actor_attributes;
 //	public Actor actor;
 	
 	
@@ -75,6 +83,23 @@ public class EventRecord {
 		int count = tokens.length;
 		if(count > 2){
 			id = tokens[count-2] + "/" + tokens[count-1];
+		}
+		
+		return id;
+	}
+	
+	
+	/**
+	 * Get repository id as: "username/repository_name"
+	 */
+	public String getUserId(){
+		
+		String id = null;
+		if(actor_attributes != null){
+			id = actor_attributes.login;
+		}
+		else if(repository != null){
+			id = repository.url;
 		}
 		
 		return id;

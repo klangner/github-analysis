@@ -1,9 +1,11 @@
 package com.matrobot.gha.app.parser;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.HashMap;
 
@@ -16,9 +18,10 @@ import com.matrobot.gha.dataset.SummaryRecord;
 import com.matrobot.gha.dataset.repo.RepositoryRecord;
 import com.matrobot.gha.dataset.user.UserRecord;
 
-public class RepositoryParserApp {
+public class DatasetParserApp {
 
-	private static final int MIN_ACTIVITY = 5;
+	private static final int REPO_MIN_ACTIVITY = 5;
+	private static final int USER_MIN_ACTIVITY = 5;
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -27,7 +30,7 @@ public class RepositoryParserApp {
 	private int month;
 	
 	
-	public RepositoryParserApp(int year, int month) throws IOException{
+	public DatasetParserApp(int year, int month) throws IOException{
 		
 		this.year = year;
 		this.month = month;
@@ -35,7 +38,7 @@ public class RepositoryParserApp {
 		parseFolder();
 	}
 
-	public RepositoryParserApp(String folder) throws IOException{
+	public DatasetParserApp(String folder) throws IOException{
 		
 		datasetPath = Settings.DATASET_PATH + folder; 
 		parseFolder();
@@ -89,19 +92,24 @@ public class RepositoryParserApp {
 
 	
 	private void updateUserData(EventRecord event) {
-	
-//		UserRecord user = users.get(event.actor.login);
-//		if( user == null){
-//			user = new UserRecord();
-//			user.name = event.actor.login;
-//		}
-//		
-//		if(event.type.equals("PushEvent")){
-//			user.pushEventCount += 1;
-//		}
-//		
-//		user.eventCount += 1;
-//		users.put(user.name, user);
+
+		if(event.getUserId() != null){
+			UserRecord user = users.get(event.getUserId());
+			if( user == null){
+				user = new UserRecord();
+				user.login = event.getUserId();
+			}
+			
+			if(event.type.equals("PushEvent")){
+				user.pushEventCount += 1;
+			}
+			
+			user.eventCount += 1;
+			users.put(user.login, user);
+		}
+		else if(event.type.equals("PushEvent")){
+			System.err.println("User id == null");
+		}
 	}
 
 	
@@ -130,11 +138,11 @@ public class RepositoryParserApp {
 			writer.write(json);
 			writer.close();
 			
-//			writer = new FileWriter(datasetPath+"/users.json");
-//			json = gson.toJson(users.values());
-//			writer.write(json);
-//			writer.close();
-//			
+			writer = new FileWriter(datasetPath+"/users.json");
+			json = gson.toJson(users.values());
+			writer.write(json);
+			writer.close();
+			
 			writer = new FileWriter(datasetPath+"/summary.json");
 			json = gson.toJson(info);
 			writer.write(json);
@@ -149,30 +157,53 @@ public class RepositoryParserApp {
 	public void saveAsCSV() {
 		
 		try{
-			String filename = "repositories-" + year + "-" + month + ".csv";
-			FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
-			Writer writer = new OutputStreamWriter(fos, "UTF-8");
-			writer.write("name,year,month,push_count\n");
-			for(RepositoryRecord record : repos.values()){
-				if(record.pushEventCount >= MIN_ACTIVITY){
-					String line = record.repository + "," +
-									year + "," + month  + "," +
-									record.pushEventCount + "\n"; 
-					writer.write(line);
-				}
-			}
-			writer.close();
+			saveRepositoriesAsCSV();
+			saveUsersAsCSV();
 			
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
+
+	private void saveRepositoriesAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+		
+		String filename = "repositories-" + year + "-" + month + ".csv";
+		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+		writer.write("name,year,month,push_count\n");
+		for(RepositoryRecord record : repos.values()){
+			if(record.pushEventCount >= REPO_MIN_ACTIVITY){
+				String line = record.repository + "," +
+								year + "," + month  + "," +
+								record.pushEventCount + "\n"; 
+				writer.write(line);
+			}
+		}
+		writer.close();
+	}
 	
 
+	private void saveUsersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+		
+		String filename = "users-" + year + "-" + month + ".csv";
+		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+		writer.write("login,year,month,push_count\n");
+		for(UserRecord record : users.values()){
+			if(record.pushEventCount >= USER_MIN_ACTIVITY){
+				String line = record.login + "," +
+								year + "," + month  + "," +
+								record.pushEventCount + "\n"; 
+				writer.write(line);
+			}
+		}
+		writer.close();
+	}
 	
+
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2012, 11);
+		parseMonth(2012, 11);
 		
 		// Parse 2012
 		for(int i = 1; i <= 11; i++){
@@ -181,7 +212,7 @@ public class RepositoryParserApp {
 		
 		// Parse 2011
 		for(int i = 3; i <= 5; i++){
-			parseMonth(2011, i);
+//			parseMonth(2011, i);
 		}
 
 	}
@@ -192,7 +223,7 @@ public class RepositoryParserApp {
 		long time = System.currentTimeMillis();
 
 		System.out.println("Dataset: " + year + "-" + month);
-		RepositoryParserApp app = new RepositoryParserApp(year, month);
+		DatasetParserApp app = new DatasetParserApp(year, month);
 		app.saveAsJson();
 		app.saveAsCSV();
 		time = (System.currentTimeMillis()-time)/1000;
