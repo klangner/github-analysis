@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 public class StatsActivityApp {
 

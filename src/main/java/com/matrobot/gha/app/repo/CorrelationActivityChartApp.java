@@ -20,8 +20,8 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.archive.repo.RepositoryArchiveList;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 /**
  * Checked correlation:
@@ -33,7 +33,7 @@ import com.matrobot.gha.dataset.repo.RepositoryRecord;
 @SuppressWarnings("serial")
 public class CorrelationActivityChartApp extends ApplicationFrame {
 
-	private RepositoryDatasetList datasets = new RepositoryDatasetList();
+	private RepositoryArchiveList datasets = new RepositoryArchiveList();
 	
 	public CorrelationActivityChartApp(String firstPath, String secondPath, String thirdPath) throws IOException {
         super("Activity correlations");

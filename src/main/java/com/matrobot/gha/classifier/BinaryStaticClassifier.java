@@ -7,7 +7,7 @@ public class BinaryStaticClassifier implements IBinaryClassifier {
 
 	@Override
 	public double classify(double[] featureVector) {
-		return 0;
+		return 1;
 	}
 
 }

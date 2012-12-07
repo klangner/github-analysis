@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.archive;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 
-public class FileDatasetReader implements Iterator<EventRecord>{
+public class FileArchiveReader implements Iterator<EventRecord>{
 
 	private List<EventRecord> records;
 	private Iterator<EventRecord> iterator;
@@ -27,7 +27,7 @@ public class FileDatasetReader implements Iterator<EventRecord>{
 	 * @param filePath
 	 * @throws IOException 
 	 */
-	public FileDatasetReader(String filePath) throws IOException{
+	public FileArchiveReader(String filePath) throws IOException{
 	
 		filename = filePath;
 		initContent(new FileInputStream(filePath));
@@ -39,7 +39,7 @@ public class FileDatasetReader implements Iterator<EventRecord>{
 	 * @param inputStream
 	 * @throws IOException 
 	 */
-	public FileDatasetReader(InputStream inputStream) throws IOException{
+	public FileArchiveReader(InputStream inputStream) throws IOException{
 
 		initContent(inputStream);
 	}

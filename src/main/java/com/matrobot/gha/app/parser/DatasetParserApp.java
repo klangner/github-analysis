@@ -12,11 +12,11 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.EventRecord;
-import com.matrobot.gha.dataset.FolderDatasetReader;
-import com.matrobot.gha.dataset.SummaryRecord;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
-import com.matrobot.gha.dataset.user.UserRecord;
+import com.matrobot.gha.archive.EventRecord;
+import com.matrobot.gha.archive.FolderArchiveReader;
+import com.matrobot.gha.archive.SummaryRecord;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
+import com.matrobot.gha.archive.user.UserRecord;
 
 public class DatasetParserApp {
 
@@ -46,7 +46,7 @@ public class DatasetParserApp {
 
 	private void parseFolder() throws IOException{
 		
-		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
+		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	recordData;
 		
 		info.eventCount = 0;

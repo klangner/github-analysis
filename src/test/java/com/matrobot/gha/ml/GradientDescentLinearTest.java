@@ -18,7 +18,7 @@ public class GradientDescentLinearTest {
 		gradientDescent.setAlpha(0.001);
 		gradientDescent.train(dataset);
 		
-		assertEquals(12, gradientDescent.predict(test), 0.01);
+		assertEquals(12, gradientDescent.predict(test), 0.1);
 	}
 
 }

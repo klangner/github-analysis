@@ -1,11 +1,11 @@
-package com.matrobot.gha.dataset.user;
+package com.matrobot.gha.archive.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserDatasetList {
+public class UserArchiveList {
 
 	private List<HashMap<String, UserRecord>> datasets = 
 			new ArrayList<HashMap<String,UserRecord>>();

@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.archive;
 
 public class SummaryRecord {
 

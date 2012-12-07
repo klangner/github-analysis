@@ -5,12 +5,12 @@ import java.io.IOException;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.user.UserDatasetList;
-import com.matrobot.gha.dataset.user.UserRecord;
+import com.matrobot.gha.archive.user.UserArchiveList;
+import com.matrobot.gha.archive.user.UserRecord;
 
 public class StatsApp {
 
-	private UserDatasetList datasets = new UserDatasetList();
+	private UserArchiveList datasets = new UserArchiveList();
 	
 	
 	protected StatsApp(String firstPath, String secondPath, String thirdPath) throws IOException{

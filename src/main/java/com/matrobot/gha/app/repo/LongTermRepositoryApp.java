@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 /**
  * Check repository activity for 12 months.

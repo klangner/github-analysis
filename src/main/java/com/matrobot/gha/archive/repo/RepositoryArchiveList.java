@@ -1,11 +1,11 @@
-package com.matrobot.gha.dataset.repo;
+package com.matrobot.gha.archive.repo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RepositoryDatasetList {
+public class RepositoryArchiveList {
 
 	private List<HashMap<String, RepositoryRecord>> datasets = 
 			new ArrayList<HashMap<String,RepositoryRecord>>();

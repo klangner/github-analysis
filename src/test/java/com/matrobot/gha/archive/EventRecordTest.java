@@ -1,8 +1,10 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.archive;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import com.matrobot.gha.archive.EventRecord;
 
 public class EventRecordTest {
 

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.EventRecord;
-import com.matrobot.gha.dataset.FolderDatasetReader;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.archive.EventRecord;
+import com.matrobot.gha.archive.FolderArchiveReader;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 public class FindEventsApp {
 
@@ -21,7 +21,7 @@ public class FindEventsApp {
 
 	protected void findEventByRepositoryName(String name) throws IOException{
 		
-		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
+		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	record;
 		
 		while((record = datasetReader.readNextRecord()) != null){
@@ -35,7 +35,7 @@ public class FindEventsApp {
 	
 	protected void findEventByUser(String name) throws IOException{
 		
-		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
+		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	record;
 		
 		while((record = datasetReader.readNextRecord()) != null){

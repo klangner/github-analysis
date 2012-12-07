@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.archive;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -11,7 +11,7 @@ import java.util.List;
 
 
 
-public class FolderDatasetReader{
+public class FolderArchiveReader{
 
 	private List<String> filePaths = new ArrayList<String>();
 	private Iterator<EventRecord> datasetReader;
@@ -22,7 +22,7 @@ public class FolderDatasetReader{
 	 * @param filePath
 	 * @throws IOException 
 	 */
-	public FolderDatasetReader(String folder) throws IOException{
+	public FolderArchiveReader(String folder) throws IOException{
 		
 		initFileNames(folder);
 		nextDatasetReader();
@@ -55,7 +55,7 @@ public class FolderDatasetReader{
 		if(filePaths.size() > 0){
 			String path = filePaths.remove(0);
 			try {
-				datasetReader = new FileDatasetReader(path);
+				datasetReader = new FileArchiveReader(path);
 			} catch (IOException e) {
 				e.printStackTrace();
 				datasetReader = null;

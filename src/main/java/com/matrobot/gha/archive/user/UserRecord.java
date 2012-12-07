@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset.user;
+package com.matrobot.gha.archive.user;
 
 import java.io.FileInputStream;
 import java.io.IOException;

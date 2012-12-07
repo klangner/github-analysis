@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Vector;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.dataset.repo.RepositoryDatasetList;
-import com.matrobot.gha.dataset.repo.RepositoryRecord;
+import com.matrobot.gha.archive.repo.RepositoryArchiveList;
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 import com.matrobot.gha.regression.IRegression;
 import com.matrobot.gha.regression.MultivariableRegression;
 import com.matrobot.gha.regression.StaticRegression;
@@ -21,7 +21,7 @@ public class RegressionEvaluatorApp {
 		Vector<String> names;
 	}
 	
-	private RepositoryDatasetList datasets = new RepositoryDatasetList();
+	private RepositoryArchiveList datasets = new RepositoryArchiveList();
 	private int counter;
 	protected TestSet testSet;
 	

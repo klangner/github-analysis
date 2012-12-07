@@ -1,4 +1,4 @@
-package com.matrobot.gha.dataset;
+package com.matrobot.gha.archive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,12 +10,15 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.matrobot.gha.archive.EventRecord;
+import com.matrobot.gha.archive.FileArchiveReader;
+
 public class FileDatasetReaderTest {
 
 	@Test
 	public void testFirstRecord() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord data = reader.next();
 		assertEquals("2012-04-01T00:00:00Z", data.created_at);
@@ -25,7 +28,7 @@ public class FileDatasetReaderTest {
 	@Test
 	public void testRepositoryId() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord data = reader.next();
 		assertEquals("azonwan/rable", data.getRepositoryId());
@@ -35,7 +38,7 @@ public class FileDatasetReaderTest {
 	@Test
 	public void testEventType() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord data = reader.next();
 		assertEquals("CreateEvent", data.type);
@@ -45,7 +48,7 @@ public class FileDatasetReaderTest {
 	@Test
 	public void testRecordCount() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		int count = 0;
 		while(reader.next() != null){
@@ -59,7 +62,7 @@ public class FileDatasetReaderTest {
 	@Test
 	public void testRecordCount2() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-10-13-0.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		int count = 0;
 		while(reader.next() != null){
@@ -73,7 +76,7 @@ public class FileDatasetReaderTest {
 	@Test
 	public void testCommitters() throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/push_event-1.json.gz");
-		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord record = reader.next();
 		
