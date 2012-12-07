@@ -6,7 +6,7 @@ import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.classifier.BinaryStaticClassifier;
 import com.matrobot.gha.classifier.IBinaryClassifier;
 import com.matrobot.gha.classifier.LogisticRegressionClassifier;
-import com.matrobot.gha.filter.RepositoryActivityFilter;
+import com.matrobot.gha.filter.ClassifyRepositoryFilter;
 import com.matrobot.gha.ml.Dataset;
 import com.matrobot.gha.ml.Sample;
 
@@ -19,7 +19,7 @@ public class ClassifierEvaluatorApp {
 	
 	protected ClassifierEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		RepositoryActivityFilter filter = new RepositoryActivityFilter(firstPath, secondPath, thirdPath);
+		ClassifyRepositoryFilter filter = new ClassifyRepositoryFilter(firstPath, secondPath, thirdPath);
 		dataset = filter.getDataset();
 		dataset.normalize();
 	}

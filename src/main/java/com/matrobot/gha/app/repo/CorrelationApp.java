@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 import com.matrobot.gha.app.Settings;
-import com.matrobot.gha.filter.RepositoryActivityFilter;
+import com.matrobot.gha.filter.ClassifyRepositoryFilter;
 import com.matrobot.gha.ml.Dataset;
 
 public class CorrelationApp{
@@ -14,7 +14,7 @@ public class CorrelationApp{
 	
 	public CorrelationApp(String firstPath, String secondPath, String thirdPath) throws IOException {
 		
-		RepositoryActivityFilter filter = new RepositoryActivityFilter(firstPath, secondPath, thirdPath);
+		ClassifyRepositoryFilter filter = new ClassifyRepositoryFilter(firstPath, secondPath, thirdPath);
 		dataset = filter.getDataset();
     }
 

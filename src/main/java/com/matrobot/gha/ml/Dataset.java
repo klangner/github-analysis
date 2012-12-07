@@ -98,5 +98,17 @@ public class Dataset {
 		
 		return outputs;
 	}
+
+	public double[][] getFeatures() {
+
+		double[][] outputs = new double[samples.size()][featureCount];
+		for(int i = 0; i < samples.size(); i++){
+			for(int j = 0; j < featureCount; j++){
+				outputs[i][j] = samples.get(i).features[j];
+			}
+		}
+		
+		return outputs;
+	}
 	
 }

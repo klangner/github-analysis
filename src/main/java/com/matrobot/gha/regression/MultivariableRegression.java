@@ -8,6 +8,8 @@ import java.io.Writer;
 
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 
+import com.matrobot.gha.ml.Dataset;
+
 
 
 
@@ -116,15 +118,10 @@ public class MultivariableRegression implements IRegression{
 		}
 	}
 	
-	public static MultivariableRegression trainByNormalEquation(double[][] inputs, double[] outputs){
+	public static MultivariableRegression trainByNormalEquation(Dataset dataset){
 
-		long time = System.currentTimeMillis();
 		OLSMultipleLinearRegression regression = new OLSMultipleLinearRegression();
-
-		regression.newSampleData(outputs, inputs);
-		
-		System.out.println("Learning time: " + (System.currentTimeMillis()-time)/1000);
-		
+		regression.newSampleData(dataset.getOutputs(), dataset.getFeatures());
 		return new MultivariableRegression(regression.estimateRegressionParameters());
 	}
 
