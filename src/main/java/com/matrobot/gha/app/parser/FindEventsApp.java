@@ -25,8 +25,9 @@ public class FindEventsApp {
 		EventRecord	record;
 		
 		while((record = datasetReader.readNextRecord()) != null){
-			
-			if(record.getRepositoryId().equals(name)){
+
+			String repoId = record.getRepositoryId(); 
+			if(repoId != null && repoId.equals(name)){
 				System.out.println(record.created_at + ": " + record.type);
 			}
 		}
@@ -50,6 +51,6 @@ public class FindEventsApp {
 	public static void main(String[] args) throws IOException {
 
 		FindEventsApp app = new FindEventsApp(2012, 11);
-		app.findEventByUser("igrigorik");
+		app.findEventByRepositoryName("ironbee/ironbee");
 	}
 }

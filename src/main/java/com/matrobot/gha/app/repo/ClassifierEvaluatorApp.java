@@ -57,10 +57,11 @@ public class ClassifierEvaluatorApp {
 				Settings.DATASET_PATH+"2012-11/");
 		double score;
 		int correctPercentage;
-		Dataset testSet = app.dataset;
-
+		Dataset dataset = app.dataset;
+		dataset.saveAsCSV(Settings.DATASET_PATH+"weka.csv");
+		
 		// Static classifier
-		score = app.evaluate(new BinaryStaticClassifier(), testSet);
+		score = app.evaluate(new BinaryStaticClassifier(), dataset);
 		correctPercentage = 100-(int)((app.errorCount*100.0)/app.counter);
 		System.out.println("Static: ");
 		System.out.println("  Error: " + score);
@@ -70,15 +71,14 @@ public class ClassifierEvaluatorApp {
 		// Logistic regression
 		LogisticRegressionClassifier classifier = new LogisticRegressionClassifier();
 		System.out.println("Train");
-		classifier.train(testSet);
+		classifier.train(dataset);
 		System.out.println("Evaluate");
-		score = app.evaluate(classifier, testSet);
+		score = app.evaluate(classifier, dataset);
 		correctPercentage = 100-(int)((app.errorCount*100.0)/app.counter);
 		System.out.println("Logistic regression: ");
 		System.out.println("  Error: " + score);
 		System.out.println("  Correct: " + correctPercentage + "%");
 		System.out.println();
-		
 	}
 	
 }
