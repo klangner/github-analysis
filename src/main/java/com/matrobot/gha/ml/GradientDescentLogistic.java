@@ -17,16 +17,17 @@ public class GradientDescentLogistic extends GradientDescentLinear{
 	}
 	
 	@Override
-	protected double calculateCost(double[][] inputs, double[] outputs) {
+	protected double calculateCost(Dataset dataset) {
 
 		double sum = 0;
-		for(int j = 0; j < inputs.length; j++){
-			double h = predict(inputs[j]);
-			double term1 = outputs[j]*Math.log(h);
-			double term2 = (1-outputs[j])*Math.log(1-h);
+		for(Sample sample : dataset.getData()){
+			double h = predict(sample.features);
+			double term1 = sample.output*Math.log(h);
+			double term2 = (1-sample.output)*Math.log(1-h);
 			sum += term1+term2;
 		}
 		
-		return -sum/inputs.length;
+		return -sum/dataset.size();
 	}
+
 }
