@@ -6,13 +6,23 @@ package com.matrobot.gha.ml;
  * 
  * @author Krzysztof Langner
  */
-public class GradientDescent{
+public class GradientDescentLinear{
 
 	private double alpha = 1;
 	private double[] coefficients;
 
 	
+	/**
+	 * Override this function for different regression model (e.g logistic regression)
+	 * @param input
+	 * @return
+	 */
 	public double predict(double[] input) {
+		
+		return getLinearRegression(input);
+	}
+	
+	protected double getLinearRegression(double[] input) {
 		
 		double sum = 0;
 		for(int i = 0; i < coefficients.length && i < input.length+1; i++){
@@ -20,7 +30,7 @@ public class GradientDescent{
 			sum += coefficients[i]*x;
 		}
 		
-		return Math.max(sum, 0);
+		return sum;
 	}
 	
 	public void setAlpha(double alpha){
@@ -30,7 +40,7 @@ public class GradientDescent{
 
 	public void train(double[][] inputs, double[] outputs){
 		
-		long time = System.currentTimeMillis();
+//		long time = System.currentTimeMillis();
 		double[] tempCoeffs = new double[inputs[0].length+1];
 		double maxGradient = 10;
 
@@ -39,7 +49,7 @@ public class GradientDescent{
 			coefficients[i] = 0;
 		}
 
-		double oldCost = calculateCost(inputs, coefficients, outputs);
+		double oldCost = calculateCost(inputs, outputs);
 		while(maxGradient > .0001){
 
 			maxGradient = 0;
@@ -47,7 +57,7 @@ public class GradientDescent{
 
 				double sum = 0;
 				for(int j = 0; j < inputs.length; j++){
-					double h = functionValue(inputs[j], coefficients);
+					double h = predict(inputs[j]);
 					double x = (i==0)? 1 : inputs[j][i-1];
 					sum += (h-outputs[j])*x;
 				}
@@ -60,7 +70,7 @@ public class GradientDescent{
 				coefficients[i] = tempCoeffs[i];
 			}
 			
-			double newCost = calculateCost(inputs, coefficients, outputs);
+			double newCost = calculateCost(inputs, outputs);
 			if(newCost > oldCost){
 				System.out.println("Cost function incresing. Probably alpha too big");
 				break;
@@ -70,28 +80,20 @@ public class GradientDescent{
 			}
 		}
 		
-		System.out.println("Learning time: " + (System.currentTimeMillis()-time)/1000);
+//		System.out.println("Learning time: " + (System.currentTimeMillis()-time)/1000);
 	}
 
 	
-	private double calculateCost(double[][] inputs, double[] coeffs, double[] outputs) {
+	/**
+	 * Calculate cost function on given inputs.
+	 * Override this function for different regression model (e.g logistic regression)
+	 */
+	protected double calculateCost(double[][] inputs, double[] outputs) {
 
 		double sum = 0;
 		for(int j = 0; j < inputs.length; j++){
-			double h = functionValue(inputs[j], coeffs);
+			double h = predict(inputs[j]);
 			sum += Math.pow((h-outputs[j]), 2);
-		}
-		
-		return sum;
-	}
-
-
-	protected double functionValue(double[] params, double[] coefficients) {
-		
-		double sum = 0;
-		for(int i = 0; i < coefficients.length && i < params.length+1; i++){
-			double x = (i==0)? 1: params[i-1];
-			sum += coefficients[i]*x;
 		}
 		
 		return sum;

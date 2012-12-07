@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class GradientDescentTest {
+public class GradientDescentLinearTest {
 
 	@Test
 	public void testRegression1() {
@@ -12,7 +12,7 @@ public class GradientDescentTest {
 		double[] output = {4, 5};
 		double[] test = {5, 6};
 		
-		GradientDescent gradientDescent = new GradientDescent();
+		GradientDescentLinear gradientDescent = new GradientDescentLinear();
 		gradientDescent.setAlpha(0.001);
 		gradientDescent.train(input, output);
 		
