@@ -33,9 +33,23 @@ public class FindEventsApp {
 	}
 
 	
+	protected void findEventByUser(String name) throws IOException{
+		
+		FolderDatasetReader datasetReader = new FolderDatasetReader(datasetPath);
+		EventRecord	record;
+		
+		while((record = datasetReader.readNextRecord()) != null){
+			
+			if(record.getCommitters().contains(name)){
+				System.out.println(record.created_at + ": " + record.type + " " + record.getRepositoryId());
+			}
+		}
+	}
+
+	
 	public static void main(String[] args) throws IOException {
 
-		FindEventsApp app = new FindEventsApp(2011, 10);
-		app.findEventByRepositoryName("cherokee/webserver");
+		FindEventsApp app = new FindEventsApp(2012, 11);
+		app.findEventByUser("igrigorik");
 	}
 }

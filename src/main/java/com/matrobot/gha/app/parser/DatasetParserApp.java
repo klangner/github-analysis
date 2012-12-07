@@ -21,7 +21,7 @@ import com.matrobot.gha.dataset.user.UserRecord;
 public class DatasetParserApp {
 
 	private static final int REPO_MIN_ACTIVITY = 5;
-	private static final int USER_MIN_ACTIVITY = 5;
+//	private static final int USER_MIN_ACTIVITY = 5;
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -54,7 +54,7 @@ public class DatasetParserApp {
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
 			updateRepositoryData(recordData);
-			updateUserData(recordData);
+//			updateUserData(recordData);
 			info.eventCount ++;
 		}
 		
@@ -78,7 +78,9 @@ public class DatasetParserApp {
 				info.newRepositoryCount += 1;
 			}
 			else if(event.type.equals("PushEvent")){
-				data.pushEventCount += 1;
+				if(event.payload.size > 0){
+					data.pushEventCount += 1;
+				}
 			}
 			else if(event.type.equals("IssuesEvent")){
 				data.issueOpenEventCount += 1;
@@ -91,41 +93,30 @@ public class DatasetParserApp {
 	}
 
 	
-	private void updateUserData(EventRecord event) {
-
-		if(event.getUserId() != null){
-			UserRecord user = users.get(event.getUserId());
-			if( user == null){
-				user = new UserRecord();
-				user.login = event.getUserId();
-			}
-			
-			if(event.type.equals("PushEvent")){
-				user.pushEventCount += 1;
-			}
-			
-			user.eventCount += 1;
-			users.put(user.login, user);
-		}
-		else if(event.type.equals("PushEvent")){
-			System.err.println("User id == null");
-		}
-	}
+//	private void updateUserData(EventRecord event) {
+//
+//		if(event.type.equals("PushEvent")){
+//			
+//			String name = event.getCommitterName(); 
+//			if(name != null){
+//				UserRecord user = users.get(name);
+//				if( user == null){
+//					user = new UserRecord();
+//					user.name = name;
+//				}
+//				
+//				user.pushEventCount += 1;
+//				
+//				user.eventCount += 1;
+//				users.put(user.name, user);
+//			}
+//			else{
+//				System.err.println("Missing committer name: " + event.created_at + " " + event.type);
+//			}
+//		}
+//	}
 
 	
-	protected int getRepoCommiters() {
-
-		int count = 0;
-		for(RepositoryRecord record : repos.values()){
-			if(record.commiters.size() > 1){
-				count += 1;
-				System.out.println(record.repository);
-			}
-		}
-		
-		return count;
-	}
-
 	public void saveAsJson() {
 	
 		FileWriter writer;
@@ -158,7 +149,7 @@ public class DatasetParserApp {
 		
 		try{
 			saveRepositoriesAsCSV();
-			saveUsersAsCSV();
+//			saveCommittersAsCSV();
 			
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
@@ -183,22 +174,22 @@ public class DatasetParserApp {
 	}
 	
 
-	private void saveUsersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
-		
-		String filename = "users-" + year + "-" + month + ".csv";
-		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
-		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("login,year,month,push_count\n");
-		for(UserRecord record : users.values()){
-			if(record.pushEventCount >= USER_MIN_ACTIVITY){
-				String line = record.login + "," +
-								year + "," + month  + "," +
-								record.pushEventCount + "\n"; 
-				writer.write(line);
-			}
-		}
-		writer.close();
-	}
+//	private void saveCommittersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+//		
+//		String filename = "users-" + year + "-" + month + ".csv";
+//		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+//		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+//		writer.write("name,year,month,push_count\n");
+//		for(UserRecord record : users.values()){
+//			if(record.pushEventCount >= USER_MIN_ACTIVITY){
+//				String line = record.name + "," +
+//								year + "," + month  + "," +
+//								record.pushEventCount + "\n"; 
+//				writer.write(line);
+//			}
+//		}
+//		writer.close();
+//	}
 	
 
 	public static void main(String[] args) throws IOException {
@@ -230,7 +221,6 @@ public class DatasetParserApp {
 		System.out.println(	"Repos: " + app.repos.size() + 
 							" Users: " + app.users.size() + 
 							" Events: " + app.info.eventCount);
-//		System.out.println("Repos with more then 1 commiter:" + app.getRepoCommiters());
 		
 		System.out.println("Parse time: " + time + "sec.");
 		System.out.println();

@@ -1,9 +1,12 @@
 package com.matrobot.gha.dataset;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -64,6 +67,22 @@ public class FileDatasetReaderTest {
 		}
 		
 		assertEquals(3086, count);
+	}
+
+
+	@Test
+	public void testCommitters() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/push_event-1.json.gz");
+		FileDatasetReader reader = new FileDatasetReader(inputStream);
+		
+		EventRecord record = reader.next();
+		
+		assertNotNull(record);
+		
+		Set<String> committers = record.getCommitters();
+		assertEquals(2, committers.size());
+		assertTrue(committers.contains("Max Medvedev"));
+		assertTrue(committers.contains("ala"));
 	}
 
 }

@@ -28,7 +28,7 @@ public class StatsApp {
 		int counter = 0;
 		double sum = 0;
 		for(UserRecord record : datasets.getDataset(1).values()){
-			UserRecord nextRecord = datasets.findRepository(2, record.login); 
+			UserRecord nextRecord = datasets.findRepository(2, record.name); 
 			double currentActivity = record.pushEventCount;
 			double nextActivity = nextRecord.pushEventCount;
 			if(currentActivity > 0){
