@@ -32,7 +32,7 @@ public class FolderDatasetReaderTest {
 			count ++;
 		}
 		
-		assertEquals(11068, count);
+		assertEquals(11067, count);
 	}
 
 }

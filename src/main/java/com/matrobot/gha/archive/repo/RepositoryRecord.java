@@ -24,7 +24,7 @@ public class RepositoryRecord {
 	public boolean isNew = false;
 	public boolean isFork = false;
 	
-	public Set<String> commiters = new HashSet<String>();
+	public Set<String> committers = new HashSet<String>();
 	
 	
 	/**

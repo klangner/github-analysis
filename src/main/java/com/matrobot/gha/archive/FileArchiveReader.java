@@ -30,7 +30,9 @@ public class FileArchiveReader implements Iterator<EventRecord>{
 	public FileArchiveReader(String filePath) throws IOException{
 	
 		filename = filePath;
-		initContent(new FileInputStream(filePath));
+
+		InputStream gzipStream = new GZIPInputStream(new FileInputStream(filePath));
+		initContent(gzipStream);
 	}
 	
 	
@@ -48,8 +50,7 @@ public class FileArchiveReader implements Iterator<EventRecord>{
 	private void initContent(InputStream inputStream) throws IOException{
 
 		Gson gson = new Gson();
-		InputStream gzipStream = new GZIPInputStream(inputStream);
-		JsonReader reader = new JsonReader(new InputStreamReader(gzipStream, "UTF-8"));
+		JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
 		reader.setLenient(true);
 	    records = new ArrayList<EventRecord>();
 	    try{

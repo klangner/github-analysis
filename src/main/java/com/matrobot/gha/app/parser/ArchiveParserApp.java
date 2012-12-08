@@ -18,7 +18,7 @@ import com.matrobot.gha.archive.SummaryRecord;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 import com.matrobot.gha.archive.user.UserRecord;
 
-public class DatasetParserApp {
+public class ArchiveParserApp {
 
 	private static final int REPO_MIN_ACTIVITY = 5;
 //	private static final int USER_MIN_ACTIVITY = 5;
@@ -30,7 +30,7 @@ public class DatasetParserApp {
 	private int month;
 	
 	
-	public DatasetParserApp(int year, int month) throws IOException{
+	public ArchiveParserApp(int year, int month) throws IOException{
 		
 		this.year = year;
 		this.month = month;
@@ -38,7 +38,7 @@ public class DatasetParserApp {
 		parseFolder();
 	}
 
-	public DatasetParserApp(String folder) throws IOException{
+	public ArchiveParserApp(String folder) throws IOException{
 		
 		datasetPath = Settings.DATASET_PATH + folder; 
 		parseFolder();
@@ -67,28 +67,37 @@ public class DatasetParserApp {
 		String url = event.getRepositoryId();
 		if(url != null){
 			
-			RepositoryRecord data = repos.get(url);
-			if(data == null){
-				data = new RepositoryRecord();
-				data.repository = url;
+			RepositoryRecord record = repos.get(url);
+			if(record == null){
+				record = new RepositoryRecord();
+				record.repository = url;
 			}
 
 			if(event.isCreateRepository()){
-				data.isNew = true;
+				record.isNew = true;
 				info.newRepositoryCount += 1;
 			}
 			else if(event.type.equals("PushEvent")){
-				if(event.payload.size > 0){
-					data.pushEventCount += 1;
-				}
+				addPushEventToRepository(event, record);
 			}
 			else if(event.type.equals("IssuesEvent")){
-				data.issueOpenEventCount += 1;
+				record.issueOpenEventCount += 1;
 			}
-
-			data.eventCount += 1;
-			repos.put(url, data);
 			
+
+			record.eventCount += 1;
+			repos.put(url, record);
+			
+		}
+	}
+
+	private void addPushEventToRepository(EventRecord event, RepositoryRecord record) {
+		
+		if(event.payload.size > 0){
+			record.pushEventCount += 1;
+			for(String committer : event.getCommitters()){
+				record.committers.add(committer);
+			}
 		}
 	}
 
@@ -161,12 +170,12 @@ public class DatasetParserApp {
 		String filename = "repositories-" + year + "-" + month + ".csv";
 		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
 		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("name,year,month,push_count\n");
+		writer.write("name,year,month,push_count, committers_count\n");
 		for(RepositoryRecord record : repos.values()){
 			if(record.pushEventCount >= REPO_MIN_ACTIVITY){
 				String line = record.repository + "," +
 								year + "," + month  + "," +
-								record.pushEventCount + "\n"; 
+								record.pushEventCount + ", " + record.committers.size() + "\n"; 
 				writer.write(line);
 			}
 		}
@@ -194,11 +203,11 @@ public class DatasetParserApp {
 
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2012, 11);
+//		parseMonth(2012, 11);
 		
 		// Parse 2012
-		for(int i = 1; i <= 11; i++){
-//			parseMonth(2012, i);
+		for(int i = 9; i <= 11; i++){
+			parseMonth(2012, i);
 		}
 		
 		// Parse 2011
@@ -214,7 +223,7 @@ public class DatasetParserApp {
 		long time = System.currentTimeMillis();
 
 		System.out.println("Dataset: " + year + "-" + month);
-		DatasetParserApp app = new DatasetParserApp(year, month);
+		ArchiveParserApp app = new ArchiveParserApp(year, month);
 		app.saveAsJson();
 		app.saveAsCSV();
 		time = (System.currentTimeMillis()-time)/1000;

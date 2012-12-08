@@ -14,6 +14,15 @@ public class EventRecord {
         public String url;
         public String name;
 	}
+
+	public class Author{
+		String name;
+		String email;
+	}
+	
+	public class Commit{
+		public Author author;
+	}
 	
 	public class Payload{
 		/** “repository”, “branch”, or “tag” */
@@ -22,8 +31,10 @@ public class EventRecord {
 		public String object;
 		/** Number of commits */
 		public int size;
-		/** Commits */
+		/** Commits ver. 1*/
 		public List<List<String>> shas;
+		/** Commits ver. 2*/
+		public List<Commit> commits;
 	}
 	
 	public String created_at;
@@ -71,6 +82,11 @@ public class EventRecord {
 				if(commit.size() > 3){
 					committers.add(commit.get(3));
 				}
+			}
+		}
+		else if(payload.commits != null){
+			for(Commit commit : payload.commits){
+				committers.add(commit.author.name);
 			}
 		}
 			
