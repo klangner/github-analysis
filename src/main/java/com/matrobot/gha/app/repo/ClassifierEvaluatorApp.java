@@ -8,13 +8,14 @@ import com.matrobot.gha.classifier.IBinaryClassifier;
 import com.matrobot.gha.classifier.LogisticRegressionClassifier;
 import com.matrobot.gha.filter.ClassifyRepositoryFilter;
 import com.matrobot.gha.ml.Dataset;
+import com.matrobot.gha.ml.EvaluationMetrics;
 import com.matrobot.gha.ml.Sample;
 
 public class ClassifierEvaluatorApp {
 
 	private Dataset dataset;
-	private int errorCount;
 	private int counter;
+	private EvaluationMetrics metrics;
 	
 	
 	protected ClassifierEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
@@ -26,8 +27,8 @@ public class ClassifierEvaluatorApp {
 	
 	private double evaluate(IBinaryClassifier classifier, Dataset dataset) {
 
+		metrics = new EvaluationMetrics();
 		counter = 0;
-		errorCount = 0;
 		double sum = 0;
 		for(Sample sample : dataset.getData()){
 				
@@ -35,7 +36,17 @@ public class ClassifierEvaluatorApp {
 			double error = Math.pow(sample.output-confidence, 2); 
 			sum += error;
 			if(error > 0.25){
-				errorCount++;
+				if(sample.output == 1){
+					metrics.addFalseNegative();
+				}
+				else{
+					metrics.addFalsePositive();
+				}
+			}
+			else{
+				if(sample.output == 1){
+					metrics.addTruePositive();
+				}
 			}
 			counter += 1;
 		}
@@ -55,17 +66,13 @@ public class ClassifierEvaluatorApp {
 				Settings.DATASET_PATH+"2012-1/", 
 				Settings.DATASET_PATH+"2012-10/",
 				Settings.DATASET_PATH+"2012-11/");
-		double score;
-		int correctPercentage;
 		Dataset dataset = app.dataset;
 		dataset.saveAsCSV(Settings.DATASET_PATH+"weka.csv");
 		
 		// Static classifier
-		score = app.evaluate(new BinaryStaticClassifier(), dataset);
-		correctPercentage = 100-(int)((app.errorCount*100.0)/app.counter);
 		System.out.println("Static: ");
-		System.out.println("  Error: " + score);
-		System.out.println("  Correct: " + correctPercentage + "%");
+		app.evaluate(new BinaryStaticClassifier(), dataset);
+		app.metrics.print();
 		System.out.println();
 
 		// Logistic regression
@@ -73,11 +80,9 @@ public class ClassifierEvaluatorApp {
 		System.out.println("Train");
 		classifier.train(dataset);
 		System.out.println("Evaluate");
-		score = app.evaluate(classifier, dataset);
-		correctPercentage = 100-(int)((app.errorCount*100.0)/app.counter);
+		app.evaluate(classifier, dataset);
 		System.out.println("Logistic regression: ");
-		System.out.println("  Error: " + score);
-		System.out.println("  Correct: " + correctPercentage + "%");
+		app.metrics.print();
 		System.out.println();
 	}
 	

@@ -24,4 +24,10 @@ public class LogisticRegressionClassifier implements IBinaryClassifier {
 	public void train(Dataset testSet) {
 		model.train(testSet);
 	}
+	
+
+	public void printModel(){
+		model.printModel();
+	}
+	
 }
