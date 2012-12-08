@@ -3,6 +3,7 @@ package com.matrobot.gha.app.repo;
 import java.io.IOException;
 
 import com.matrobot.gha.app.Settings;
+import com.matrobot.gha.classifier.Binary1RClassifier;
 import com.matrobot.gha.classifier.BinaryStaticClassifier;
 import com.matrobot.gha.classifier.IBinaryClassifier;
 import com.matrobot.gha.classifier.LogisticRegressionClassifier;
@@ -47,6 +48,9 @@ public class ClassifierEvaluatorApp {
 				if(sample.output == 1){
 					metrics.addTruePositive();
 				}
+				else{
+					metrics.addTrueNegative();
+				}
 			}
 			counter += 1;
 		}
@@ -72,6 +76,12 @@ public class ClassifierEvaluatorApp {
 		// Static classifier
 		System.out.println("Static: ");
 		app.evaluate(new BinaryStaticClassifier(), dataset);
+		app.metrics.print();
+		System.out.println();
+
+		// 1R regression
+		System.out.println("1R: ");
+		app.evaluate(new Binary1RClassifier(), dataset);
 		app.metrics.print();
 		System.out.println();
 

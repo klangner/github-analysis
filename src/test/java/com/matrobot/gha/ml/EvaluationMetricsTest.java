@@ -14,6 +14,9 @@ public class EvaluationMetricsTest {
 		metrics.addTruePositive();
 		metrics.addTruePositive();
 		
+		metrics.addTrueNegative();
+		metrics.addTrueNegative();
+		
 		metrics.addFalsePositive();
 		metrics.addFalsePositive();
 		metrics.addFalsePositive();
@@ -26,5 +29,6 @@ public class EvaluationMetricsTest {
 		assertEquals(2.0/5, metrics.getPrecision(), 0.01);
 		assertEquals(2.0/6, metrics.getRecall(), 0.01);
 		assertEquals(0.364, metrics.getFScore(), 0.01);
+		assertEquals(4.0/11, metrics.getAccuracy(), 0.01);
 	}
 }

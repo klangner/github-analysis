@@ -170,7 +170,7 @@ public class ArchiveParserApp {
 		String filename = "repositories-" + year + "-" + month + ".csv";
 		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
 		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("name,year,month,push_count, committers_count\n");
+		writer.write("name,year,month,push_count,committer_count\n");
 		for(RepositoryRecord record : repos.values()){
 			if(record.pushEventCount >= REPO_MIN_ACTIVITY){
 				String line = record.repository + "," +
@@ -203,11 +203,11 @@ public class ArchiveParserApp {
 
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2012, 11);
+		parseMonth(2012, 11);
 		
 		// Parse 2012
 		for(int i = 9; i <= 11; i++){
-			parseMonth(2012, i);
+//			parseMonth(2012, i);
 		}
 		
 		// Parse 2011

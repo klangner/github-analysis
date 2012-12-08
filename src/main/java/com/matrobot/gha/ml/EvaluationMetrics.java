@@ -6,17 +6,20 @@ public class EvaluationMetrics {
 	private double truePositive = 0;
 	private double falseNegative = 0;
 	private double falsePositive = 0;
+	private double trueNegatives = 0;
 
 	
 	public void addTruePositive(){
 		truePositive ++;
 	}
 	
+	public void addTrueNegative(){
+		trueNegatives ++;
+	}
 	
 	public void addFalseNegative(){
 		falseNegative ++;
 	}
-	
 	
 	public void addFalsePositive(){
 		falsePositive ++;
@@ -61,8 +64,14 @@ public class EvaluationMetrics {
 
 	public void print() {
 
+		System.out.println("Accuracy: " + getAccuracy());
 		System.out.println("Precision: " + getPrecision());
 		System.out.println("Recall: " + getRecall());
 		System.out.println("F score: " + getFScore());
+	}
+
+	public double getAccuracy() {
+
+		return (truePositive+trueNegatives)/(truePositive+trueNegatives+falsePositive+falseNegative);
 	}
 }
