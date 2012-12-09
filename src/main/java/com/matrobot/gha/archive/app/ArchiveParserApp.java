@@ -1,4 +1,4 @@
-package com.matrobot.gha.app.parser;
+package com.matrobot.gha.archive.app;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
