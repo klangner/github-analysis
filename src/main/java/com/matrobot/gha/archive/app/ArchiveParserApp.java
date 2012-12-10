@@ -203,16 +203,16 @@ public class ArchiveParserApp {
 
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2012, 11);
+//		parseMonth(2012, 11);
 		
 		// Parse 2012
-		for(int i = 9; i <= 11; i++){
+		for(int i = 1; i <= 11; i++){
 //			parseMonth(2012, i);
 		}
 		
 		// Parse 2011
-		for(int i = 3; i <= 5; i++){
-//			parseMonth(2011, i);
+		for(int i = 3; i <= 12; i++){
+			parseMonth(2011, i);
 		}
 
 	}

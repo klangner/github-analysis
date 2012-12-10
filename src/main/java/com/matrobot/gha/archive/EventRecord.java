@@ -37,11 +37,17 @@ public class EventRecord {
 		public List<Commit> commits;
 	}
 	
+	public class ActorAttributes{
+		String email;
+        String login;
+    }
+	
 	public String created_at;
 	public Repo repo;
 	public Repo repository;
 	public String type;
 	public Payload payload;
+	public ActorAttributes actor_attributes;
 	
 	
 	/**
@@ -109,5 +115,19 @@ public class EventRecord {
 		}
 		
 		return false;
+	}
+	
+	
+	/**
+	 * Get actor email or epty string if not available
+	 */
+	public String getActorEmail(){
+		
+		String email = "";
+		if(actor_attributes != null && actor_attributes.email != null){
+			email = actor_attributes.email;
+		}
+		
+		return email;
 	}
 }
