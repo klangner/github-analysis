@@ -31,7 +31,7 @@ public class RegressionRepositoryFilter {
 		for(RepositoryRecord record : datasets.getDataset(1).values()){
 			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
 			RepositoryRecord prevRecord = datasets.findRepository(0, record.repository); 
-			if(nextRecord.pushEventCount > MIN_ACTIVITY){
+			if(record.pushEventCount > MIN_ACTIVITY && nextRecord.pushEventCount > MIN_ACTIVITY){
 				Sample sample = createSample(record, nextRecord, prevRecord);
 				dataset.addSample(sample);
 			}
@@ -43,8 +43,8 @@ public class RegressionRepositoryFilter {
 	private Sample createSample(RepositoryRecord record,
 			RepositoryRecord nextRecord, RepositoryRecord prevRecord) {
 		Sample sample = new Sample();
+		sample.name = record.repository;
 		sample.features = new double[2];
-		
 		sample.features[0] = record.pushEventCount;
 		sample.features[1] =  prevRecord.pushEventCount;
 		sample.output = nextRecord.pushEventCount;
