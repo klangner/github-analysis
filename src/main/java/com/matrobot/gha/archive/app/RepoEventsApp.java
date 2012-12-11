@@ -9,7 +9,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.archive.EventRecord;
@@ -19,11 +21,17 @@ public class RepoEventsApp {
 
 	private String repoName;
 	List<EventRecord> events = new ArrayList<EventRecord>();
+	private Set<String> excludeEventTypes = new HashSet<String>();
 	
 	
 	public RepoEventsApp(String repoName) throws IOException{
 		
 		this.repoName = repoName;
+	}
+	
+	
+	public void addExcludeType(String eventType){
+		excludeEventTypes.add(eventType);
 	}
 
 	public void parseMonth(int year, int month) throws IOException{
@@ -36,7 +44,7 @@ public class RepoEventsApp {
 		while((event = datasetReader.readNextRecord()) != null){
 			
 			String name = event.getRepositoryId();
-			if(repoName.equals(name)){
+			if(repoName.equals(name) && !excludeEventTypes.contains(event.type)){
 				events.add(event);
 			}
 		}
@@ -68,12 +76,13 @@ public class RepoEventsApp {
 
 		long time = System.currentTimeMillis();
 		RepoEventsApp app = new RepoEventsApp("rubinius/rubinius");
+		app.addExcludeType("WatchEvent");
 		
 //		app.parseMonth(2011, 12);
-//		app.parseMonth(2012, 1);
+//		app.parseMonth(2012, 8);
 		
 		// Parse 2011
-		for(int i = 3; i <= 12; i++){
+		for(int i = 2; i <= 12; i++){
 			app.parseMonth(2011, i);
 		}
 

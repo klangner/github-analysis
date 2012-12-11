@@ -40,9 +40,7 @@ public class Dataset {
 		
 		assert(features.length == featureCount);
 		
-		Sample sample = new Sample();
-		sample.features = features;
-		sample.output = output;
+		Sample sample = new Sample(features, output);
 		addSample(sample);
 	}
 	

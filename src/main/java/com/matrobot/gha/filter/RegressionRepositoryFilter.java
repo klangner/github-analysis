@@ -42,9 +42,8 @@ public class RegressionRepositoryFilter {
 
 	private Sample createSample(RepositoryRecord record,
 			RepositoryRecord nextRecord, RepositoryRecord prevRecord) {
-		Sample sample = new Sample();
+		Sample sample = new Sample(2);
 		sample.name = record.repository;
-		sample.features = new double[2];
 		sample.features[0] = record.pushEventCount;
 		sample.features[1] =  prevRecord.pushEventCount;
 		sample.output = nextRecord.pushEventCount;

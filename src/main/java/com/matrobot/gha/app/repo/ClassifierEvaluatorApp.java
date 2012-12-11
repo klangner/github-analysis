@@ -3,8 +3,8 @@ package com.matrobot.gha.app.repo;
 import java.io.IOException;
 
 import com.matrobot.gha.app.Settings;
+import com.matrobot.gha.classifier.BayesClassifier;
 import com.matrobot.gha.classifier.Binary1RClassifier;
-import com.matrobot.gha.classifier.BinaryStaticClassifier;
 import com.matrobot.gha.classifier.IBinaryClassifier;
 import com.matrobot.gha.classifier.LogisticRegressionClassifier;
 import com.matrobot.gha.filter.ClassifyRepositoryFilter;
@@ -73,16 +73,20 @@ public class ClassifierEvaluatorApp {
 		Dataset dataset = app.dataset;
 		dataset.saveAsCSV(Settings.DATASET_PATH+"weka.csv");
 		
-		// Static classifier
-		System.out.println("Static: ");
-		app.evaluate(new BinaryStaticClassifier(), dataset);
-		app.metrics.print();
-		System.out.println();
-
-		// 1R regression
+		// 1R classifier
 		System.out.println("1R: ");
 		app.evaluate(new Binary1RClassifier(), dataset);
 		app.metrics.print();
+		System.out.println();
+
+		// Bayes classifier
+		System.out.println("Bayes: ");
+		BayesClassifier bayes = new BayesClassifier(2);
+		System.out.println("Train");
+		bayes.train(dataset);
+		app.evaluate(bayes, dataset);
+		app.metrics.print();
+		bayes.printModel();
 		System.out.println();
 
 		// Logistic regression

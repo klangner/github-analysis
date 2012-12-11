@@ -31,7 +31,7 @@ public class ClassifyRepositoryFilter {
 		for(RepositoryRecord record : datasets.getDataset(1).values()){
 			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
 			RepositoryRecord prevRecord = datasets.findRepository(0, record.repository); 
-			if(record.pushEventCount > MIN_ACTIVITY){
+			if(record.pushEventCount > MIN_ACTIVITY && prevRecord.pushEventCount > MIN_ACTIVITY){
 				Sample sample = createSample(record, nextRecord, prevRecord);
 				dataset.addSample(sample);
 			}
@@ -40,12 +40,19 @@ public class ClassifyRepositoryFilter {
 		return dataset;
 	}
 
-	private Sample createSample(RepositoryRecord record,
-			RepositoryRecord nextRecord, RepositoryRecord prevRecord) {
-		Sample sample = new Sample();
-		sample.features = new double[2];
-		sample.features[0] = record.pushEventCount-prevRecord.pushEventCount;
-		sample.features[1] =  record.pushEventCount;
+	private Sample createSample(RepositoryRecord record, RepositoryRecord nextRecord, RepositoryRecord prevRecord) {
+		
+		Sample sample = new Sample(2);
+		
+		double prevActivity = prevRecord.pushEventCount;
+		if(prevActivity > 0){
+			sample.features[0] = record.pushEventCount/prevActivity-1;
+		}
+		else{
+			sample.features[0] = 0;
+		}
+
+		sample.features[1] =  record.committers.size()-prevRecord.committers.size();
 		sample.output = (nextRecord.pushEventCount > record.pushEventCount)? 1 : 0;
 		return sample;
 	}

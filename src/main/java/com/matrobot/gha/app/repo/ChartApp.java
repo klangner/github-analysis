@@ -111,8 +111,53 @@ public class ChartApp extends ApplicationFrame {
 //        System.out.println("Correlation 7-8 = " + app.corrCoeff);
 //        app.showChart();
         
-        show2012();
+        show2011();
     }
+   
+   public static void show2011() throws IOException {
+	   
+       ChartApp app;
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-3/", Settings.DATASET_PATH+"2011-4/");
+       System.out.println("Correlation 3-4 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-4/", Settings.DATASET_PATH+"2011-5/");
+       System.out.println("Correlation 4-5 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-5/", Settings.DATASET_PATH+"2011-6/");
+       System.out.println("Correlation 5-6 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-6/", Settings.DATASET_PATH+"2011-7/");
+       System.out.println("Correlation 6-7 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-7/", Settings.DATASET_PATH+"2011-8/");
+       System.out.println("Correlation 7-8 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-8/", Settings.DATASET_PATH+"2011-9/");
+       System.out.println("Correlation 8-9 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-9/", Settings.DATASET_PATH+"2011-10/");
+       System.out.println("Correlation 9-10 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-10/", Settings.DATASET_PATH+"2011-11/");
+       System.out.println("Correlation 10-11 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-11/", Settings.DATASET_PATH+"2011-12/");
+       System.out.println("Correlation 11-12 = " + app.corrCoeff);
+       
+       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
+       		Settings.DATASET_PATH+"2011-12/", Settings.DATASET_PATH+"2012-1/");
+       System.out.println("Correlation 12-1 = " + app.corrCoeff);
+   }
    
    public static void show2012() throws IOException {
 	   
@@ -158,5 +203,4 @@ public class ChartApp extends ApplicationFrame {
        		Settings.DATASET_PATH+"2012-10/", Settings.DATASET_PATH+"2012-11/");
        System.out.println("Correlation 10-11 = " + app.corrCoeff);
    }
-   
 }
