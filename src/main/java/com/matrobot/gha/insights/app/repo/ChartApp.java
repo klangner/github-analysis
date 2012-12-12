@@ -31,7 +31,7 @@ import com.matrobot.gha.insights.ml.Sample;
 @SuppressWarnings("serial")
 public class ChartApp extends ApplicationFrame {
 
-	Properties prop = new Properties();
+	private Properties prop = new Properties();
 	private Dataset dataset;
 	private XYSeriesCollection chartDataset;
 	double corrCoeff;

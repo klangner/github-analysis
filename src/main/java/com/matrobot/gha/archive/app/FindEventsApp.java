@@ -53,7 +53,7 @@ public class FindEventsApp {
 	
 	public static void main(String[] args) throws IOException {
 
-		FindEventsApp app = new FindEventsApp(2012, 11);
-		app.findEventByRepositoryName("ironbee/ironbee");
+		FindEventsApp app = new FindEventsApp(2011, 6);
+		app.findEventByRepositoryName("rubinius/rubinius");
 	}
 }
