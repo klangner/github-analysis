@@ -1,8 +1,9 @@
 package com.matrobot.gha.insights.app.repo;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
-import com.matrobot.gha.archive.app.Settings;
 import com.matrobot.gha.insights.filter.RegressionRepositoryFilter;
 import com.matrobot.gha.insights.ml.Dataset;
 import com.matrobot.gha.insights.ml.Sample;
@@ -14,13 +15,18 @@ public class RegressionEvaluatorApp {
 
 	private static final int PREDICTION_RANGE = 140;
 	
+	Properties prop = new Properties();
 	private Dataset dataset;
 	private int counter;
 	
 	
 	protected RegressionEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		RegressionRepositoryFilter filter = new RegressionRepositoryFilter(firstPath, secondPath, thirdPath);
+		prop.load(new FileInputStream("config.properties"));
+		RegressionRepositoryFilter filter = new RegressionRepositoryFilter(
+				prop.getProperty("data_path") + firstPath, 
+				prop.getProperty("data_path") + secondPath, 
+				prop.getProperty("data_path") + thirdPath);
 		dataset = filter.getDataset();
 		dataset.normalize();
 	}
@@ -62,10 +68,7 @@ public class RegressionEvaluatorApp {
 		IRegression regression;
 		
 		System.out.println("Load datasets");
-		RegressionEvaluatorApp app = new RegressionEvaluatorApp(
-				Settings.DATASET_PATH+"2012-9/", 
-				Settings.DATASET_PATH+"2012-10/", 
-				Settings.DATASET_PATH+"2012-11/");
+		RegressionEvaluatorApp app = new RegressionEvaluatorApp("2012-9/", "2012-10/", "2012-11/");
 
 		
 		// Static classifier

@@ -1,5 +1,6 @@
 package com.matrobot.gha.archive.app;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -8,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Properties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +23,7 @@ public class ArchiveParserApp {
 
 	private static final int REPO_MIN_ACTIVITY = 5;
 //	private static final int USER_MIN_ACTIVITY = 5;
+	Properties prop = new Properties();
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -31,15 +34,17 @@ public class ArchiveParserApp {
 	
 	public ArchiveParserApp(int year, int month) throws IOException{
 		
+		prop.load(new FileInputStream("config.properties"));
 		this.year = year;
 		this.month = month;
-		datasetPath = Settings.DATASET_PATH + year + "-" + month; 
+		datasetPath = prop.getProperty("data_path") + year + "-" + month; 
 		parseFolder();
 	}
 
 	public ArchiveParserApp(String folder) throws IOException{
 		
-		datasetPath = Settings.DATASET_PATH + folder; 
+		prop.load(new FileInputStream("config.properties"));
+		datasetPath = prop.getProperty("data_path") + folder; 
 		parseFolder();
 	}
 
@@ -167,7 +172,7 @@ public class ArchiveParserApp {
 	private void saveRepositoriesAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 		
 		String filename = "repositories-" + year + "-" + month + ".csv";
-		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
 		Writer writer = new OutputStreamWriter(fos, "UTF-8");
 		writer.write("name,year,month,push_count,committer_count\n");
 		for(RepositoryRecord record : repos.values()){
@@ -202,7 +207,7 @@ public class ArchiveParserApp {
 
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2012, 10);
+		parseMonth(2011, 2);
 		
 		// Parse 2012
 		for(int i = 1; i <= 11; i++){

@@ -1,5 +1,6 @@
 package com.matrobot.gha.archive.app;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import com.matrobot.gha.archive.EventRecord;
@@ -18,6 +20,7 @@ import com.matrobot.gha.archive.FolderArchiveReader;
 
 public class RepoEventsApp {
 
+	Properties prop = new Properties();
 	private String repoName;
 	List<EventRecord> events = new ArrayList<EventRecord>();
 	private Set<String> excludeEventTypes = new HashSet<String>();
@@ -25,6 +28,7 @@ public class RepoEventsApp {
 	
 	public RepoEventsApp(String repoName) throws IOException{
 		
+		prop.load(new FileInputStream("config.properties"));
 		this.repoName = repoName;
 	}
 	
@@ -36,7 +40,7 @@ public class RepoEventsApp {
 	public void parseMonth(int year, int month) throws IOException{
 
 		System.out.println("Parse: " + year + "-" + month);
-		String datasetPath = Settings.DATASET_PATH + year + "-" + month; 
+		String datasetPath = prop.getProperty("data_path") + year + "-" + month; 
 		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	event;
 		
@@ -59,7 +63,7 @@ public class RepoEventsApp {
 		} );
 		
 		String filename = repoName.replace('/', '-') + ".csv";
-		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
 		Writer writer = new OutputStreamWriter(fos, "UTF-8");
 		writer.write("created_at, type, actor_email\n");
 		for(EventRecord event : events){

@@ -1,7 +1,9 @@
 package com.matrobot.gha.insights.app.repo;
 
 import java.awt.Dimension;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.JPanel;
 
@@ -15,7 +17,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-import com.matrobot.gha.archive.app.Settings;
 import com.matrobot.gha.insights.filter.RegressionRepositoryFilter;
 import com.matrobot.gha.insights.ml.Dataset;
 import com.matrobot.gha.insights.ml.Sample;
@@ -30,6 +31,7 @@ import com.matrobot.gha.insights.ml.Sample;
 @SuppressWarnings("serial")
 public class ChartApp extends ApplicationFrame {
 
+	Properties prop = new Properties();
 	private Dataset dataset;
 	private XYSeriesCollection chartDataset;
 	double corrCoeff;
@@ -37,7 +39,11 @@ public class ChartApp extends ApplicationFrame {
 	public ChartApp(String firstPath, String secondPath, String thirdPath) throws IOException {
         super("Activity correlations");
 		
-		RegressionRepositoryFilter filter = new RegressionRepositoryFilter(firstPath, secondPath, thirdPath);
+		prop.load(new FileInputStream("config.properties"));
+		RegressionRepositoryFilter filter = new RegressionRepositoryFilter(
+				prop.getProperty("data_path") + firstPath, 
+				prop.getProperty("data_path") + secondPath, 
+				prop.getProperty("data_path") + thirdPath);
 		dataset = filter.getDataset();
 		createChartDataset();
     }
@@ -106,8 +112,8 @@ public class ChartApp extends ApplicationFrame {
 	
    public static void main(String args[]) throws IOException {
 	   
-//        ChartApp app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-//        		Settings.DATASET_PATH+"2012-7/", Settings.DATASET_PATH+"2012-8/");
+//        ChartApp app = new ChartApp("2012-2/", 
+//        		"2012-7/", "2012-8/");
 //        System.out.println("Correlation 7-8 = " + app.corrCoeff);
 //        app.showChart();
         
@@ -118,44 +124,44 @@ public class ChartApp extends ApplicationFrame {
 	   
        ChartApp app;
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-3/", Settings.DATASET_PATH+"2011-4/");
+       app = new ChartApp("2012-2/", 
+       		"2011-3/", "2011-4/");
        System.out.println("Correlation 3-4 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-4/", Settings.DATASET_PATH+"2011-5/");
+       app = new ChartApp("2012-2/", 
+       		"2011-4/", "2011-5/");
        System.out.println("Correlation 4-5 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-5/", Settings.DATASET_PATH+"2011-6/");
+       app = new ChartApp("2012-2/", 
+       		"2011-5/", "2011-6/");
        System.out.println("Correlation 5-6 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-6/", Settings.DATASET_PATH+"2011-7/");
+       app = new ChartApp("2012-2/", 
+       		"2011-6/", "2011-7/");
        System.out.println("Correlation 6-7 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-7/", Settings.DATASET_PATH+"2011-8/");
+       app = new ChartApp("2012-2/", 
+       		"2011-7/", "2011-8/");
        System.out.println("Correlation 7-8 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-8/", Settings.DATASET_PATH+"2011-9/");
+       app = new ChartApp("2012-2/", 
+       		"2011-8/", "2011-9/");
        System.out.println("Correlation 8-9 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-9/", Settings.DATASET_PATH+"2011-10/");
+       app = new ChartApp("2012-2/", 
+       		"2011-9/", "2011-10/");
        System.out.println("Correlation 9-10 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-10/", Settings.DATASET_PATH+"2011-11/");
+       app = new ChartApp("2012-2/", 
+       		"2011-10/", "2011-11/");
        System.out.println("Correlation 10-11 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-11/", Settings.DATASET_PATH+"2011-12/");
+       app = new ChartApp("2012-2/", 
+       		"2011-11/", "2011-12/");
        System.out.println("Correlation 11-12 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2011-12/", Settings.DATASET_PATH+"2012-1/");
+       app = new ChartApp("2012-2/", 
+       		"2011-12/", "2012-1/");
        System.out.println("Correlation 12-1 = " + app.corrCoeff);
    }
    
@@ -163,44 +169,34 @@ public class ChartApp extends ApplicationFrame {
 	   
        ChartApp app;
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-1/", Settings.DATASET_PATH+"2012-2/");
+       app = new ChartApp("2012-2/", "2012-1/", "2012-2/");
        System.out.println("Correlation 1-2 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-2/", Settings.DATASET_PATH+"2012-3/");
+       app = new ChartApp("2012-2/", "2012-2/", "2012-3/");
        System.out.println("Correlation 2-3 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-3/", Settings.DATASET_PATH+"2012-4/");
+       app = new ChartApp("2012-2/", "2012-3/", "2012-4/");
        System.out.println("Correlation 3-4 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-4/", Settings.DATASET_PATH+"2012-5/");
+       app = new ChartApp("2012-2/", "2012-4/", "2012-5/");
        System.out.println("Correlation 4-5 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-5/", Settings.DATASET_PATH+"2012-6/");
+       app = new ChartApp("2012-2/", "2012-5/", "2012-6/");
        System.out.println("Correlation 5-6 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-6/", Settings.DATASET_PATH+"2012-7/");
+       app = new ChartApp("2012-2/", "2012-6/", "2012-7/");
        System.out.println("Correlation 6-7 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-7/", Settings.DATASET_PATH+"2012-8/");
+       app = new ChartApp("2012-2/", "2012-7/", "2012-8/");
        System.out.println("Correlation 7-8 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-8/", Settings.DATASET_PATH+"2012-9/");
+       app = new ChartApp("2012-2/", "2012-8/", "2012-9/");
        System.out.println("Correlation 8-9 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-9/", Settings.DATASET_PATH+"2012-10/");
+       app = new ChartApp("2012-2/", "2012-9/", "2012-10/");
        System.out.println("Correlation 9-10 = " + app.corrCoeff);
        
-       app = new ChartApp(Settings.DATASET_PATH+"2012-2/", 
-       		Settings.DATASET_PATH+"2012-10/", Settings.DATASET_PATH+"2012-11/");
+       app = new ChartApp("2012-2/", "2012-10/", "2012-11/");
        System.out.println("Correlation 10-11 = " + app.corrCoeff);
    }
 }

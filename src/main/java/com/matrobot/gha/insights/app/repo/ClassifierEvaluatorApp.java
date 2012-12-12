@@ -1,8 +1,9 @@
 package com.matrobot.gha.insights.app.repo;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
-import com.matrobot.gha.archive.app.Settings;
 import com.matrobot.gha.insights.classifier.BayesClassifier;
 import com.matrobot.gha.insights.classifier.Binary1RClassifier;
 import com.matrobot.gha.insights.classifier.IBinaryClassifier;
@@ -14,6 +15,7 @@ import com.matrobot.gha.insights.ml.Sample;
 
 public class ClassifierEvaluatorApp {
 
+	Properties prop = new Properties();
 	private Dataset dataset;
 	private int counter;
 	private EvaluationMetrics metrics;
@@ -21,7 +23,11 @@ public class ClassifierEvaluatorApp {
 	
 	protected ClassifierEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		ClassifyRepositoryFilter filter = new ClassifyRepositoryFilter(firstPath, secondPath, thirdPath);
+		prop.load(new FileInputStream("config.properties"));
+		ClassifyRepositoryFilter filter = new ClassifyRepositoryFilter(
+				prop.getProperty("data_path") + firstPath, 
+				prop.getProperty("data_path") + secondPath, 
+				prop.getProperty("data_path") + thirdPath);
 		dataset = filter.getDataset();
 		dataset.normalize();
 	}
@@ -66,12 +72,9 @@ public class ClassifierEvaluatorApp {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		ClassifierEvaluatorApp app = new ClassifierEvaluatorApp(
-				Settings.DATASET_PATH+"2012-1/", 
-				Settings.DATASET_PATH+"2012-10/",
-				Settings.DATASET_PATH+"2012-11/");
+		ClassifierEvaluatorApp app = new ClassifierEvaluatorApp("2012-1/", "2012-10/", "2012-11/");
 		Dataset dataset = app.dataset;
-		dataset.saveAsCSV(Settings.DATASET_PATH+"weka.csv");
+		dataset.saveAsCSV(app.prop.getProperty("data_path") + "weka.csv");
 		
 		// 1R classifier
 		System.out.println("1R: ");

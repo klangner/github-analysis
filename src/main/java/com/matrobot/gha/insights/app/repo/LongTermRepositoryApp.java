@@ -1,5 +1,6 @@
 package com.matrobot.gha.insights.app.repo;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -7,8 +8,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
-import com.matrobot.gha.archive.app.Settings;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 /**
@@ -20,12 +21,14 @@ import com.matrobot.gha.archive.repo.RepositoryRecord;
  */
 public class LongTermRepositoryApp {
 
+	Properties prop = new Properties();
 	private List<String> createdRepositories = new ArrayList<String>();
 	private List<Integer> activeProjectCounts = new ArrayList<Integer>();
 
 	
 	public LongTermRepositoryApp(String firstMonthPath) throws IOException{
 		
+		prop.load(new FileInputStream("config.properties"));
 		initRepositories(firstMonthPath);
 	}
 	
@@ -44,7 +47,7 @@ public class LongTermRepositoryApp {
 
 	public void addMonth(String filePath) throws IOException {
 
-		HashMap<String, RepositoryRecord> dataset = RepositoryRecord.loadData(filePath);
+		HashMap<String, RepositoryRecord> dataset = RepositoryRecord.loadData(prop.getProperty("data_path") + filePath);
 		List<String> nextRepositories = new ArrayList<String>();
 		
 		int activeRepositoryCount = 0;
@@ -74,7 +77,7 @@ public class LongTermRepositoryApp {
 		
 		try{
 			String filename = "top_projects.csv";
-			FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
+			FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
 			Writer writer = new OutputStreamWriter(fos, "UTF-8");
 			writer.write("name\n");
 			for(int i = 0; i < 100; i ++){
@@ -94,21 +97,21 @@ public class LongTermRepositoryApp {
 	public static void main(String[] args) throws IOException {
 
 		long time = System.currentTimeMillis();
-		LongTermRepositoryApp app = new LongTermRepositoryApp(Settings.DATASET_PATH+"2011-10/");
+		LongTermRepositoryApp app = new LongTermRepositoryApp("2011-10/");
 		
-		app.addMonth(Settings.DATASET_PATH+"2011-11/"); 
-		app.addMonth(Settings.DATASET_PATH+"2011-12/");
-		app.addMonth(Settings.DATASET_PATH+"2012-1/");
-		app.addMonth(Settings.DATASET_PATH+"2012-2/");
-		app.addMonth(Settings.DATASET_PATH+"2012-3/");
-		app.addMonth(Settings.DATASET_PATH+"2012-4/");
-		app.addMonth(Settings.DATASET_PATH+"2012-5/");
-		app.addMonth(Settings.DATASET_PATH+"2012-6/");
-		app.addMonth(Settings.DATASET_PATH+"2012-7/");
-		app.addMonth(Settings.DATASET_PATH+"2012-8/");
-		app.addMonth(Settings.DATASET_PATH+"2012-9/");
-		app.addMonth(Settings.DATASET_PATH+"2012-10/");
-		app.addMonth(Settings.DATASET_PATH+"2012-10/");
+		app.addMonth("2011-11/"); 
+		app.addMonth("2011-12/");
+		app.addMonth("2012-1/");
+		app.addMonth("2012-2/");
+		app.addMonth("2012-3/");
+		app.addMonth("2012-4/");
+		app.addMonth("2012-5/");
+		app.addMonth("2012-6/");
+		app.addMonth("2012-7/");
+		app.addMonth("2012-8/");
+		app.addMonth("2012-9/");
+		app.addMonth("2012-10/");
+		app.addMonth("2012-10/");
 		
 		System.out.println("Create report");
 		app.printMonthlyActivity();
