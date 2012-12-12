@@ -3,7 +3,6 @@ package com.matrobot.gha.archive.app;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;

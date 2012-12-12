@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.matrobot.gha.app.Settings;
 import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.SummaryRecord;
