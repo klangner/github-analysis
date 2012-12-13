@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.matrobot.github</groupId>
   <artifactId>github-analysis</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <build>
     <plugins>
       <plugin>
@@ -12,6 +12,29 @@
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
+      </plugin>
+      <plugin>
+      	<artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+			<archive>
+            	<manifest>
+                	<mainClass>com.matrobot.gha.MainApp</mainClass>
+                </manifest>
+            </archive>
+            <descriptorRefs>
+            	<descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <finalName>gha</finalName>
+        	<appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+      		<execution>
+        		<phase>package</phase>
+        		<goals>
+          			<goal>single</goal>
+        		</goals>
+      		</execution>
+    	</executions>
       </plugin>
     </plugins>
   </build>
