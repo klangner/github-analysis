@@ -22,7 +22,7 @@ import com.matrobot.gha.archive.user.UserRecord;
 public class ArchiveParserApp {
 
 	private static final int REPO_MIN_ACTIVITY = 5;
-//	private static final int USER_MIN_ACTIVITY = 5;
+	private static final int USER_MIN_ACTIVITY = 5;
 	Properties prop = new Properties();
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
@@ -58,7 +58,7 @@ public class ArchiveParserApp {
 		while((recordData = datasetReader.readNextRecord()) != null){
 			
 			updateRepositoryData(recordData);
-//			updateUserData(recordData);
+			updateUserData(recordData);
 			info.eventCount ++;
 		}
 		
@@ -106,28 +106,27 @@ public class ArchiveParserApp {
 	}
 
 	
-//	private void updateUserData(EventRecord event) {
-//
-//		if(event.type.equals("PushEvent")){
-//			
-//			String name = event.getCommitterName(); 
-//			if(name != null){
-//				UserRecord user = users.get(name);
-//				if( user == null){
-//					user = new UserRecord();
-//					user.name = name;
-//				}
-//				
-//				user.pushEventCount += 1;
-//				
-//				user.eventCount += 1;
-//				users.put(user.name, user);
-//			}
-//			else{
-//				System.err.println("Missing committer name: " + event.created_at + " " + event.type);
-//			}
-//		}
-//	}
+	private void updateUserData(EventRecord event) {
+
+		if(event.type.equals("PushEvent")){
+			
+			for(String name : event.getCommitters()){ 
+				
+				if(name != null && name.length() > 1){
+					UserRecord user = users.get(name);
+					if(user == null){
+						user = new UserRecord();
+						user.name = name;
+					}
+					
+					user.pushEventCount += 1;
+					
+					user.eventCount += 1;
+					users.put(user.name, user);
+				}
+			}
+		}
+	}
 
 	
 	public void saveAsJson() {
@@ -162,7 +161,7 @@ public class ArchiveParserApp {
 		
 		try{
 			saveRepositoriesAsCSV();
-//			saveCommittersAsCSV();
+			saveCommittersAsCSV();
 			
 		}catch (Exception e){
 			System.err.println("Error: " + e.getMessage());
@@ -187,27 +186,27 @@ public class ArchiveParserApp {
 	}
 	
 
-//	private void saveCommittersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
-//		
-//		String filename = "users-" + year + "-" + month + ".csv";
-//		FileOutputStream fos = new FileOutputStream(Settings.DATASET_PATH + filename, false);
-//		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-//		writer.write("name,year,month,push_count\n");
-//		for(UserRecord record : users.values()){
-//			if(record.pushEventCount >= USER_MIN_ACTIVITY){
-//				String line = record.name + "," +
-//								year + "," + month  + "," +
-//								record.pushEventCount + "\n"; 
-//				writer.write(line);
-//			}
-//		}
-//		writer.close();
-//	}
+	private void saveCommittersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+		
+		String filename = "committers-" + year + "-" + month + ".csv";
+		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
+		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+		writer.write("name,year,month,commit_count\n");
+		for(UserRecord record : users.values()){
+			if(record.pushEventCount >= USER_MIN_ACTIVITY){
+				String line = "\"" + record.name + "\"," +
+								year + "," + month  + "," +
+								record.pushEventCount + "\n"; 
+				writer.write(line);
+			}
+		}
+		writer.close();
+	}
 	
 
 	public static void main(String[] args) throws IOException {
 
-		parseMonth(2011, 2);
+		parseMonth(2012, 11);
 		
 		// Parse 2012
 		for(int i = 1; i <= 11; i++){

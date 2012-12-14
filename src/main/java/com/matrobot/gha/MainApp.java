@@ -11,7 +11,18 @@ public class MainApp {
 	
 	
 	public void run() {
-		System.out.println("Run command: " + params.getCommand());
+		
+		ICommand command = findCommand(params.getCommand());
+		
+		if(command == null){
+			System.out.println("Command " + params.getCommand() + " not found");
+			return;
+		}
+	}
+
+
+	private ICommand findCommand(String command) {
+		return null;
 	}
 
 

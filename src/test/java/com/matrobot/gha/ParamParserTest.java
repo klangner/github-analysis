@@ -3,6 +3,8 @@ package com.matrobot.gha;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class ParamParserTest {
@@ -52,4 +54,14 @@ public class ParamParserTest {
 		assertTrue(parser.hasAllParams());
 	}
 
+	@Test
+	public void testFolders() {
+		String[] args = {"my_command", "-data=path", "-from=2011-10", "-to=2012-2", "-repo=ala/ola"};
+		ParamParser parser = new ParamParser(args);
+		
+		List<String> folders = parser.getMonthFolders();
+		
+		assertEquals(5, folders.size());
+		assertEquals("path/2012-1", folders.get(3));
+	}
 }

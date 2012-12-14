@@ -5,17 +5,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.matrobot.gha.ICommand;
+import com.matrobot.gha.ParamParser;
 import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
-public class FindEventsApp {
+public class FindEventsApp implements ICommand{
 
 	Properties prop = new Properties();
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	
 	
+	@Override
+	public void run(ParamParser params) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public FindEventsApp(int year, int month) throws IOException{
 		
 		prop.load(new FileInputStream("config.properties"));
