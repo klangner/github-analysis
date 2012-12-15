@@ -130,4 +130,17 @@ public class EventRecord {
 		
 		return email;
 	}
+
+	
+	/**
+	 * @return Header for CSV file
+	 */
+	public static String getCSVHeaders(){
+		return "created_at, repository, type\n";
+	}
+	
+	
+	public String toCSV(){
+		return created_at + "," + getRepositoryId() + "," + type + "\n";
+	}
 }

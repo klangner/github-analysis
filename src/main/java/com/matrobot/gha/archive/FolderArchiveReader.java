@@ -39,12 +39,15 @@ public class FolderArchiveReader{
 				return (name.endsWith(".gz"));
 			}
 		};
-		List<File> files = Arrays.asList(rootFolder.listFiles(filter));
-		Collections.sort(files);
-		
-		for(File file : files){
-			if(file.isFile()){
-				filePaths.add(file.getPath());
+
+		if(rootFolder.isDirectory()){
+			List<File> files = Arrays.asList(rootFolder.listFiles(filter));
+			Collections.sort(files);
+			
+			for(File file : files){
+				if(file.isFile()){
+					filePaths.add(file.getPath());
+				}
 			}
 		}
 	}

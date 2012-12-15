@@ -14,9 +14,13 @@ This project contains code for parsing and analysis data availabe from githubarc
 
 Run the application to extract events for particular repository with command:
 
-    java -jar gha.jar find_events -data=<path_to_data> -from=2011-11 -to=2012-2 -repo=rails/rails
+    java -jar gha.jar find_events -data=<path_to_data> -from=<year-month> -to=<year-month> -repo=<user/repo>
 
 This command will create events.csv file.
+
+Example:
+
+    java -jar gha.jar find_events -data=/home/klangner/githubdata -from=2011-11 -to=2012-02 -repo=rails/rails
 
 
 ## Packages

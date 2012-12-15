@@ -24,6 +24,9 @@ public class ParamParser {
 			String argument = args[i];
 			if(argument.startsWith("-data=")){
 				dataPath = argument.substring(6);
+				if(!dataPath.endsWith("/")){
+					dataPath += '/';
+				}
 			}
 			else if(argument.startsWith("-from=")){
 				startDate = argument.substring(6);
@@ -97,7 +100,7 @@ public class ParamParser {
 				endMonth = Integer.parseInt(tokens[1]);
 		
 				while(year < endYear || month <= endMonth){
-					folders.add(dataPath + "/" + year + "-" + month);
+					folders.add(dataPath + year + "-" + month);
 					
 					month ++;
 					if(month > 12){

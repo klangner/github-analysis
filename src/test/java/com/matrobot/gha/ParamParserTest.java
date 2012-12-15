@@ -23,7 +23,7 @@ public class ParamParserTest {
 		String[] args = {"my_command", "-data=path"};
 		ParamParser parser = new ParamParser(args);
 		
-		assertEquals("path", parser.getDataPath());
+		assertEquals("path/", parser.getDataPath());
 	}
 
 

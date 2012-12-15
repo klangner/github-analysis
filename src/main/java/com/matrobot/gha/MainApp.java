@@ -1,5 +1,9 @@
 package com.matrobot.gha;
 
+import java.io.IOException;
+
+import com.matrobot.gha.archive.app.FindEventsApp;
+
 public class MainApp {
 
 	private ParamParser params;
@@ -10,7 +14,7 @@ public class MainApp {
 	}
 	
 	
-	public void run() {
+	public void run() throws IOException {
 		
 		ICommand command = findCommand(params.getCommand());
 		
@@ -18,15 +22,22 @@ public class MainApp {
 			System.out.println("Command " + params.getCommand() + " not found");
 			return;
 		}
+		
+		command.run(params);
 	}
 
 
 	private ICommand findCommand(String command) {
+		
+		if(command.equals("find_events")){
+			return new FindEventsApp();
+		}
+		
 		return null;
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		ParamParser params = new ParamParser(args);
 		
