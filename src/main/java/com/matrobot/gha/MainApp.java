@@ -2,7 +2,7 @@ package com.matrobot.gha;
 
 import java.io.IOException;
 
-import com.matrobot.gha.archive.app.FindEventsApp;
+import com.matrobot.gha.archive.cmd.FindEventsCmd;
 
 public class MainApp {
 
@@ -30,7 +30,7 @@ public class MainApp {
 	private ICommand findCommand(String command) {
 		
 		if(command.equals("find_events")){
-			return new FindEventsApp();
+			return new FindEventsCmd();
 		}
 		
 		return null;
