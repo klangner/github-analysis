@@ -33,6 +33,8 @@ datapath: /home/klangner/datasets/github
 output: events.csv  
 ```
 
+[See more](github-analysis/blob/master/docs/scripts.md)
+
 ## Packages
 
 - **com.matrobot.gha.archive** - Contains code to parse githubarchive.org files and create 
