@@ -3,6 +3,7 @@ package com.matrobot.gha;
 import java.io.IOException;
 
 import com.matrobot.gha.archive.cmd.FindEventsCmd;
+import com.matrobot.gha.archive.cmd.RepoActivityCmd;
 
 public class MainApp {
 
@@ -32,6 +33,9 @@ public class MainApp {
 		if(command.equals("find_events")){
 			return new FindEventsCmd();
 		}
+		else if(command.equals("repo_activity")){
+			return new RepoActivityCmd();
+		}
 		
 		return null;
 	}
@@ -41,7 +45,7 @@ public class MainApp {
 
 		ParamParser params = new ParamParser(args);
 		
-		if(params.hasAllParams()){
+		if(params.getCommand() != null){
 			MainApp app = new MainApp(params);
 			app.run();
 		}
@@ -53,16 +57,9 @@ public class MainApp {
 
 	private static void showHelp() {
 
-		System.out.println("Usage:");
-		System.out.println("java -jar gha.jar <command> -data=<path> -from=<year-month> -to=<year-month> -repo=<user/repo>");
-		System.out.println();
-
-		System.out.println("Command:");
-		System.out.println("* find_events: Find all events and save them to csv file");
-		System.out.println();
-
-		System.out.println("Example:");
-		System.out.println("java -jar gha.jar find_events -data=dataset -from=2011-11 -to=2012-2 -repo=rails/rails");
+		System.out.println("Commands:");
+		System.out.println("- find_events: Find all events and save them to csv file");
+		System.out.println("- repos: Create report with repository activity");
 		System.out.println();
 	}
 }

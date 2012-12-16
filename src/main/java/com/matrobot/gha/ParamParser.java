@@ -72,7 +72,9 @@ public class ParamParser {
 			Map<String, Object> config = (Map<String, Object>) yaml.load(new FileInputStream(filename));
 			command = config.get("command").toString();
 			setDatapath(config.get("datapath").toString());
-			repositoryName = config.get("repository").toString();
+			if(config.get("repository") != null){
+				repositoryName = config.get("repository").toString();
+			}
 			outputFilename = config.get("output").toString();
 			Map<String, String> dateRange = (Map<String, String>) config.get("date");
 			startDate = dateRange.get("from");

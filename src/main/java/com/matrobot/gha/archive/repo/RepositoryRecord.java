@@ -53,4 +53,17 @@ public class RepositoryRecord {
 		return dataset;
 	}
 	
+	/**
+	 * @return Header for CSV file
+	 */
+	public static String getCSVHeaders(){
+		return "name, push_count, committer_count\n";
+	}
+	
+	/**
+	 * @return CSV
+	 */
+	public String toCSV(){
+		return repository + ", " + pushEventCount + ", " + committers.size() + "\n"; 
+	}
 }

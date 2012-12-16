@@ -10,6 +10,11 @@ import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
+/**
+ * Find all events for given repository or user
+ * 
+ * @author Krzysztof Langner
+ */
 public class FindEventsCmd implements ICommand{
 
 	private String datasetPath;
@@ -17,10 +22,6 @@ public class FindEventsCmd implements ICommand{
 	private PrintStream outputStream;
 	
 	
-	public FindEventsCmd(){
-	
-	}
-		
 	@Override
 	public void run(ParamParser params) throws IOException {
 
