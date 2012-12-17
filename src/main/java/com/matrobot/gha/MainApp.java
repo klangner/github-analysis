@@ -7,10 +7,10 @@ import com.matrobot.gha.archive.cmd.RepoActivityCmd;
 
 public class MainApp {
 
-	private ParamParser params;
+	private Configuration params;
 	
 	
-	public MainApp(ParamParser params){
+	public MainApp(Configuration params){
 		this.params = params;
 	}
 	
@@ -43,7 +43,7 @@ public class MainApp {
 
 	public static void main(String[] args) throws IOException {
 
-		ParamParser params = new ParamParser(args);
+		Configuration params = new Configuration(args[0]);
 		
 		if(params.getCommand() != null){
 			MainApp app = new MainApp(params);

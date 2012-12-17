@@ -1,15 +1,10 @@
 package com.matrobot.gha.archive.app;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.HashMap;
-import java.util.Properties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,7 +18,6 @@ public class ArchiveParserApp {
 
 	private static final int REPO_MIN_ACTIVITY = 5;
 	private static final int USER_MIN_ACTIVITY = 5;
-	Properties prop = new Properties();
 	private String datasetPath;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	HashMap<String, UserRecord> users = new HashMap<String, UserRecord>();
@@ -34,17 +28,9 @@ public class ArchiveParserApp {
 	
 	public ArchiveParserApp(int year, int month) throws IOException{
 		
-		prop.load(new FileInputStream("config.properties"));
 		this.year = year;
 		this.month = month;
-		datasetPath = prop.getProperty("data_path") + year + "-" + month; 
-		parseFolder();
-	}
-
-	public ArchiveParserApp(String folder) throws IOException{
-		
-		prop.load(new FileInputStream("config.properties"));
-		datasetPath = prop.getProperty("data_path") + folder; 
+//		datasetPath = prop.getProperty("data_path") + year + "-" + month; 
 		parseFolder();
 	}
 
@@ -170,47 +156,47 @@ public class ArchiveParserApp {
 
 	private void saveRepositoriesAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 		
-		String filename = "repositories-" + year + "-" + month + ".csv";
-		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
-		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("name,year,month,push_count,committer_count\n");
-		for(RepositoryRecord record : repos.values()){
-			if(record.pushEventCount >= REPO_MIN_ACTIVITY){
-				String line = record.repository + "," +
-								year + "," + month  + "," +
-								record.pushEventCount + ", " + record.committers.size() + "\n"; 
-				writer.write(line);
-			}
-		}
-		writer.close();
+//		String filename = "repositories-" + year + "-" + month + ".csv";
+//		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
+//		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+//		writer.write("name,year,month,push_count,committer_count\n");
+//		for(RepositoryRecord record : repos.values()){
+//			if(record.pushEventCount >= REPO_MIN_ACTIVITY){
+//				String line = record.repository + "," +
+//								year + "," + month  + "," +
+//								record.pushEventCount + ", " + record.committers.size() + "\n"; 
+//				writer.write(line);
+//			}
+//		}
+//		writer.close();
 	}
 	
 
 	private void saveCommittersAsCSV() throws FileNotFoundException, UnsupportedEncodingException, IOException {
 		
-		String filename = "committers-" + year + "-" + month + ".csv";
-		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
-		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("name,year,month,commit_count\n");
-		for(UserRecord record : users.values()){
-			if(record.pushEventCount >= USER_MIN_ACTIVITY){
-				String line = "\"" + record.name + "\"," +
-								year + "," + month  + "," +
-								record.pushEventCount + "\n"; 
-				writer.write(line);
-			}
-		}
-		writer.close();
+//		String filename = "committers-" + year + "-" + month + ".csv";
+//		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
+//		Writer writer = new OutputStreamWriter(fos, "UTF-8");
+//		writer.write("name,year,month,commit_count\n");
+//		for(UserRecord record : users.values()){
+//			if(record.pushEventCount >= USER_MIN_ACTIVITY){
+//				String line = "\"" + record.name + "\"," +
+//								year + "," + month  + "," +
+//								record.pushEventCount + "\n"; 
+//				writer.write(line);
+//			}
+//		}
+//		writer.close();
 	}
 	
 
 	public static void main(String[] args) throws IOException {
 
-//		parseMonth(2012, 11);
+		parseMonth(2011, 11);
 		
 		// Parse 2012
 		for(int i = 1; i < 11; i++){
-			parseMonth(2012, i);
+//			parseMonth(2012, i);
 		}
 		
 		// Parse 2011

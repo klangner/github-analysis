@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 import com.matrobot.gha.ICommand;
-import com.matrobot.gha.ParamParser;
+import com.matrobot.gha.Configuration;
 import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
@@ -23,7 +23,7 @@ public class FindEventsCmd implements ICommand{
 	
 	
 	@Override
-	public void run(ParamParser params) throws IOException {
+	public void run(Configuration params) throws IOException {
 
 		outputStream = params.getOutputStream();
 		outputStream.print(EventRecord.getCSVHeaders());

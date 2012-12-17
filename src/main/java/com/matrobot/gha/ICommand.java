@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface ICommand {
 
-	public void run(ParamParser params) throws IOException;
+	public void run(Configuration params) throws IOException;
 }

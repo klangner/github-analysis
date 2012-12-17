@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import com.matrobot.gha.ICommand;
-import com.matrobot.gha.ParamParser;
+import com.matrobot.gha.Configuration;
 import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
@@ -22,7 +22,7 @@ public class RepoActivityCmd implements ICommand{
 	
 	
 	@Override
-	public void run(ParamParser params) throws IOException {
+	public void run(Configuration params) throws IOException {
 
 		for(String path : params.getMonthFolders()){
 			String datasetPath = path;
@@ -65,6 +65,9 @@ public class RepoActivityCmd implements ICommand{
 			else if(event.type.equals("IssuesEvent")){
 				record.issueOpenEventCount += 1;
 			}
+			else if(event.type.equals("ForkEvent")){
+				record.forkEventCount += 1;
+			}
 			
 
 			record.eventCount += 1;
@@ -79,6 +82,7 @@ public class RepoActivityCmd implements ICommand{
 			record.pushEventCount += 1;
 			for(String committer : event.getCommitters()){
 				record.committers.add(committer);
+				record.community.add(committer);
 			}
 		}
 	}

@@ -15,6 +15,10 @@ public class EventRecord {
         public String name;
 	}
 
+	public class Actor{
+		String login;
+	}
+	
 	public class Author{
 		String name;
 		String email;
@@ -47,6 +51,7 @@ public class EventRecord {
 	public Repo repository;
 	public String type;
 	public Payload payload;
+	public Actor actor;
 	public ActorAttributes actor_attributes;
 	
 	
@@ -121,14 +126,17 @@ public class EventRecord {
 	/**
 	 * Get actor email or epty string if not available
 	 */
-	public String getActorEmail(){
+	public String getActorLogin(){
 		
-		String email = "";
-		if(actor_attributes != null && actor_attributes.email != null){
-			email = actor_attributes.email;
+		String login = "";
+		if(actor_attributes != null && actor_attributes.login != null){
+			login = actor_attributes.login;
+		}
+		else if(actor != null){
+			login = actor.login;
 		}
 		
-		return email;
+		return login;
 	}
 
 	

@@ -21,10 +21,12 @@ public class RepositoryRecord {
 	public int eventCount = 0;
 	public int pushEventCount = 0;
 	public int issueOpenEventCount = 0;
+	public int forkEventCount = 0;
 	public boolean isNew = false;
 	public boolean isFork = false;
 	
 	public Set<String> committers = new HashSet<String>();
+	public Set<String> community = new HashSet<String>();
 	
 	
 	/**
@@ -57,13 +59,14 @@ public class RepositoryRecord {
 	 * @return Header for CSV file
 	 */
 	public static String getCSVHeaders(){
-		return "name, push_count, committer_count\n";
+		return "name, push_count, committer_count, fork_count, community_size\n";
 	}
 	
 	/**
 	 * @return CSV
 	 */
 	public String toCSV(){
-		return repository + ", " + pushEventCount + ", " + committers.size() + "\n"; 
+		return repository + ", " + pushEventCount + ", " + committers.size() + ", " +
+				forkEventCount + ", " + community.size() + "\n"; 
 	}
 }

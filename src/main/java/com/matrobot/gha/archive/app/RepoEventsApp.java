@@ -65,10 +65,10 @@ public class RepoEventsApp {
 		String filename = repoName.replace('/', '-') + ".csv";
 		FileOutputStream fos = new FileOutputStream(prop.getProperty("data_path") + filename, false);
 		Writer writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write("created_at, type, actor_email\n");
+		writer.write("created_at, type, actor_login\n");
 		for(EventRecord event : events){
 			String line = event.created_at + "," + event.type + "," + 
-					event.getActorEmail() + "\n"; 
+					event.getActorLogin() + "\n"; 
 			writer.write(line);
 		}
 		writer.close();
