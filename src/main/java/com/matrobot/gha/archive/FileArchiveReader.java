@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import com.matrobot.gha.archive.event.EventRecord;
 
 
 public class FileArchiveReader implements Iterator<EventRecord>{
@@ -49,7 +50,7 @@ public class FileArchiveReader implements Iterator<EventRecord>{
 
 	private void initContent(InputStream inputStream) throws IOException{
 
-		Gson gson = new Gson();
+		Gson gson = EventRecord.getGson();
 		JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
 		reader.setLenient(true);
 	    records = new ArrayList<EventRecord>();

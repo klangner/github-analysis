@@ -11,6 +11,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.junit.Test;
 
+import com.matrobot.gha.archive.event.EventRecord;
+
 public class FileDatasetReaderTest {
 
 	@Test

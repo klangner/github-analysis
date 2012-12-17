@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
+import com.matrobot.gha.archive.event.EventRecord;
 
 public class RepoEventsApp {
 

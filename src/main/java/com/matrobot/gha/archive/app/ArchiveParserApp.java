@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.SummaryRecord;
+import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 import com.matrobot.gha.archive.user.UserRecord;
 

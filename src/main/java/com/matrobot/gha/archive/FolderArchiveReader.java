@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.matrobot.gha.archive.event.EventRecord;
+
 
 
 public class FolderArchiveReader{

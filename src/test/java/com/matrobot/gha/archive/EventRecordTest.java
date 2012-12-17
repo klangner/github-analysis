@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.matrobot.gha.archive.EventRecord;
+import com.matrobot.gha.archive.event.EventRecord;
 
 public class EventRecordTest {
 

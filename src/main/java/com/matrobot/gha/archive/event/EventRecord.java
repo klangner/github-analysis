@@ -1,24 +1,31 @@
-package com.matrobot.gha.archive;
+package com.matrobot.gha.archive.event;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Read event from archive 
  */
 public class EventRecord {
 
+	public static Gson getGson(){
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Actor.class, new ActorDeserializer());
+		return builder.create();
+	}
+	
+	
 	public class Repo{
 		public String id;
         public String url;
         public String name;
 	}
 
-	public class Actor{
-		String login;
-	}
-	
 	public class Author{
 		String name;
 		String email;

@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 import com.matrobot.gha.ICommand;
 import com.matrobot.gha.Configuration;
-import com.matrobot.gha.archive.EventRecord;
 import com.matrobot.gha.archive.FolderArchiveReader;
+import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 /**
