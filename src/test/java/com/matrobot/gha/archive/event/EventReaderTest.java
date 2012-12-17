@@ -12,7 +12,6 @@ public class EventReaderTest {
 	public void getRepositoryId1() {
 		
 		URL url = getClass().getResource("testdata");
-		System.out.println(url);
 		EventReader reader = new EventReader(url.getPath());
 
 		EventRecord data = reader.next();

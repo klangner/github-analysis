@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
+import com.matrobot.gha.archive.event.EventFilterReader;
 import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
@@ -17,7 +18,7 @@ import com.matrobot.gha.archive.repo.RepositoryRecord;
  */
 public class FindEventsCmd implements ICommand{
 
-	private EventReader eventReader;
+	private EventFilterReader eventReader;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	private PrintStream outputStream;
 	
@@ -26,37 +27,22 @@ public class FindEventsCmd implements ICommand{
 	public void run(Configuration params) throws IOException {
 
 		outputStream = params.getOutputStream();
+		eventReader = new EventFilterReader(new EventReader(params.getMonthFolders()));
+		eventReader.setRepoName(params.getRepositoryName());
+
 		outputStream.print(EventRecord.getCSVHeaders());
-		eventReader = new EventReader(params.getMonthFolders());
-		findEventByRepositoryName(params.getRepositoryName());
+		saveAsCSV();
 	}
 
 
-	protected void findEventByRepositoryName(String name) throws IOException{
+	private void saveAsCSV() throws IOException{
 		
 		EventRecord	record;
-		
 		while((record = eventReader.next()) != null){
-
-			String repoId = record.getRepositoryId(); 
-			if(repoId != null && repoId.equals(name)){
-				outputStream.print(record.toCSV());
-			}
+			outputStream.print(record.toCSV());
 		}
 	}
 
-	
-	protected void findEventByUser(String name) throws IOException{
-		
-		EventRecord	record;
-		
-		while((record = eventReader.next()) != null){
-			
-			if(record.getCommitters().contains(name)){
-				outputStream.print(record.toCSV());
-			}
-		}
-	}
 	
 	/**
 	 * for local testing
