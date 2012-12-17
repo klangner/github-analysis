@@ -1,6 +1,7 @@
 package com.matrobot.gha.archive.event;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventReader {
@@ -16,6 +17,13 @@ public class EventReader {
 	}
 	
 	
+	public EventReader(String folder) {
+		folders = new ArrayList<String>();
+		folders.add(folder);
+		prepareNextDataset();
+	}
+
+
 	public EventRecord next(){
 
 		EventRecord record = null;

@@ -31,7 +31,6 @@ public class RepoActivityCmd implements ICommand{
 
 		for(String path : params.getMonthFolders()){
 			String datasetPath = path;
-			System.out.println("Parse: " + datasetPath);
 			parseFolder(datasetPath);
 		}
 		
