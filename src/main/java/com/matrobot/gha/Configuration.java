@@ -20,6 +20,7 @@ public class Configuration {
 	private String startDate;
 	private String endDate;
 	private String outputFilename;
+	private String orderBy;
 	private PrintStream outputStream;
 	
 	
@@ -51,6 +52,9 @@ public class Configuration {
 		setDatapath(config.get("datapath").toString());
 		if(config.get("repository") != null){
 			repositoryName = config.get("repository").toString();
+		}
+		if(config.get("order_by") != null){
+			orderBy = config.get("order_by").toString();
 		}
 		outputFilename = config.get("output").toString();
 		Map<String, String> dateRange = (Map<String, String>) config.get("date");
@@ -157,5 +161,9 @@ public class Configuration {
 		}
 		
 		return outputStream;
+	}
+
+	public String getOrderBy() {
+		return orderBy;
 	}
 }

@@ -8,6 +8,8 @@ date:
   from: 2011-10
   to: 2012-1
   
+order_by: ala
+  
 datapath: datasets/github
 
 output: events.csv  

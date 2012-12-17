@@ -56,4 +56,13 @@ public class ConfigurationTest {
 		assertEquals(4, folders.size());
 		assertEquals("datasets/github/2012-1", folders.get(3));
 	}
+
+
+	@Test
+	public void testOrder() {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/config1.yaml");
+		Configuration parser = new Configuration(inputStream);
+		
+		assertEquals("ala", parser.getOrderBy());
+	}
 }

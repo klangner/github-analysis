@@ -33,7 +33,7 @@ datapath: /home/klangner/datasets/github
 output: events.csv  
 ```
 
-[See more](github-analysis/blob/master/docs/scripts.md)
+[See more](github-analysis/blob/master/docs/configs.md)
 
 ## Packages
 
