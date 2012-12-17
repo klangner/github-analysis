@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive;
+package com.matrobot.gha.archive.event;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,8 +7,8 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import com.matrobot.gha.archive.FolderArchiveReader;
 import com.matrobot.gha.archive.event.EventRecord;
+import com.matrobot.gha.archive.event.FolderArchiveReader;
 
 public class FolderDatasetReaderTest {
 

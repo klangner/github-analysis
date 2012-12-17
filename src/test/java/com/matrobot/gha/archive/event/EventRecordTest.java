@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive;
+package com.matrobot.gha.archive.event;
 
 import static org.junit.Assert.assertEquals;
 

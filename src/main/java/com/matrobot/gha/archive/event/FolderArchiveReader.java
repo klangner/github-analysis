@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive;
+package com.matrobot.gha.archive.event;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.matrobot.gha.archive.event.EventRecord;
 
 
 

@@ -39,6 +39,7 @@ public class RepositoryMonthlyActivity {
 			line += ", " + monthlyActivity.get(i);
 		}
 		
+		line += "\n";
 		return line;
 	}
 }

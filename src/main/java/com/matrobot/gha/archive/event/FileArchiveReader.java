@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive;
+package com.matrobot.gha.archive.event;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
-import com.matrobot.gha.archive.event.EventRecord;
 
 
 public class FileArchiveReader implements Iterator<EventRecord>{

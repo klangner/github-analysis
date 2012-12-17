@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 
-import com.matrobot.gha.ICommand;
 import com.matrobot.gha.Configuration;
-import com.matrobot.gha.archive.FolderArchiveReader;
+import com.matrobot.gha.ICommand;
+import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
@@ -17,7 +17,7 @@ import com.matrobot.gha.archive.repo.RepositoryRecord;
  */
 public class FindEventsCmd implements ICommand{
 
-	private String datasetPath;
+	private EventReader eventReader;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	private PrintStream outputStream;
 	
@@ -27,21 +27,16 @@ public class FindEventsCmd implements ICommand{
 
 		outputStream = params.getOutputStream();
 		outputStream.print(EventRecord.getCSVHeaders());
-		
-		for(String path : params.getMonthFolders()){
-			datasetPath = path;
-			System.out.println("Parse: " + datasetPath);
-			findEventByRepositoryName(params.getRepositoryName());
-		}
+		eventReader = new EventReader(params.getMonthFolders());
+		findEventByRepositoryName(params.getRepositoryName());
 	}
 
 
 	protected void findEventByRepositoryName(String name) throws IOException{
 		
-		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	record;
 		
-		while((record = datasetReader.readNextRecord()) != null){
+		while((record = eventReader.next()) != null){
 
 			String repoId = record.getRepositoryId(); 
 			if(repoId != null && repoId.equals(name)){
@@ -53,14 +48,27 @@ public class FindEventsCmd implements ICommand{
 	
 	protected void findEventByUser(String name) throws IOException{
 		
-		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	record;
 		
-		while((record = datasetReader.readNextRecord()) != null){
+		while((record = eventReader.next()) != null){
 			
 			if(record.getCommitters().contains(name)){
 				outputStream.print(record.toCSV());
 			}
 		}
 	}
+	
+	/**
+	 * for local testing
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException {
+
+		Configuration params = new Configuration("configs/events.yaml");
+		
+		FindEventsCmd app = new FindEventsCmd();
+		app.run(params);
+	}
+	
 }
