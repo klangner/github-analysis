@@ -3,8 +3,8 @@ package com.matrobot.gha.archive.repo;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.event.EventRecord;
+import com.matrobot.gha.archive.event.IEventReader;
 
 
 /**
@@ -12,18 +12,19 @@ import com.matrobot.gha.archive.event.EventRecord;
  * 
  * @author Krzysztof Langner
  */
-public class RepositoryReader {
+public class RepositoryReader implements IRepositoryReader{
 
-	private EventReader eventReader;
+	private IEventReader eventReader;
 	private HashMap<String, RepositoryRecord> repoData = null;
 	private Iterator<RepositoryRecord> dataIterator;
 	
 	
-	public RepositoryReader(EventReader reader){
+	public RepositoryReader(IEventReader reader){
 		this.eventReader = reader;
 	}
 	
 	
+	@Override
 	public RepositoryRecord next(){
 
 		if(repoData == null){

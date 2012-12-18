@@ -6,13 +6,13 @@ package com.matrobot.gha.archive.event;
  * 
  * @author Krzysztof Langner
  */
-public class EventFilterReader {
+public class EventFilterReader implements IEventReader{
 
-	private EventReader reader;
+	private IEventReader reader;
 	private String repoName;
 	
 	
-	public EventFilterReader(EventReader reader){
+	public EventFilterReader(IEventReader reader){
 		this.reader = reader;
 	}
 	
@@ -26,6 +26,7 @@ public class EventFilterReader {
 	}
 	
 	
+	@Override
 	public EventRecord next(){
 
 		EventRecord record;
