@@ -1,9 +1,11 @@
-package com.matrobot.gha.archive.repo;
+package com.matrobot.gha.insights.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 public class RepositoryArchiveList {
 

@@ -2,7 +2,6 @@ package com.matrobot.gha.insights.filter;
 
 import java.io.IOException;
 
-import com.matrobot.gha.archive.repo.RepositoryArchiveList;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 import com.matrobot.gha.insights.ml.Dataset;
 import com.matrobot.gha.insights.ml.Sample;
