@@ -18,7 +18,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testFirstRecord() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/2012-04-01-0.json.gz");
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
@@ -29,7 +29,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testRepositoryId() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/2012-04-01-0.json.gz");
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
@@ -40,7 +40,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testEventType() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/2012-04-01-0.json.gz");
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
@@ -51,7 +51,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testRecordCount() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-04-01-0.json.gz");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/2012-04-01-0.json.gz");
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
@@ -66,7 +66,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testRecordCount2() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/2012-10-13-0.json.gz");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/2012-10-13-0.json.gz");
 		InputStream gzipStream = new GZIPInputStream(inputStream);
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
@@ -81,7 +81,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testCommitters1() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/push_event-1.json");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/push_event-1.json");
 		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord record = reader.next();
@@ -97,7 +97,7 @@ public class FileDatasetReaderTest {
 
 	@Test
 	public void testCommitters2() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream("testdata/push_event-2.json");
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/push_event-2.json");
 		FileArchiveReader reader = new FileArchiveReader(inputStream);
 		
 		EventRecord record = reader.next();

@@ -11,7 +11,7 @@ public class EventReaderTest {
 	@Test
 	public void getRepositoryId1() {
 		
-		URL url = getClass().getResource("testdata");
+		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 
 		EventRecord data = reader.next();

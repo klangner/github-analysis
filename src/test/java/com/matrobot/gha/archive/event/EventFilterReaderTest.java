@@ -11,7 +11,7 @@ public class EventFilterReaderTest {
 	@Test
 	public void getEventCount() {
 		
-		URL url = getClass().getResource("testdata");
+		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		EventFilterReader filterReader = new EventFilterReader(reader);
 		filterReader.setRepoName("rails/rails");

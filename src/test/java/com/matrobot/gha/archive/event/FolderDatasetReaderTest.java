@@ -14,7 +14,7 @@ public class FolderDatasetReaderTest {
 
 	@Test
 	public void testFirstRecord() throws IOException {
-		URL url = getClass().getResource("testdata");
+		URL url = getClass().getResource("../testdata");
 		FolderArchiveReader reader = new FolderArchiveReader(url.getPath());
 		
 		EventRecord data = reader.readNextRecord();
@@ -24,7 +24,7 @@ public class FolderDatasetReaderTest {
 
 	@Test
 	public void testRecordCount() throws IOException {
-		URL url = getClass().getResource("testdata");
+		URL url = getClass().getResource("../testdata");
 		FolderArchiveReader reader = new FolderArchiveReader(url.getPath());
 		
 		int count = 0;

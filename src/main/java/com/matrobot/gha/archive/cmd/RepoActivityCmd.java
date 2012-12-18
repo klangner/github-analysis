@@ -12,8 +12,8 @@ import java.util.List;
 
 import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
+import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.event.EventRecord;
-import com.matrobot.gha.archive.event.FolderArchiveReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
 /**
@@ -23,16 +23,15 @@ import com.matrobot.gha.archive.repo.RepositoryRecord;
  */
 public class RepoActivityCmd implements ICommand{
 
+	private EventReader eventReader;
 	HashMap<String, RepositoryRecord> repos = new HashMap<String, RepositoryRecord>();
 	
 	
 	@Override
 	public void run(Configuration params) throws IOException {
 
-		for(String path : params.getMonthFolders()){
-			String datasetPath = path;
-			parseFolder(datasetPath);
-		}
+		eventReader = new EventReader(params.getMonthFolders());
+		readEvents();
 		
 		List<RepositoryRecord> records = new ArrayList<RepositoryRecord>(repos.values());
 		if(params.getOrderBy() != null){
@@ -43,12 +42,10 @@ public class RepoActivityCmd implements ICommand{
 	}
 
 
-	private void parseFolder(String datasetPath) throws IOException{
+	private void readEvents(){
 		
-		FolderArchiveReader datasetReader = new FolderArchiveReader(datasetPath);
 		EventRecord	recordData;
-		
-		while((recordData = datasetReader.readNextRecord()) != null){
+		while((recordData = eventReader.next()) != null){
 			updateRepositoryData(recordData);
 		}
 	}
