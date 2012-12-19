@@ -21,6 +21,7 @@ public class Configuration {
 	private String endDate;
 	private String outputFilename;
 	private String orderBy;
+	private int minActivity;
 	private PrintStream outputStream;
 	
 	
@@ -55,6 +56,9 @@ public class Configuration {
 		}
 		if(config.get("order_by") != null){
 			orderBy = config.get("order_by").toString();
+		}
+		if(config.get("min_activity") != null){
+			minActivity = Integer.parseInt(config.get("min_activity").toString());
 		}
 		outputFilename = config.get("output").toString();
 		Map<String, String> dateRange = (Map<String, String>) config.get("date");
@@ -165,5 +169,9 @@ public class Configuration {
 
 	public String getOrderBy() {
 		return orderBy;
+	}
+
+	public int getMinActivity() {
+		return minActivity;
 	}
 }

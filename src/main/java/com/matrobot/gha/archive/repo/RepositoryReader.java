@@ -79,7 +79,9 @@ public class RepositoryReader implements IRepositoryReader{
 				record.forkEventCount += 1;
 			}
 			
-
+			if(event.getActorLogin() != null){
+				record.community.add(event.getActorLogin());
+			}
 			record.eventCount += 1;
 			repoData.put(url, record);
 			
@@ -92,7 +94,6 @@ public class RepositoryReader implements IRepositoryReader{
 			record.pushEventCount += 1;
 			for(String committer : event.getCommitters()){
 				record.committers.add(committer);
-				record.community.add(committer);
 			}
 		}
 	}
