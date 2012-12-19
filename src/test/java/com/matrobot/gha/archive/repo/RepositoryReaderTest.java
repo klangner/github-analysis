@@ -23,7 +23,7 @@ public class RepositoryReaderTest {
 
 		RepositoryRecord record;
 		while((record = repoReader.next()) != null){
-			if(record.repository.equals(REPO_NAME)){
+			if(record.repoName.equals(REPO_NAME)){
 				break;
 			}
 		}

@@ -103,7 +103,7 @@ public class OrderedRepoReader implements IRepositoryReader{
 		else if(field == SORT_BY_NAME){
 			cmp = new Comparator<RepositoryRecord>() {
 				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
-					return o1.repository.compareTo(o2.repository);
+					return o1.repoName.compareTo(o2.repoName);
 				}
 			};
 		}

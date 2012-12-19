@@ -36,7 +36,7 @@ public class StatsActivityApp {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		int activity = 0;
 		for(RepositoryRecord record : dataset1.values()){
-			RepositoryRecord nextRecord = dataset2.get(record.repository); 
+			RepositoryRecord nextRecord = dataset2.get(record.repoName); 
 			double currentActivity = record.eventCount;
 			double nextActivity = (nextRecord!=null)? nextRecord.eventCount: 0;
 			if(currentActivity > minActivity){

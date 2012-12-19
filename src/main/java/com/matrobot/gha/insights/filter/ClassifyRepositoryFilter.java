@@ -28,8 +28,8 @@ public class ClassifyRepositoryFilter {
 		Dataset dataset = new Dataset(2);
 		
 		for(RepositoryRecord record : datasets.getDataset(1).values()){
-			RepositoryRecord nextRecord = datasets.findRepository(2, record.repository); 
-			RepositoryRecord prevRecord = datasets.findRepository(0, record.repository); 
+			RepositoryRecord nextRecord = datasets.findRepository(2, record.repoName); 
+			RepositoryRecord prevRecord = datasets.findRepository(0, record.repoName); 
 			if(record.pushEventCount > MIN_ACTIVITY && prevRecord.pushEventCount > MIN_ACTIVITY){
 				Sample sample = createSample(record, nextRecord, prevRecord);
 				dataset.addSample(sample);

@@ -17,7 +17,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class RepositoryRecord {
 
-	public String repository;
+	public String repoName;
 	public int eventCount = 0;
 	public int pushEventCount = 0;
 	public int issueOpenEventCount = 0;
@@ -49,7 +49,7 @@ public class RepositoryRecord {
 
 		HashMap<String, RepositoryRecord> dataset = new HashMap<String, RepositoryRecord>();
 		for(RepositoryRecord row : rows){
-			dataset.put(row.repository, row);
+			dataset.put(row.repoName, row);
 		}
 		
 		return dataset;
@@ -66,7 +66,7 @@ public class RepositoryRecord {
 	 * @return CSV
 	 */
 	public String toCSV(){
-		return repository + ", " + pushEventCount + ", " + eventCount + ", " + committers.size() + ", " +
+		return repoName + ", " + pushEventCount + ", " + eventCount + ", " + committers.size() + ", " +
 				forkEventCount + ", " + community.size() + "\n"; 
 	}
 }

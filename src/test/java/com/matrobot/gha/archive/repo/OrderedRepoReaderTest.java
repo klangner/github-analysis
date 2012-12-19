@@ -21,7 +21,7 @@ public class OrderedRepoReaderTest {
 
 		RepositoryRecord record = sortedReader.next();
 
-		assertEquals("jailuthra/page-about-me", record.repository);
+		assertEquals("jailuthra/page-about-me", record.repoName);
 	}
 
 	@Test
@@ -35,7 +35,7 @@ public class OrderedRepoReaderTest {
 
 		RepositoryRecord record = sortedReader.next();
 
-		assertEquals("daniel-vsln/PPS1901", record.repository);
+		assertEquals("daniel-vsln/PPS1901", record.repoName);
 	}
 
 }

@@ -38,7 +38,7 @@ public class LongTermRepositoryApp {
 		HashMap<String, RepositoryRecord> dataset = RepositoryRecord.loadData(filePath);
 		
 		for(RepositoryRecord repository : dataset.values()){
-			createdRepositories.add(repository.repository);
+			createdRepositories.add(repository.repoName);
 		}
 		
 		activeProjectCounts.add(createdRepositories.size());
