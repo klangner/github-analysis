@@ -8,7 +8,7 @@ import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
 import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.repo.IRepositoryReader;
-import com.matrobot.gha.archive.repo.RepoFilterReader;
+import com.matrobot.gha.archive.repo.FilteredRepoReader;
 import com.matrobot.gha.archive.repo.RepositoryReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
@@ -29,7 +29,7 @@ public class RepoActivityCmd implements ICommand{
 		RepositoryReader repoReader = new RepositoryReader(eventReader);
 		reader = repoReader;
 		if(params.getMinActivity() > 0){
-			RepoFilterReader filteredReader = new RepoFilterReader(reader);
+			FilteredRepoReader filteredReader = new FilteredRepoReader(reader);
 			filteredReader.setMinActivity(params.getMinActivity());
 			reader = filteredReader;
 		}

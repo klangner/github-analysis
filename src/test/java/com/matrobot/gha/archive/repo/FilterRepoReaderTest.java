@@ -1,7 +1,6 @@
 package com.matrobot.gha.archive.repo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URL;
 
@@ -9,27 +8,25 @@ import org.junit.Test;
 
 import com.matrobot.gha.archive.event.EventReader;
 
-public class RepoFilterReaderTest {
+public class FilterRepoReaderTest {
 
-	private static final String REPO_NAME = "rails/rails";
-
-	
 	@Test
 	public void getEventCount() {
 		
+		final int minActivity = 5;
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		RepositoryReader repoReader = new RepositoryReader(reader);
-		RepoFilterReader filteredReader = new RepoFilterReader(repoReader);
+		FilteredRepoReader filteredReader = new FilteredRepoReader(repoReader);
+		filteredReader.setMinActivity(minActivity);
 
 		RepositoryRecord record;
 		while((record = filteredReader.next()) != null){
-			if(record.repository.equals(REPO_NAME)){
+			if(record.eventCount < minActivity){
 				break;
 			}
 		}
 		
-		assertNotNull(record);
-		assertEquals(213, record.eventCount);
+		assertNull(record);
 	}
 }

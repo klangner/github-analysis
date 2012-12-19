@@ -6,13 +6,13 @@ package com.matrobot.gha.archive.repo;
  * 
  * @author Krzysztof Langner
  */
-public class RepoFilterReader implements IRepositoryReader{
+public class FilteredRepoReader implements IRepositoryReader{
 
 	private IRepositoryReader reader;
 	private int minActivity = 0;
 	
 	
-	public RepoFilterReader(IRepositoryReader reader){
+	public FilteredRepoReader(IRepositoryReader reader){
 		this.reader = reader;
 	}
 	
