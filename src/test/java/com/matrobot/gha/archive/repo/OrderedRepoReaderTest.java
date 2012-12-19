@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.matrobot.gha.archive.event.EventReader;
 
-public class SortedRepoReaderTest {
+public class OrderedRepoReaderTest {
 
 	@Test
 	public void sortInc() {
@@ -16,8 +16,8 @@ public class SortedRepoReaderTest {
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		RepositoryReader repoReader = new RepositoryReader(reader);
-		SortedRepoReader sortedReader = new SortedRepoReader(repoReader);
-		sortedReader.addField(SortedRepoReader.SORT_BY_FORKS);
+		OrderedRepoReader sortedReader = new OrderedRepoReader(repoReader);
+		sortedReader.addField(OrderedRepoReader.SORT_BY_FORKS);
 
 		RepositoryRecord record = sortedReader.next();
 
@@ -30,8 +30,8 @@ public class SortedRepoReaderTest {
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		RepositoryReader repoReader = new RepositoryReader(reader);
-		SortedRepoReader sortedReader = new SortedRepoReader(repoReader);
-		sortedReader.addField(SortedRepoReader.SORT_BY_FORKS_DESC);
+		OrderedRepoReader sortedReader = new OrderedRepoReader(repoReader);
+		sortedReader.addField(OrderedRepoReader.SORT_BY_FORKS_DESC);
 
 		RepositoryRecord record = sortedReader.next();
 

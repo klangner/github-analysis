@@ -3,12 +3,14 @@ package com.matrobot.gha.archive.cmd;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
 import com.matrobot.gha.archive.event.EventReader;
-import com.matrobot.gha.archive.repo.IRepositoryReader;
 import com.matrobot.gha.archive.repo.FilteredRepoReader;
+import com.matrobot.gha.archive.repo.IRepositoryReader;
+import com.matrobot.gha.archive.repo.OrderedRepoReader;
 import com.matrobot.gha.archive.repo.RepositoryReader;
 import com.matrobot.gha.archive.repo.RepositoryRecord;
 
@@ -20,6 +22,7 @@ import com.matrobot.gha.archive.repo.RepositoryRecord;
 public class RepoActivityCmd implements ICommand{
 
 	private IRepositoryReader reader;
+	private HashMap<String, String> staticCSVFields = new HashMap<String, String>();
 	
 	
 	@Override
@@ -34,61 +37,44 @@ public class RepoActivityCmd implements ICommand{
 			reader = filteredReader;
 		}
 		
+		if(params.getOrderBy() != null){
+			OrderedRepoReader orderedReader = new OrderedRepoReader(reader);
+			orderedReader.addField(OrderedRepoReader.SORT_BY_EVENTS);
+			reader = orderedReader;
+		}
+		
 		saveAsCSV(params.getOutputStream());
 	}
 
-/*
-	private Comparator<RepositoryRecord> getComparator(String orderBy) {
-
-		Comparator<RepositoryRecord> cmp;
-		
-		if(orderBy.equals("community_size")){
-			cmp = new Comparator<RepositoryRecord>() {
-				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
-					if(o1.community.size() == o2.community.size()){
-						return 0;
-					}
-					else if(o1.community.size() > o2.community.size()){
-						return 1;
-					}
-					else{
-						return -1;
-					}
-				}
-			};
-		}
-		else{
-			cmp = new Comparator<RepositoryRecord>() {
-				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
-					return o1.repository.compareTo(o2.repository);
-				}
-			};
-		}
-		
-		return cmp;
-	}
-*/
-
 	private void saveAsCSV(PrintStream printStream) throws UnsupportedEncodingException, IOException {
-		
+
+		for(String key : staticCSVFields.keySet()){
+			printStream.print(key + ", ");
+		}
 		printStream.print(RepositoryRecord.getCSVHeaders());
 		RepositoryRecord record;
 		while((record = reader.next()) != null){
+			for(String value : staticCSVFields.values()){
+				printStream.print(value + ", ");
+			}
 			printStream.print(record.toCSV());
 		}
 	}
 
 	
 	/**
-	 * for local testing
-	 * @param args
-	 * @throws IOException
+	 * Export data for matrobot.com website
 	 */
 	public static void main(String[] args) throws IOException {
 
+		RepoActivityCmd app = new RepoActivityCmd();
 		Configuration params = new Configuration("configs/export_repos.yaml");
 		
-		RepoActivityCmd app = new RepoActivityCmd();
+		String[] date = params.getStartDate().split("-");
+		if(date.length == 2){
+			app.staticCSVFields.put("year", date[0]);
+			app.staticCSVFields.put("month", date[1]);
+		}
 		app.run(params);
 	}
 	

@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author Krzysztof Langner
  */
-public class SortedRepoReader implements IRepositoryReader{
+public class OrderedRepoReader implements IRepositoryReader{
 
 	public static final int SORT_BY_EVENTS = 1;
 	public static final int SORT_BY_EVENTS_DESC = 2;
@@ -26,7 +26,7 @@ public class SortedRepoReader implements IRepositoryReader{
 	private int field = SORT_BY_EVENTS;
 	
 	
-	public SortedRepoReader(IRepositoryReader reader){
+	public OrderedRepoReader(IRepositoryReader reader){
 		this.reader = reader;
 	}
 	
