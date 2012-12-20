@@ -1,5 +1,6 @@
 package com.matrobot.gha;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.matrobot.gha.archive.cmd.FindEventsCmd;
@@ -42,17 +43,22 @@ public class MainApp {
 	}
 
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException{
 
-		Configuration params = new Configuration(args[0]);
+		Configuration params;
+		try {
+			params = new Configuration(args[0]);
+			if(params.getCommand() != null){
+				MainApp app = new MainApp(params);
+				app.run();
+			}
+			else{
+				showHelp();
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println("Can't find configuration file: " + args[0]);
+		}
 		
-		if(params.getCommand() != null){
-			MainApp app = new MainApp(params);
-			app.run();
-		}
-		else{
-			showHelp();
-		}
 	}
 
 

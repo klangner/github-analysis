@@ -6,7 +6,7 @@ This project contains code for parsing and analysis data availabe from githubarc
 ## Installation
 
 - Download data from http://githubarchive.org. Put each month in separate folder with name year-month (e.g 2012-4)
-- [Download gha.jar](https://docs.google.com/folder/d/0Byh8AijvGkRlRzBOeEp5TlpNVm8/edit).
+- [Download gha-version.zip](https://docs.google.com/folder/d/0Byh8AijvGkRlRzBOeEp5TlpNVm8/edit).
 
 
 
