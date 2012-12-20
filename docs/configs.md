@@ -2,38 +2,38 @@
 
 ## Find events
 
+Extract events from given by **repository** property.
+
+
 ```YAML
-# Extract events from repository rails/rails into events.csv where data in range from 2011-11 to 2012-1
-
 command: find_events
-
 repository: rails/rails
-
 date:
   from: 2011-11
   to: 2012-1
   
 datapath: /home/klangner/datasets/github
-
-output: events.csv  
+output: events.csv
 ```
 
 ## Get repository activity
 
+Extract activity for all repositories in the given time range.
+Repositories can be ordered by **order_by** property.
+
+
 ```YAML
-# Extract events from repository rails/rails into events.csv where data in range from 2011-11 to 2012-1
-
 command: repo_activity
-
-order_by: community_size
-
+order_by: forks
 date:
   from: 2011-11
   to: 2012-1
   
 datapath: /home/klangner/datasets/github
-
 output: repos.csv  
 ```
+
+### Supported order_by fields:
+- forks - Order by number of forks
 
 

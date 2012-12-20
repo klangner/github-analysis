@@ -30,6 +30,7 @@ public class MainApp {
 
 	private ICommand findCommand(String command) {
 		
+		command = command.trim();
 		if(command.equals("find_events")){
 			return new FindEventsCmd();
 		}
