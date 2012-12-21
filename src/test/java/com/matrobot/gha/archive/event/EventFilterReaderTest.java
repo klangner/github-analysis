@@ -13,7 +13,7 @@ public class EventFilterReaderTest {
 		
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
-		EventFilterReader filterReader = new EventFilterReader(reader);
+		FilteredEventReader filterReader = new FilteredEventReader(reader);
 		filterReader.setRepoName("rails/rails");
 
 		int count = 0;

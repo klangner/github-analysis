@@ -1,7 +1,6 @@
 package com.matrobot.gha.archive.repo;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.event.IEventReader;
@@ -16,7 +15,6 @@ public class RepositoryReader implements IRepositoryReader{
 
 	private IEventReader eventReader;
 	private HashMap<String, RepositoryRecord> repoData = null;
-	private Iterator<RepositoryRecord> dataIterator;
 	
 	
 	public RepositoryReader(IEventReader reader){
@@ -32,8 +30,9 @@ public class RepositoryReader implements IRepositoryReader{
 		}
 		
 		RepositoryRecord record = null;
-		if(dataIterator.hasNext()){
-			record = dataIterator.next();
+		if(repoData.size() > 0){
+			String key = repoData.keySet().iterator().next();
+			record = repoData.remove(key);
 		}
 		
 		return record;
@@ -51,8 +50,6 @@ public class RepositoryReader implements IRepositoryReader{
 		while((recordData = eventReader.next()) != null){
 			updateRepositoryData(recordData);
 		}
-		
-		dataIterator = repoData.values().iterator();
 	}
 	
 	private void updateRepositoryData(EventRecord event) {

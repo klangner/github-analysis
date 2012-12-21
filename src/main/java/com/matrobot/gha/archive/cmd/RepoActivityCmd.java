@@ -8,6 +8,8 @@ import java.util.HashMap;
 import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
 import com.matrobot.gha.archive.event.EventReader;
+import com.matrobot.gha.archive.event.FilteredEventReader;
+import com.matrobot.gha.archive.event.IEventReader;
 import com.matrobot.gha.archive.repo.FilteredRepoReader;
 import com.matrobot.gha.archive.repo.IRepositoryReader;
 import com.matrobot.gha.archive.repo.OrderedRepoReader;
@@ -28,7 +30,34 @@ public class RepoActivityCmd implements ICommand{
 	@Override
 	public void run(Configuration params) throws IOException {
 
-		EventReader eventReader = new EventReader(params.getMonthFolders());
+		IEventReader eventReader = createEventReader(params);
+
+		createRepoReader(params, eventReader);
+		
+		saveAsCSV(params.getOutputStream());
+	}
+
+	/**
+	 * Filter by repository if repository param provided
+	 */
+	private IEventReader createEventReader(Configuration params) {
+		IEventReader eventReader = new EventReader(params.getMonthFolders());
+		if(params.getRepositoryName() != null){
+			FilteredEventReader filteredEventReader = new FilteredEventReader(eventReader);
+			filteredEventReader.setRepoName(params.getRepositoryName());
+			eventReader = filteredEventReader;
+		}
+		return eventReader;
+	}
+
+	
+	/**
+	 * Create repository reader. 
+	 * Add:
+	 * - min activity filter
+	 * - ordered reader
+	 */
+	private void createRepoReader(Configuration params, IEventReader eventReader) {
 		RepositoryReader repoReader = new RepositoryReader(eventReader);
 		reader = repoReader;
 		if(params.getMinActivity() > 0){
@@ -42,10 +71,9 @@ public class RepoActivityCmd implements ICommand{
 			orderedReader.addField(OrderedRepoReader.SORT_BY_EVENTS);
 			reader = orderedReader;
 		}
-		
-		saveAsCSV(params.getOutputStream());
 	}
 
+	
 	private void saveAsCSV(PrintStream printStream) throws UnsupportedEncodingException, IOException {
 
 		for(String key : staticCSVFields.keySet()){

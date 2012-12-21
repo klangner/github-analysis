@@ -3,7 +3,6 @@ package com.matrobot.gha.archive.repo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -21,8 +20,7 @@ public class OrderedRepoReader implements IRepositoryReader{
 	public static final int SORT_BY_NAME = 5;
 	
 	private IRepositoryReader reader;
-	private List<RepositoryRecord> index = null;
-	private Iterator<RepositoryRecord> indexIterator = null;
+	private List<RepositoryRecord> sortedRecords = null;
 	private int field = SORT_BY_EVENTS;
 	
 	
@@ -42,13 +40,13 @@ public class OrderedRepoReader implements IRepositoryReader{
 	@Override
 	public RepositoryRecord next(){
 
-		if(index == null){
+		if(sortedRecords == null){
 			initIndex();
 		}
 		
 		RepositoryRecord record = null;
-		if(indexIterator.hasNext()){
-			record = indexIterator.next();
+		if(sortedRecords.size() > 0){
+			record = sortedRecords.remove(0);
 		}
 		
 		return record;
@@ -60,21 +58,19 @@ public class OrderedRepoReader implements IRepositoryReader{
 	 */
 	private void initIndex() {
 
-		index = new ArrayList<RepositoryRecord>();
+		sortedRecords = new ArrayList<RepositoryRecord>();
 		RepositoryRecord record;
 		Comparator<RepositoryRecord> cmp = getComparator();
 		
 		while((record=reader.next()) != null){
-			int pos = Collections.binarySearch(index, record, cmp);
+			int pos = Collections.binarySearch(sortedRecords, record, cmp);
 			if (pos<0) { // not found
-				index.add(-pos-1, record);
+				sortedRecords.add(-pos-1, record);
 			}			
 			else{
-				index.add(pos, record);
+				sortedRecords.add(pos, record);
 			}
 		}
-		
-		indexIterator = index.iterator();
 	}
 	
 	/**
