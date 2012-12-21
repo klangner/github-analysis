@@ -10,6 +10,7 @@ public class FilteredEventReader implements IEventReader{
 
 	private IEventReader reader;
 	private String repoName;
+	private String actor;
 	
 	
 	public FilteredEventReader(IEventReader reader){
@@ -33,11 +34,18 @@ public class FilteredEventReader implements IEventReader{
 		
 		while((record=reader.next()) != null){
 			
-			if(repoName == null || repoName.equals(record.getRepositoryId()) ){
+			if((repoName == null || repoName.equals(record.getRepositoryId())) &&
+				(actor == null || actor.equals(record.getActorLogin())) )
+			{
 				break;
 			}
 		}
 		
 		return record;
+	}
+
+
+	public void setActor(String actor) {
+		this.actor = actor;
 	}
 }

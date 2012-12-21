@@ -151,11 +151,11 @@ public class EventRecord {
 	 * @return Header for CSV file
 	 */
 	public static String getCSVHeaders(){
-		return "created_at, repository, type\n";
+		return "created_at, repository, type, actor\n";
 	}
 	
 	
 	public String toCSV(){
-		return created_at + "," + getRepositoryId() + "," + type + "\n";
+		return created_at + "," + getRepositoryId() + "," + type + "," + getActorLogin() + "\n";
 	}
 }

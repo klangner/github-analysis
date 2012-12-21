@@ -29,6 +29,9 @@ public class FindEventsCmd implements ICommand{
 		outputStream = params.getOutputStream();
 		eventReader = new FilteredEventReader(new EventReader(params.getMonthFolders()));
 		eventReader.setRepoName(params.getRepositoryName());
+		if(params.getActor() != null){
+			eventReader.setActor(params.getActor());
+		}
 
 		outputStream.print(EventRecord.getCSVHeaders());
 		saveAsCSV();

@@ -17,6 +17,7 @@ public class Configuration {
 	private String command;
 	private String dataPath;
 	private String repositoryName;
+	private String actor;
 	private String startDate;
 	private String endDate;
 	private String outputFilename;
@@ -53,6 +54,9 @@ public class Configuration {
 		setDatapath(config.get("datapath").toString());
 		if(config.get("repository") != null){
 			repositoryName = config.get("repository").toString();
+		}
+		if(config.get("actor") != null){
+			actor = config.get("actor").toString();
 		}
 		if(config.get("order_by") != null){
 			orderBy = config.get("order_by").toString();
@@ -173,5 +177,9 @@ public class Configuration {
 
 	public int getMinActivity() {
 		return minActivity;
+	}
+
+	public String getActor() {
+		return actor;
 	}
 }

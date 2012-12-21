@@ -9,7 +9,7 @@ import org.junit.Test;
 public class EventFilterReaderTest {
 
 	@Test
-	public void getEventCount() {
+	public void testEventCount() {
 		
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
@@ -22,5 +22,22 @@ public class EventFilterReaderTest {
 		}
 		
 		assertEquals(213, count);
+	}
+
+	@Test
+	public void testActorFilter() {
+		
+		URL url = getClass().getResource("../testdata");
+		EventReader reader = new EventReader(url.getPath());
+		FilteredEventReader filterReader = new FilteredEventReader(reader);
+		filterReader.setRepoName("rails/rails");
+		filterReader.setActor("kylev");
+
+		int count = 0;
+		while(filterReader.next() != null){
+			count ++;
+		}
+		
+		assertEquals(1, count);
 	}
 }
