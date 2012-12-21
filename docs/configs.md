@@ -16,6 +16,11 @@ datapath: /home/klangner/datasets/github
 output: events.csv
 ```
 
+### Parameters:
+- **repository** Filter events to this repository only
+- **actor** Filter events to this actor only
+
+
 ## Get repository activity
 
 Extract activity for all repositories in the given time range.
