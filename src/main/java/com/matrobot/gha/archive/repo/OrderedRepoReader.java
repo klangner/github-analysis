@@ -17,7 +17,11 @@ public class OrderedRepoReader implements IRepositoryReader{
 	public static final int SORT_BY_EVENTS_DESC = 2;
 	public static final int SORT_BY_FORKS = 3;
 	public static final int SORT_BY_FORKS_DESC = 4;
-	public static final int SORT_BY_NAME = 5;
+	public static final int SORT_BY_PUSHES = 5;
+	public static final int SORT_BY_PUSHES_DESC = 6;
+	public static final int SORT_BY_COMMUNITY = 7;
+	public static final int SORT_BY_COMMUNITY_DESC = 8;
+	public static final int SORT_BY_NAME = 20;
 	
 	private IRepositoryReader reader;
 	private List<RepositoryRecord> sortedRecords = null;
@@ -32,7 +36,7 @@ public class OrderedRepoReader implements IRepositoryReader{
 	/**
 	 * SORT_BY_*
 	 */
-	public void addField(int field){
+	public void setField(int field){
 		this.field = field;
 	}
 	
@@ -82,7 +86,21 @@ public class OrderedRepoReader implements IRepositoryReader{
 
 		Comparator<RepositoryRecord> cmp = null;
 		
-		if(field == SORT_BY_FORKS){
+		if(field == SORT_BY_EVENTS){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o1.eventCount-o2.eventCount;
+				}
+			};
+		}
+		else if(field == SORT_BY_EVENTS_DESC){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o2.eventCount-o1.eventCount;
+				}
+			};
+		}
+		else if(field == SORT_BY_FORKS){
 			cmp = new Comparator<RepositoryRecord>() {
 				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
 					return o1.forkEventCount-o2.forkEventCount;
@@ -96,24 +114,38 @@ public class OrderedRepoReader implements IRepositoryReader{
 				}
 			};
 		}
+		else if(field == SORT_BY_PUSHES){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o1.pushEventCount-o2.pushEventCount;
+				}
+			};
+		}
+		else if(field == SORT_BY_PUSHES_DESC){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o2.pushEventCount-o1.pushEventCount;
+				}
+			};
+		}
+		else if(field == SORT_BY_COMMUNITY){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o1.community.size()-o2.community.size();
+				}
+			};
+		}
+		else if(field == SORT_BY_COMMUNITY_DESC){
+			cmp = new Comparator<RepositoryRecord>() {
+				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
+					return o2.community.size()-o1.community.size();
+				}
+			};
+		}
 		else if(field == SORT_BY_NAME){
 			cmp = new Comparator<RepositoryRecord>() {
 				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
 					return o1.repoName.compareTo(o2.repoName);
-				}
-			};
-		}
-		else if(field == SORT_BY_EVENTS){
-			cmp = new Comparator<RepositoryRecord>() {
-				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
-					return o1.eventCount-o2.eventCount;
-				}
-			};
-		}
-		else if(field == SORT_BY_EVENTS_DESC){
-			cmp = new Comparator<RepositoryRecord>() {
-				public int compare(RepositoryRecord o1, RepositoryRecord o2) {
-					return o2.eventCount-o1.eventCount;
 				}
 			};
 		}

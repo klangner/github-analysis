@@ -68,12 +68,33 @@ public class RepoActivityCmd implements ICommand{
 		
 		if(params.getOrderBy() != null){
 			OrderedRepoReader orderedReader = new OrderedRepoReader(reader);
-			orderedReader.addField(OrderedRepoReader.SORT_BY_EVENTS);
+			int orderBy = getOrderKey(params.getOrderBy());
+			orderedReader.setField(orderBy);
 			reader = orderedReader;
 		}
 	}
 
 	
+	private int getOrderKey(String orderBy) {
+
+		int value = 0;
+		
+		if(orderBy.equals("forks")){
+			value = OrderedRepoReader.SORT_BY_FORKS;
+		}
+		else if(orderBy.equals("community_size")){
+			value = OrderedRepoReader.SORT_BY_COMMUNITY;
+		}
+		else if(orderBy.equals("pushes")){
+			value = OrderedRepoReader.SORT_BY_PUSHES;
+		}
+		else if(orderBy.equals("events")){
+			value = OrderedRepoReader.SORT_BY_EVENTS;
+		}
+		
+		return value;
+	}
+
 	private void saveAsCSV(PrintStream printStream) throws UnsupportedEncodingException, IOException {
 
 		for(String key : staticCSVFields.keySet()){

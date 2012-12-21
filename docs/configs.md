@@ -31,7 +31,7 @@ date:
   to: 2012-1
   
 datapath: /home/klangner/datasets/github
-output: repos.csv  
+output: repos.csv
 ```
 
 ### Parameters:
@@ -39,6 +39,10 @@ output: repos.csv
 - **repository** is optional parameter. If provided it will create report only for given repository.
 If not provided, then all repositories will be included.
 - **order_by** Allows ordering repositories. Allowed values:
+  - community_size - Order by number of all unique actors
+  - events - Order by number of all events
   - forks - Order by number of forks
+  - pushes - Order by number of push events
+
 
 
