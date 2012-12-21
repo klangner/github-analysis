@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive.repotimeseries;
+package com.matrobot.gha.archive.repotimeline;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,10 +8,10 @@ import java.net.URL;
 import org.junit.Test;
 
 import com.matrobot.gha.archive.event.EventReader;
-import com.matrobot.gha.archive.repotimeseries.RepoTimeSeries;
-import com.matrobot.gha.archive.repotimeseries.TimeSeriesRepoReader;
+import com.matrobot.gha.archive.repotimeline.RepoTimeline;
+import com.matrobot.gha.archive.repotimeline.TimelineRepoReader;
 
-public class TimeSeriesRepoReaderTest {
+public class TimelineRepoReaderTest {
 
 	private static final String REPO_NAME = "rails/rails";
 
@@ -21,9 +21,9 @@ public class TimeSeriesRepoReaderTest {
 		
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
-		TimeSeriesRepoReader repoReader = new TimeSeriesRepoReader(reader);
+		TimelineRepoReader repoReader = new TimelineRepoReader(reader);
 
-		RepoTimeSeries record;
+		RepoTimeline record;
 		while((record = repoReader.next()) != null){
 			if(record.getRepoName().equals(REPO_NAME)){
 				break;

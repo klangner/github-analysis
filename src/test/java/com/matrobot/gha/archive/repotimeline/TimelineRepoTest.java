@@ -1,18 +1,18 @@
-package com.matrobot.gha.archive.repotimeseries;
+package com.matrobot.gha.archive.repotimeline;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.matrobot.gha.archive.repotimeseries.RepoTimeSeries;
+import com.matrobot.gha.archive.repotimeline.RepoTimeline;
 
-public class TimeSeriesRepoTest {
+public class TimelineRepoTest {
 
 	@Test
 	public void testRepoName() {
 		
-		RepoTimeSeries record = new RepoTimeSeries("ala");
+		RepoTimeline record = new RepoTimeline("ala");
 		assertEquals("ala", record.getRepoName());
 	}
 
@@ -20,7 +20,7 @@ public class TimeSeriesRepoTest {
 	@Test
 	public void testIncrementSeries() {
 		
-		RepoTimeSeries series = new RepoTimeSeries("ala");
+		RepoTimeline series = new RepoTimeline("ala");
 		
 		series.addDataPoint("1");
 		series.addDataPoint("2");

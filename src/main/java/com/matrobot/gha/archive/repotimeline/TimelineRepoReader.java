@@ -1,4 +1,4 @@
-package com.matrobot.gha.archive.repotimeseries;
+package com.matrobot.gha.archive.repotimeline;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,28 +13,28 @@ import com.matrobot.gha.archive.event.IEventReader;
  * 
  * @author Krzysztof Langner
  */
-public class TimeSeriesRepoReader implements ITimeSeriesRepoReader{
+public class TimelineRepoReader implements ITimelineRepoReader{
 
 	private IEventReader eventReader;
-	private HashMap<String, RepoTimeSeries> repoData = null;
-	private Iterator<RepoTimeSeries> dataIterator;
+	private HashMap<String, RepoTimeline> repoData = null;
+	private Iterator<RepoTimeline> dataIterator;
 	private String lastDate = null; 
 	private boolean canAddRepo = true;
 	
 	
-	public TimeSeriesRepoReader(IEventReader reader){
+	public TimelineRepoReader(IEventReader reader){
 		this.eventReader = reader;
 	}
 	
 	
 	@Override
-	public RepoTimeSeries next(){
+	public RepoTimeline next(){
 
 		if(repoData == null){
 			initRepositoryData();
 		}
 		
-		RepoTimeSeries record = null;
+		RepoTimeline record = null;
 		if(dataIterator.hasNext()){
 			record = dataIterator.next();
 		}
@@ -49,7 +49,7 @@ public class TimeSeriesRepoReader implements ITimeSeriesRepoReader{
 	 */
 	private void initRepositoryData(){
 
-		repoData = new HashMap<String, RepoTimeSeries>();
+		repoData = new HashMap<String, RepoTimeline>();
 		EventRecord	event;
 		while((event = eventReader.next()) != null){
 			String label = getLabelFromDate(event.created_at);
@@ -84,7 +84,7 @@ public class TimeSeriesRepoReader implements ITimeSeriesRepoReader{
 	private void updateLabel(String label) {
 
 		if(lastDate != null){
-			for(RepoTimeSeries record : repoData.values()){
+			for(RepoTimeline record : repoData.values()){
 				record.addDataPoint(label);
 			}
 			canAddRepo = false;
@@ -96,11 +96,11 @@ public class TimeSeriesRepoReader implements ITimeSeriesRepoReader{
 
 	private void updateTimeSeries(EventRecord event) {
 
-		RepoTimeSeries record = repoData.get(event.getRepositoryId());
+		RepoTimeline record = repoData.get(event.getRepositoryId());
 		
 		if(record == null){
 			if(canAddRepo){
-				record = new RepoTimeSeries(event.getRepositoryId());
+				record = new RepoTimeline(event.getRepositoryId());
 				record.addDataPoint(lastDate);
 				repoData.put(event.getRepositoryId(), record);
 			}

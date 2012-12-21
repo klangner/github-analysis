@@ -1,10 +1,10 @@
-package com.matrobot.gha.archive.repotimeseries;
+package com.matrobot.gha.archive.repotimeline;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class RepoTimeSeries {
+public class RepoTimeline {
 
 	class DataPoint{
 		String label;
@@ -16,7 +16,7 @@ public class RepoTimeSeries {
 	private DataPoint lastDataPoint = null;
 	
 
-	public RepoTimeSeries(String repoName){
+	public RepoTimeline(String repoName){
 		
 		this.repoName = repoName;
 	}
