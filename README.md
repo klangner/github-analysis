@@ -21,16 +21,12 @@ Sample params.yaml:
 # Extract events from repository rails/rails into events.csv where data in range from 2011-11 to 2012-1
 
 command: find_events
-
 repository: rails/rails
-
 date:
   from: 2011-11
   to: 2012-1
-  
 datapath: /home/klangner/datasets/github
-
-output: events.csv  
+output: events.csv
 ```
 
 [See more](github-analysis/blob/master/docs/configs.md)

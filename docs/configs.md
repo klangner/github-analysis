@@ -24,6 +24,7 @@ Repositories can be ordered by **order_by** property.
 
 ```YAML
 command: repo_activity
+repository: rails/rails
 order_by: forks
 date:
   from: 2011-11
@@ -33,7 +34,11 @@ datapath: /home/klangner/datasets/github
 output: repos.csv  
 ```
 
-### Supported order_by fields:
-- forks - Order by number of forks
+### Parameters:
+
+- **repository** is optional parameter. If provided it will create report only for given repository.
+If not provided, then all repositories will be included.
+- **order_by** Allows ordering repositories. Allowed values:
+  - forks - Order by number of forks
 
 
