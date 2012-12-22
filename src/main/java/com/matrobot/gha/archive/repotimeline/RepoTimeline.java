@@ -61,4 +61,22 @@ public class RepoTimeline {
 		
 		return values;
 	}
+
+
+	public String getCSVHeaders() {
+		String headers = "name";
+		for(int i = 0; i < dataPoints.size(); i++){
+			headers += ", month" + (i+1); 
+		}
+		return headers;
+	}
+
+
+	public String toCSV() {
+		String values = repoName;
+		for(int i = 0; i < dataPoints.size(); i++){
+			values += ", " + dataPoints.get(i).value; 
+		}
+		return values;
+	}
 }

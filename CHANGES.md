@@ -1,9 +1,10 @@
-Version 0.3 in progress
+Version 0.3 2012-12-22
 ----------------------
 
 - repo_activity command accept repository parameter to filter which repository should be included in the report
 - repo_activity command accept additional order_by fields
 - find_events can by filtered by actor login
+- Added repo_timeline command
 
 
 Version 0.2 2012-12-20

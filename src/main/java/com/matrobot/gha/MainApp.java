@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.matrobot.gha.archive.cmd.FindEventsCmd;
 import com.matrobot.gha.archive.cmd.RepoActivityCmd;
+import com.matrobot.gha.archive.cmd.RepoTimelineCmd;
 
 public class MainApp {
 
@@ -37,6 +38,9 @@ public class MainApp {
 		}
 		else if(command.equals("repo_activity")){
 			return new RepoActivityCmd();
+		}
+		else if(command.equals("repo_timeline")){
+			return new RepoTimelineCmd();
 		}
 		
 		return null;

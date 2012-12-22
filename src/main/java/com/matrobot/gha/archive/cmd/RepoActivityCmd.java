@@ -31,9 +31,7 @@ public class RepoActivityCmd implements ICommand{
 	public void run(Configuration params) throws IOException {
 
 		IEventReader eventReader = createEventReader(params);
-
 		createRepoReader(params, eventReader);
-		
 		saveAsCSV(params.getOutputStream());
 	}
 

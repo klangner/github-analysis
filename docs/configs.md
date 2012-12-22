@@ -50,4 +50,26 @@ If not provided, then all repositories will be included.
   - pushes - Order by number of push events
 
 
+## Get repository timeline
+
+Extract activity for all repositories month by month in the given time range.
+
+
+```YAML
+command: repo_timeline
+repository: rails/rails
+date:
+  from: 2011-3
+  to: 2012-10
+  
+datapath: /home/klangner/datasets/github
+output: repos_timeline.csv
+```
+
+### Parameters:
+
+- **repository** is optional parameter. If provided it will create report only for given repository.
+If not provided, then all repositories will be included.
+
+
 
