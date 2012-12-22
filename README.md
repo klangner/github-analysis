@@ -40,17 +40,22 @@ external programs like [weka](http://www.cs.waikato.ac.nz/~ml/weka/).
 - **com.matrobot.gha.ghapi** - Get data from GitHub API.
 
 
-Important links
-===============
+## Important links
 
 - Visualization: http://matrobot.com
 - Data: http://githubarchive.org
 - [Google groups for githubarchive.org](https://groups.google.com/forum/?fromgroups=#!forum/github-archive)
 
 
-Dependencies
-============
+## Dependencies
 
 This project uses Maven to resolve dependencies
 
 
+## Contribution
+
+If you want to help with this projects, then great!
+The best way to do it is by creating fork and sending pull requests.
+
+If you are beginner and want to learn Java, then let me know.
+I can prepare easy tasks for you and help you became better developer :-)
