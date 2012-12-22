@@ -26,7 +26,7 @@ public class UserReader implements IUserReader{
 	public UserRecord next(){
 
 		if(userData == null){
-			initRepositoryData();
+			initUserData();
 		}
 		
 		UserRecord record = null;
@@ -43,7 +43,7 @@ public class UserReader implements IUserReader{
 	 * Parse all event to get information about repository
 	 * This is time consuming function.
 	 */
-	private void initRepositoryData(){
+	private void initUserData(){
 
 		userData = new HashMap<String, UserRecord>();
 		EventRecord	recordData;
@@ -55,7 +55,7 @@ public class UserReader implements IUserReader{
 	private void updateUserData(EventRecord event) {
 		
 		String userLogin = event.getActorLogin();
-		if(userLogin != null){
+		if(userLogin != null && userLogin.length() > 0){
 			
 			UserRecord record = userData.get(userLogin);
 			if(record == null){

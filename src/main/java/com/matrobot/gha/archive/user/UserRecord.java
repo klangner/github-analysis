@@ -18,6 +18,6 @@ public class UserRecord {
 	 * @return CSV
 	 */
 	public String toCSV(){
-		return name + ", " + eventCount; 
+		return name + "," + eventCount; 
 	}
 }
