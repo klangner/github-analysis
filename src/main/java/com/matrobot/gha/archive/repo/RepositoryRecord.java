@@ -59,14 +59,14 @@ public class RepositoryRecord {
 	 * @return Header for CSV file
 	 */
 	public static String getCSVHeaders(){
-		return "name, push_count, event_count, committer_count, fork_count, community_size\n";
+		return "name,push_count,event_count,committer_count,fork_count,community_size";
 	}
 	
 	/**
 	 * @return CSV
 	 */
 	public String toCSV(){
-		return repoName + ", " + pushEventCount + ", " + eventCount + ", " + committers.size() + ", " +
-				forkEventCount + ", " + community.size() + "\n"; 
+		return repoName + "," + pushEventCount + "," + eventCount + "," + committers.size() + "," +
+				forkEventCount + "," + community.size(); 
 	}
 }
