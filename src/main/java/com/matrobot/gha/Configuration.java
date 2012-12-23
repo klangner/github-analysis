@@ -24,6 +24,7 @@ public class Configuration {
 	private String orderBy;
 	private int minActivity;
 	private PrintStream outputStream;
+	private List<String> eventTypes = new ArrayList<String>();
 	
 	
 	public Configuration(InputStream is){
@@ -63,6 +64,9 @@ public class Configuration {
 		}
 		if(config.get("min_activity") != null){
 			minActivity = Integer.parseInt(config.get("min_activity").toString());
+		}
+		if(config.get("event_type") != null){
+			eventTypes.add(config.get("event_type").toString());
 		}
 		outputFilename = config.get("output").toString();
 		Map<String, String> dateRange = (Map<String, String>) config.get("date");
@@ -181,5 +185,14 @@ public class Configuration {
 
 	public String getActor() {
 		return actor;
+	}
+
+	public String getEventType() {
+		
+		if(eventTypes.size() > 0){
+			return eventTypes.get(0);
+		}
+		
+		return null;
 	}
 }

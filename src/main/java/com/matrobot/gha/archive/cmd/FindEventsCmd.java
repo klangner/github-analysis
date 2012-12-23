@@ -34,6 +34,9 @@ public class FindEventsCmd implements ICommand{
 		if(params.getActor() != null){
 			eventReader.setActor(params.getActor());
 		}
+		if(params.getEventType() != null){
+			eventReader.addEventType(params.getEventType());
+		}
 
 		outputStream.print(EventRecord.getCSVHeaders());
 		saveAsCSV();

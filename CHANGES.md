@@ -1,3 +1,9 @@
+Version 0.4 2012-12-
+----------------------
+
+- added event_type filter to find_events command
+
+
 Version 0.3 2012-12-22
 ----------------------
 

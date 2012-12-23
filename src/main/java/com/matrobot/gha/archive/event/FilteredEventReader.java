@@ -1,5 +1,8 @@
 package com.matrobot.gha.archive.event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * This reader will filter events based on given parameters
@@ -11,6 +14,7 @@ public class FilteredEventReader implements IEventReader{
 	private IEventReader reader;
 	private String repoName;
 	private String actor;
+	private Set<String> eventTypes;
 	
 	
 	public FilteredEventReader(IEventReader reader){
@@ -30,22 +34,33 @@ public class FilteredEventReader implements IEventReader{
 	@Override
 	public EventRecord next(){
 
-		EventRecord record;
+		EventRecord event;
 		
-		while((record=reader.next()) != null){
+		while((event=reader.next()) != null){
 			
-			if((repoName == null || repoName.equals(record.getRepositoryId())) &&
-				(actor == null || actor.equals(record.getActorLogin())) )
+			if((repoName == null || repoName.equals(event.getRepositoryId())) &&
+				(actor == null || actor.equals(event.getActorLogin())) &&
+				(eventTypes == null || eventTypes.contains(event.type)))
 			{
 				break;
 			}
 		}
 		
-		return record;
+		return event;
 	}
 
 
 	public void setActor(String actor) {
 		this.actor = actor;
+	}
+
+
+	public void addEventType(String type) {
+
+		if(eventTypes == null){
+			 eventTypes = new HashSet<String>();
+		}
+		
+		eventTypes.add(type);
 	}
 }

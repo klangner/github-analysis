@@ -40,4 +40,21 @@ public class EventFilterReaderTest {
 		
 		assertEquals(1, count);
 	}
+
+	@Test
+	public void testEventTypeFilter() {
+		
+		URL url = getClass().getResource("../testdata");
+		EventReader reader = new EventReader(url.getPath());
+		FilteredEventReader filterReader = new FilteredEventReader(reader);
+		filterReader.setRepoName("rails/rails");
+		filterReader.addEventType("PullRequestEvent");
+
+		int count = 0;
+		while(filterReader.next() != null){
+			count ++;
+		}
+		
+		assertEquals(210, count);
+	}
 }

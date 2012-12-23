@@ -8,6 +8,8 @@ Extract events from given by **repository** property.
 ```YAML
 command: find_events
 repository: rails/rails
+actor: <user_login>
+event_type: PushEvent
 date:
   from: 2011-11
   to: 2012-1
@@ -19,6 +21,7 @@ output: events.csv
 ### Parameters:
 - **repository** Filter events to this repository only
 - **actor** Filter events to this actor only
+- **event_type** Show only this event type
 
 
 ## Get repository activity
