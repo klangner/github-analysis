@@ -1,0 +1,15 @@
+# Extract events based on repository
+
+command: find_events
+
+repository: rails/rails
+actor: tenderlove
+event_type: PushEvent
+
+date:
+  from: 2011-3
+  to: 2011-3
+  
+datapath: /home/klangner/datasets/github
+
+output: output/events.csv  
