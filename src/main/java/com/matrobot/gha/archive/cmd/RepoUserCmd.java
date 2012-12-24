@@ -63,7 +63,7 @@ public class RepoUserCmd implements ICommand{
 		output.println(RepoUserRecord.getCSVHeaders());
 		RepoUserRecord record;
 		while((record = reader.next()) != null){
-			if(record.eventCount > minActivity){
+			if(record.eventCount >= minActivity){
 				output.println(record.toCSV());
 			}
 		}
