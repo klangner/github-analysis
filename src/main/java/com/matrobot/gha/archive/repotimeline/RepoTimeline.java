@@ -79,4 +79,16 @@ public class RepoTimeline {
 		}
 		return values;
 	}
+
+
+	public String toString() {
+		String values = repoName + " : ";
+		for(int i = 0; i < dataPoints.size(); i++){
+			if(i > 0){
+				values += ", ";
+			}
+			values += dataPoints.get(i).value;
+		}
+		return values;
+	}
 }

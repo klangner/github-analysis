@@ -1,8 +1,8 @@
 package com.matrobot.gha.insights.app.repo;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import com.matrobot.gha.Configuration;
 import com.matrobot.gha.ICommand;
@@ -12,20 +12,32 @@ import com.matrobot.gha.archive.event.IEventReader;
 import com.matrobot.gha.archive.repotimeline.ITimelineRepoReader;
 import com.matrobot.gha.archive.repotimeline.RepoTimeline;
 import com.matrobot.gha.archive.repotimeline.TimelineRepoReader;
+import com.matrobot.gha.insights.ml.EvaluationMetrics;
 
 /**
- * Parse archive and create reports with repository info by months
+ * Hypothesis:
+ * Linear model will predict if next month activity is higher or lower then current month
  * 
+ * Results (2012-5 - 2012-11):
+ *  Accuracy: 0.9491334942467083
+ *  Precision: 0.10961678684274488
+ *  Recall: 0.5852076124567474
+ *  F score: 0.18464687819856707 
+ *   
  * @author Krzysztof Langner
  */
 public class LinearModelApp implements ICommand{
 
+	private EvaluationMetrics metrics;
+	
+	
 	@Override
 	public void run(Configuration params) throws IOException {
 
+		metrics = new EvaluationMetrics();
 		IEventReader eventReader = createEventReader(params);
 		ITimelineRepoReader reader = createRepoReader(params, eventReader);
-		saveAsCSV(reader, params.getOutputStream());
+		analize(reader);
 	}
 
 
@@ -57,17 +69,54 @@ public class LinearModelApp implements ICommand{
 	}
 	
 	
-	private void saveAsCSV(ITimelineRepoReader reader, PrintStream printStream) throws UnsupportedEncodingException, IOException {
+	private void analize(ITimelineRepoReader reader){
 
-		boolean printHeaders = true;
 		RepoTimeline record;
 		while((record = reader.next()) != null){
-			if(printHeaders){
-				printStream.println(record.getCSVHeaders());
-				printHeaders = false;
+			boolean isPositive = isPositiveSample(record);
+			boolean expected = getExpectedValue(record);
+			if(isPositive){
+				if(expected){
+					metrics.addTruePositive();
+				}
+				else{
+					metrics.addFalsePositive();
+				}
 			}
-			printStream.println(record.toCSV());
+			else{
+				if(expected){
+					metrics.addFalseNegative();
+				}
+				else{
+					metrics.addTrueNegative();
+				}
+			}
 		}
+	}
+
+
+	private boolean isPositiveSample(RepoTimeline record) {
+
+		SimpleRegression regression = new SimpleRegression();
+		int[] values = record.getDataPoints();
+		int count = values.length;
+		int prevValue = values[count-2];
+		
+		for(int i = 0; i < count-1; i++){
+			regression.addData(i, values[i]);
+		}
+		
+		int lastValue = (int) regression.predict(count-1);
+		return (lastValue - prevValue > 0);
+	}
+
+
+	private boolean getExpectedValue(RepoTimeline record) {
+		
+		int count = record.getDataPoints().length;
+		int lastValue = record.getDataPoints()[count-1];
+		int prevValue = record.getDataPoints()[count-2];
+		return (lastValue - prevValue > 0);
 	}
 
 
@@ -82,6 +131,7 @@ public class LinearModelApp implements ICommand{
 		
 		LinearModelApp app = new LinearModelApp();
 		app.run(params);
+		app.metrics.print();
 	}
 	
 }

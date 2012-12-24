@@ -1,8 +1,6 @@
 package com.matrobot.gha.insights.app.repo;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 import com.matrobot.gha.insights.classifier.BayesClassifier;
 import com.matrobot.gha.insights.classifier.Binary1RClassifier;
@@ -15,7 +13,6 @@ import com.matrobot.gha.insights.ml.Sample;
 
 public class ClassifierEvaluatorApp {
 
-	Properties prop = new Properties();
 	private Dataset dataset;
 	private int counter;
 	private EvaluationMetrics metrics;
@@ -23,11 +20,11 @@ public class ClassifierEvaluatorApp {
 	
 	protected ClassifierEvaluatorApp(String firstPath, String secondPath, String thirdPath) throws IOException{
 		
-		prop.load(new FileInputStream("config.properties"));
+		String dataPath = "/home/klangner/datasets/github/";
 		ClassifyRepositoryFilter filter = new ClassifyRepositoryFilter(
-				prop.getProperty("data_path") + firstPath, 
-				prop.getProperty("data_path") + secondPath, 
-				prop.getProperty("data_path") + thirdPath);
+				dataPath + firstPath, 
+				dataPath + secondPath, 
+				dataPath + thirdPath);
 		dataset = filter.getDataset();
 		dataset.normalize();
 	}
@@ -74,7 +71,6 @@ public class ClassifierEvaluatorApp {
 
 		ClassifierEvaluatorApp app = new ClassifierEvaluatorApp("2012-1/", "2012-10/", "2012-11/");
 		Dataset dataset = app.dataset;
-		dataset.saveAsCSV(app.prop.getProperty("data_path") + "weka.csv");
 		
 		// 1R classifier
 		System.out.println("1R: ");
