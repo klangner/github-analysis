@@ -9,7 +9,6 @@ import com.matrobot.gha.ICommand;
 import com.matrobot.gha.archive.event.EventReader;
 import com.matrobot.gha.archive.event.FilteredEventReader;
 import com.matrobot.gha.archive.event.IEventReader;
-import com.matrobot.gha.archive.repo.RepositoryRecord;
 import com.matrobot.gha.archive.repouser.IRepoUserReader;
 import com.matrobot.gha.archive.repouser.RepoUserReader;
 import com.matrobot.gha.archive.repouser.RepoUserRecord;
@@ -28,7 +27,7 @@ public class RepoUserCmd implements ICommand{
 
 		IEventReader eventReader = createEventReader(params);
 		IRepoUserReader reader = createRepoReader(params, eventReader);
-		saveAsCSV(reader, params.getOutputStream());
+		saveAsCSV(reader, params);
 	}
 
 	/**
@@ -57,12 +56,16 @@ public class RepoUserCmd implements ICommand{
 	}
 
 	
-	private void saveAsCSV(IRepoUserReader reader, PrintStream printStream) throws UnsupportedEncodingException, IOException {
+	private void saveAsCSV(IRepoUserReader reader, Configuration params) throws UnsupportedEncodingException, IOException {
 
-		printStream.println(RepositoryRecord.getCSVHeaders());
+		PrintStream output = params.getOutputStream();
+		int minActivity = params.getMinActivity();
+		output.println(RepoUserRecord.getCSVHeaders());
 		RepoUserRecord record;
 		while((record = reader.next()) != null){
-			printStream.println(record.toCSV());
+			if(record.eventCount > minActivity){
+				output.println(record.toCSV());
+			}
 		}
 	}
 

@@ -22,7 +22,7 @@ public class Configuration {
 	private String endDate;
 	private String outputFilename;
 	private String orderBy;
-	private int minActivity;
+	private int minActivity = 0;
 	private PrintStream outputStream;
 	private List<String> eventTypes = new ArrayList<String>();
 	

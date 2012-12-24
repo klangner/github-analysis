@@ -1,0 +1,11 @@
+# Parse repositories and create monthly reports as json and csv
+
+command: repo_user
+min_activity: 2
+
+date:
+  from: 2012-11
+  to: 2012-11
+  
+datapath: /home/klangner/datasets/github
+output: output/repouser-2012-11.csv
