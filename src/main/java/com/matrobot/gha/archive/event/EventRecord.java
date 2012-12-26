@@ -26,6 +26,15 @@ public class EventRecord {
         public String name;
 	}
 
+	public class Repository{
+		public String id;
+        public String url;
+        public String name;
+        public String language;
+        public String homepage;
+		public int forks;
+    }
+	
 	public class Author{
 		String name;
 		String email;
@@ -55,11 +64,11 @@ public class EventRecord {
 	
 	public String created_at;
 	public Repo repo;
-	public Repo repository;
 	public String type;
 	public Payload payload;
 	public Actor actor;
 	public ActorAttributes actor_attributes;
+	public Repository repository;
 	
 	
 	/**

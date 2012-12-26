@@ -23,7 +23,7 @@ public class EventRecordTest {
 	public void getRepositoryId2() {
 		
 		EventRecord record = new EventRecord();
-		record.repository = record.new Repo();
+		record.repository = record.new Repository();
 		record.repository.url = "https://api.github.com/chiphogg/bestinbg";
 		
 		assertEquals("chiphogg/bestinbg", record.getRepositoryId());

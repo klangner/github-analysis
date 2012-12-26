@@ -59,8 +59,7 @@ public class RepositoryReader implements IRepositoryReader{
 			
 			RepositoryRecord record = repoData.get(url);
 			if(record == null){
-				record = new RepositoryRecord();
-				record.repoName = url;
+				record = new RepositoryRecord(url);
 			}
 
 			if(event.isCreateRepository()){

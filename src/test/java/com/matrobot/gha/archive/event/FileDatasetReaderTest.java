@@ -110,4 +110,17 @@ public class FileDatasetReaderTest {
 		assertTrue(committers.contains("Rob Sayre"));
 	}
 
+
+	@Test
+	public void testRepositoryForks() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/push_event-1.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals(5, event.repository.forks);
+	}
+
 }

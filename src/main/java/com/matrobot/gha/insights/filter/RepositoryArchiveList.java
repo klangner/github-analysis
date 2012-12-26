@@ -35,7 +35,7 @@ public class RepositoryArchiveList {
 
 		RepositoryRecord repository = datasets.get(datasetIndex).get(repositoryName);
 		if(repository == null){
-			repository = new RepositoryRecord();
+			repository = new RepositoryRecord(repositoryName);
 		}
 		
 		return repository;

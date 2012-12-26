@@ -29,6 +29,11 @@ public class RepositoryRecord {
 	public Set<String> community = new HashSet<String>();
 	
 	
+	public RepositoryRecord(String name) {
+		repoName = name;
+	}
+
+	
 	/**
 	 * Load activity.json
 	 * 
