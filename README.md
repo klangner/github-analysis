@@ -14,7 +14,7 @@ This project contains code for parsing and analysis data availabe from githubarc
 
 Run the application to extract events for particular repository with command:
 
-    java -Xmx1024M -jar gha.jar params.yaml
+    java -Xmx2G -jar gha.jar params.yaml
 
 Sample params.yaml:
 ```YAML

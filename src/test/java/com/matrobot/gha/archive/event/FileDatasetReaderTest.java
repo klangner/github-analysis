@@ -123,4 +123,17 @@ public class FileDatasetReaderTest {
 		assertEquals(5, event.repository.forks);
 	}
 
+
+	@Test
+	public void testPullAction() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/pull_event-1.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals("opened", event.payload.action);
+	}
+
 }

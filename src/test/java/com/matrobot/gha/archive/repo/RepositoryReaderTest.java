@@ -11,11 +11,8 @@ import com.matrobot.gha.archive.event.EventReader;
 
 public class RepositoryReaderTest {
 
-	private static final String REPO_NAME = "rails/rails";
-
-	
 	@Test
-	public void getEventCount() {
+	public void testEventCount() {
 		
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
@@ -23,12 +20,50 @@ public class RepositoryReaderTest {
 
 		RepositoryRecord record;
 		while((record = repoReader.next()) != null){
-			if(record.repoName.equals(REPO_NAME)){
+			if(record.repoName.equals("rails/rails")){
 				break;
 			}
 		}
 		
 		assertNotNull(record);
 		assertEquals(213, record.eventCount);
+	}
+
+	
+	@Test
+	public void testPullOpened() {
+		
+		URL url = getClass().getResource("../testdata");
+		EventReader reader = new EventReader(url.getPath());
+		RepositoryReader repoReader = new RepositoryReader(reader);
+
+		RepositoryRecord record;
+		while((record = repoReader.next()) != null){
+			if(record.repoName.equals("libgdx/libgdx")){
+				break;
+			}
+		}
+		
+		assertNotNull(record);
+		assertEquals(1, record.openedPullCount);
+	}
+
+	
+	@Test
+	public void testPullClosed() {
+		
+		URL url = getClass().getResource("../testdata");
+		EventReader reader = new EventReader(url.getPath());
+		RepositoryReader repoReader = new RepositoryReader(reader);
+
+		RepositoryRecord record;
+		while((record = repoReader.next()) != null){
+			if(record.repoName.equals("vodik/powersave")){
+				break;
+			}
+		}
+		
+		assertNotNull(record);
+		assertEquals(2, record.closedPullCount);
 	}
 }

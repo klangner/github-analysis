@@ -22,6 +22,8 @@ public class RepositoryRecord {
 	public int pushEventCount = 0;
 	public int issueOpenEventCount = 0;
 	public int forkEventCount = 0;
+	public int openedPullCount = 0;
+	public int closedPullCount = 0;
 	public boolean isNew = false;
 	public boolean isFork = false;
 	
@@ -64,7 +66,7 @@ public class RepositoryRecord {
 	 * @return Header for CSV file
 	 */
 	public static String getCSVHeaders(){
-		return "name,push_count,event_count,committer_count,fork_count,community_size";
+		return "name,push_count,event_count,committer_count,fork_count,community_size,opened_pulls,closed_pulls";
 	}
 	
 	/**
@@ -72,6 +74,6 @@ public class RepositoryRecord {
 	 */
 	public String toCSV(){
 		return repoName + "," + pushEventCount + "," + eventCount + "," + committers.size() + "," +
-				forkEventCount + "," + community.size(); 
+				forkEventCount + "," + community.size() + "," + openedPullCount + "," + closedPullCount; 
 	}
 }

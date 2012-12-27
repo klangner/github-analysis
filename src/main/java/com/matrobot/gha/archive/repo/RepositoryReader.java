@@ -68,6 +68,9 @@ public class RepositoryReader implements IRepositoryReader{
 			else if(event.type.equals("PushEvent")){
 				addPushEventToRepository(event, record);
 			}
+			else if(event.type.equals("PullRequestEvent")){
+				addPullRequestEventToRepository(event, record);
+			}
 			else if(event.type.equals("IssuesEvent")){
 				record.issueOpenEventCount += 1;
 			}
@@ -91,6 +94,16 @@ public class RepositoryReader implements IRepositoryReader{
 			for(String committer : event.getCommitters()){
 				record.committers.add(committer);
 			}
+		}
+	}
+	
+	private void addPullRequestEventToRepository(EventRecord event, RepositoryRecord record) {
+		
+		if(event.payload.action.equals("opened")){
+			record.openedPullCount += 1;
+		}
+		else if(event.payload.action.equals("closed")){
+			record.closedPullCount += 1;
 		}
 	}
 	

@@ -55,6 +55,8 @@ public class EventRecord {
 		public List<List<String>> shas;
 		/** Commits ver. 2*/
 		public List<Commit> commits;
+		/** Action. Used in PullRequestEvent: "opened", "closed", "synchronize", "reopened" */
+		public String action;
 	}
 	
 	public class ActorAttributes{
