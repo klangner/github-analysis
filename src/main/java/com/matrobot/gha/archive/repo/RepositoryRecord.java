@@ -80,7 +80,7 @@ public class RepositoryRecord {
 	public String toCSV(){
 		return repoName + "," + pushEventCount + "," + eventCount + "," + committers.size() + "," +
 				forkEventCount + "," + community.size() + "," + openedPullCount + "," + 
-				closedPullCount + "," + language + "," + homepage + "," + createdAt; 
+				closedPullCount + "," + language + ",\"" + homepage + "\"," + createdAt; 
 	}
 
 	
