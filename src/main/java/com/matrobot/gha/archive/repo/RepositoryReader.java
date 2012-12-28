@@ -62,49 +62,10 @@ public class RepositoryReader implements IRepositoryReader{
 				record = new RepositoryRecord(url);
 			}
 
-			if(event.isCreateRepository()){
-				record.isNew = true;
-			}
-			else if(event.type.equals("PushEvent")){
-				addPushEventToRepository(event, record);
-			}
-			else if(event.type.equals("PullRequestEvent")){
-				addPullRequestEventToRepository(event, record);
-			}
-			else if(event.type.equals("IssuesEvent")){
-				record.issueOpenEventCount += 1;
-			}
-			else if(event.type.equals("ForkEvent")){
-				record.forkEventCount += 1;
-			}
-			
-			if(event.getActorLogin() != null){
-				record.community.add(event.getActorLogin());
-			}
-			record.eventCount += 1;
+			record.updateData(event);
 			repoData.put(url, record);
 			
 		}
 	}
 
-	private void addPushEventToRepository(EventRecord event, RepositoryRecord record) {
-		
-		if(event.payload.size > 0){
-			record.pushEventCount += 1;
-			for(String committer : event.getCommitters()){
-				record.committers.add(committer);
-			}
-		}
-	}
-	
-	private void addPullRequestEventToRepository(EventRecord event, RepositoryRecord record) {
-		
-		if(event.payload.action.equals("opened")){
-			record.openedPullCount += 1;
-		}
-		else if(event.payload.action.equals("closed")){
-			record.closedPullCount += 1;
-		}
-	}
-	
 }

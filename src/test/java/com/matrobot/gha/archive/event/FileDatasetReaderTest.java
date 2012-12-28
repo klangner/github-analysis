@@ -136,4 +136,43 @@ public class FileDatasetReaderTest {
 		assertEquals("opened", event.payload.action);
 	}
 
+
+	@Test
+	public void testLanguage() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/pull_event-1.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals("C", event.repository.language);
+	}
+
+
+	@Test
+	public void testHomepage() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/pull_event-1.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals("http://luke.dashjr.org/programs/bitcoin/files/bfgminer/", event.repository.homepage);
+	}
+
+
+	@Test
+	public void testCreatedAt() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/pull_event-1.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals("2012-04-26T04:29:32-07:00", event.repository.created_at);
+	}
+
 }
