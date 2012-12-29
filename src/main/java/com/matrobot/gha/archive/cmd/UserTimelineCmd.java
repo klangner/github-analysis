@@ -31,9 +31,8 @@ public class UserTimelineCmd implements ICommand{
 
 		IEventReader reader;
 		List<String> months = params.getMonthFolders();
-		reader = new EventReader(months.get(0));
+		reader = new EventReader(months.remove(0));
 		initFirstMonth(reader);
-		months.remove(0);
 		initOutputStream(params);
 		reader = new EventReader(months);
 		parse(reader);
@@ -53,8 +52,8 @@ public class UserTimelineCmd implements ICommand{
 
 	private void initOutputStream(Configuration params) {
 		outputStream = params.getOutputStream(); 
-		outputStream.println("index, month,users");
-		outputStream.println("0,1," + firstMonthUsers.size());
+		outputStream.println("index,date,users");
+		outputStream.println("0,0," + firstMonthUsers.size());
 	}
 
 
@@ -78,6 +77,7 @@ public class UserTimelineCmd implements ICommand{
 		String date = event.created_at.substring(0, 7);
 		
 		if(currentDate == null){
+			System.out.println(date);
 			currentDate = date;
 		}
 		else if(!currentDate.equals(date)){
@@ -90,7 +90,7 @@ public class UserTimelineCmd implements ICommand{
 
 
 	private void saveRecord(){
-		outputStream.println(index + "," + activeUsers.size());
+		outputStream.println(index + "," + currentDate + "," + activeUsers.size());
 		index++;
 	}
 
