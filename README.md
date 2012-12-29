@@ -35,7 +35,7 @@ output: events.csv
 
 - **com.matrobot.gha.archive** - Contains code to parse githubarchive.org files and create 
 intermediate csv and json files which can be processed by other packages or 
-external programs like [weka](http://www.cs.waikato.ac.nz/~ml/weka/).
+external programs like [R](http://www.r-project.org/) or [weka](http://www.cs.waikato.ac.nz/~ml/weka/).
 - **com.matrobot.gha.insights** - Contains code for analyzing data and find patterns in it.
 - **com.matrobot.gha.ghapi** - Get data from GitHub API.
 

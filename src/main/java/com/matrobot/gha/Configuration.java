@@ -20,6 +20,7 @@ public class Configuration {
 	private String actor;
 	private String startDate;
 	private String endDate;
+	private String dateResolution;
 	private String outputFilename;
 	private String orderBy;
 	private int minActivity = 0;
@@ -69,9 +70,16 @@ public class Configuration {
 			eventTypes.add(config.get("event_type").toString());
 		}
 		outputFilename = config.get("output").toString();
-		Map<String, String> dateRange = (Map<String, String>) config.get("date");
-		startDate = dateRange.get("from");
-		endDate = dateRange.get("to");
+		parseDate((Map<String, String>) config.get("date"));
+	}
+
+	
+	private void parseDate(Map<String, String> date) {
+		startDate = date.get("from");
+		endDate = date.get("to");
+		if(date.get("resolution") != null){
+			dateResolution = date.get("resolution");
+		}
 	}
 
 	/**
@@ -195,5 +203,10 @@ public class Configuration {
 		}
 		
 		return null;
+	}
+
+	
+	public String getDateResolution() {
+		return dateResolution;
 	}
 }

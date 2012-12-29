@@ -22,6 +22,7 @@ public class TimelineCmd implements ICommand{
 
 	class Record{
 		String date;
+		int totalActivity = 0;
 		int newUsers = 0;
 		Set<String> activeUsers = new HashSet<String>();
 	}
@@ -30,11 +31,13 @@ public class TimelineCmd implements ICommand{
 	private Record currentRecord = null;
 	private int index = 1;
 	private PrintStream outputStream;
+	private int dateLength = 7;
 	
 	
 	@Override
 	public void run(Configuration params) throws IOException {
 
+		initDateLength(params);
 		initOutputStream(params);
 		IEventReader reader;
 		reader = new EventReader(params.getMonthFolders());
@@ -42,9 +45,17 @@ public class TimelineCmd implements ICommand{
 	}
 
 
+	private void initDateLength(Configuration params) {
+
+		if(params.getDateResolution() != null && params.getDateResolution().equals("day")){
+			dateLength = 10;
+		}
+	}
+
+
 	private void initOutputStream(Configuration params) {
 		outputStream = params.getOutputStream(); 
-		outputStream.println("index,date,nu,au");
+		outputStream.println("index,date,nu,au,ta");
 	}
 
 
@@ -61,6 +72,7 @@ public class TimelineCmd implements ICommand{
 					allUsers.add(actor);
 				}
 			}
+			currentRecord.totalActivity ++;
 		}
 		
 		saveRecord(currentRecord);
@@ -69,7 +81,7 @@ public class TimelineCmd implements ICommand{
 
 	private void prepareCurrentRecord(EventRecord event) {
 
-		String date = event.created_at.substring(0, 7);
+		String date = event.created_at.substring(0, dateLength);
 		
 		if(currentRecord == null){
 			currentRecord = new Record();
@@ -86,7 +98,8 @@ public class TimelineCmd implements ICommand{
 
 	private void saveRecord(Record record){
 		outputStream.println(
-			index+","+record.date+","+record.newUsers+","+record.activeUsers.size()
+			index + "," + record.date + "," + record.newUsers + "," + 
+			record.activeUsers.size() + "," + record.totalActivity 
 		);
 		index++;
 	}

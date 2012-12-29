@@ -38,6 +38,15 @@ public class ConfigurationTest {
 
 
 	@Test
+	public void testDateResolution() {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/config2.yaml");
+		Configuration parser = new Configuration(inputStream);
+		
+		assertEquals("day", parser.getDateResolution());
+	}
+
+
+	@Test
 	public void testMonthFolders() {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/config2.yaml");
 		Configuration parser = new Configuration(inputStream);
