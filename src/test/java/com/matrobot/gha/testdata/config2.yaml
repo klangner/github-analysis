@@ -1,0 +1,15 @@
+# Extract events based on repository
+
+command: find_events
+
+repository: rails/rails
+
+date:
+  from: 2011-3
+  to: 2011-12
+  
+order_by: ala
+  
+datapath: datasets/github
+
+output: events.csv  
