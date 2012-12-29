@@ -38,6 +38,15 @@ public class ConfigurationTest {
 
 
 	@Test
+	public void testMonthFolders() {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/config2.yaml");
+		Configuration parser = new Configuration(inputStream);
+		
+		assertEquals(10, parser.getMonthFolders().size());
+	}
+
+
+	@Test
 	public void testRepo() {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/config1.yaml");
 		Configuration parser = new Configuration(inputStream);

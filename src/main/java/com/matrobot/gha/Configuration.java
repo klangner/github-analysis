@@ -129,8 +129,9 @@ public class Configuration {
 			
 				endYear = Integer.parseInt(tokens[0]);
 				endMonth = Integer.parseInt(tokens[1]);
+				int end = endYear*100+endMonth;
 		
-				while(year < endYear || month <= endMonth){
+				while(year*100+month <= end){
 					folders.add(dataPath + year + "-" + month);
 					
 					month ++;
