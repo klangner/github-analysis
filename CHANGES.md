@@ -1,7 +1,8 @@
-Version 0.4 2012-12-
+Version 0.4 2012-12-29
 ----------------------
 
 - added event_type filter to find_events command
+- fixed problem with time range ending on 12
 
 
 Version 0.3 2012-12-22
