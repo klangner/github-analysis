@@ -12,9 +12,7 @@ import com.matrobot.gha.archive.event.EventRecord;
 import com.matrobot.gha.archive.event.IEventReader;
 
 /**
- * Find repository state by going back in history events.
- * E.g.
- * Find number of forks in 2011-2 by counting back from 
+ * Calculate different statistics across time
  * 
  * @author Krzysztof Langner
  */

@@ -143,7 +143,7 @@ public class EventRecord {
 	
 	
 	/**
-	 * Get actor email or epty string if not available
+	 * Get actor email or empty string if not available
 	 */
 	public String getActorLogin(){
 		
