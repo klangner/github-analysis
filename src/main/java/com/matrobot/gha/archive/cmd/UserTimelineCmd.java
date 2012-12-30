@@ -20,9 +20,16 @@ import com.matrobot.gha.archive.event.IEventReader;
 public class UserTimelineCmd implements ICommand{
 
 	private Set<String> firstMonthUsers = new HashSet<String>();
-	Set<String> activeUsers = new HashSet<String>();
+	class Record{
+		String date;
+		int newUsers = 0;
+		Set<String> activeUsers = new HashSet<String>();
+		Set<String> users = new HashSet<String>();
+	}
+	
+	private Set<String> allUsers = new HashSet<String>();
+	private Record currentRecord = null;
 	private int index = 1;
-	private String currentDate;
 	private PrintStream outputStream;
 	
 	
@@ -45,6 +52,7 @@ public class UserTimelineCmd implements ICommand{
 			String actor = event.getActorLogin();
 			if(actor != null){
 				firstMonthUsers.add(actor);
+				allUsers.add(actor);
 			}
 		}
 	}
@@ -52,8 +60,9 @@ public class UserTimelineCmd implements ICommand{
 
 	private void initOutputStream(Configuration params) {
 		outputStream = params.getOutputStream(); 
-		outputStream.println("index,date,users");
-		outputStream.println("0,0," + firstMonthUsers.size());
+		outputStream.println("index,date,active,new,all");
+		int userCount = firstMonthUsers.size();
+		outputStream.println("0," + params.getStartDate() + "," + userCount + "," + userCount + "," + userCount);
 	}
 
 
@@ -64,10 +73,16 @@ public class UserTimelineCmd implements ICommand{
 			prepareCurrentRecord(event);
 			String actor = event.getActorLogin();
 			if(firstMonthUsers.contains(actor)){
-				activeUsers.add(actor);
+				currentRecord.activeUsers.add(actor);
 			}
+			
+			if(!allUsers.contains(actor)){
+				allUsers.add(actor);
+				currentRecord.newUsers ++;
+			}
+			
+			currentRecord.users.add(actor);
 		}
-		
 		saveRecord();
 	}
 
@@ -76,21 +91,23 @@ public class UserTimelineCmd implements ICommand{
 
 		String date = event.getCreatedAt().substring(0, 7);
 		
-		if(currentDate == null){
+		if(currentRecord == null){
 			System.out.println(date);
-			currentDate = date;
+			currentRecord = new Record();
+			currentRecord.date = date;
 		}
-		else if(!currentDate.equals(date)){
+		else if(!currentRecord.date.equals(date)){
 			System.out.println(date);
 			saveRecord();
-			currentDate = date;
-			activeUsers.clear();
+			currentRecord = new Record();
+			currentRecord.date = date;
 		}
 	}
 
 
 	private void saveRecord(){
-		outputStream.println(index + "," + currentDate + "," + activeUsers.size());
+		outputStream.println(index + "," + currentRecord.date + "," + currentRecord.activeUsers.size() +
+				"," + currentRecord.newUsers + "," + currentRecord.users.size());
 		index++;
 	}
 
@@ -102,7 +119,7 @@ public class UserTimelineCmd implements ICommand{
 	 */
 	public static void main(String[] args) throws IOException {
 
-		Configuration params = new Configuration("configs/timeline.yaml");
+		Configuration params = new Configuration("configs/users_timeline.yaml");
 		
 		UserTimelineCmd app = new UserTimelineCmd();
 		app.run(params);
