@@ -12,7 +12,7 @@ import java.util.Set;
 public class FilteredEventReader implements IEventReader{
 
 	private IEventReader reader;
-	private String repoName;
+	private Set<String> repoNames = new HashSet<String>();
 	private String actor;
 	private Set<String> eventTypes;
 	
@@ -26,8 +26,8 @@ public class FilteredEventReader implements IEventReader{
 	 * Filter events to this repository
 	 * @param name
 	 */
-	public void setRepoName(String name){
-		repoName = name;
+	public void addRepoFilter(String name){
+		repoNames.add(name);
 	}
 	
 	
@@ -38,7 +38,7 @@ public class FilteredEventReader implements IEventReader{
 		
 		while((event=reader.next()) != null){
 			
-			if((repoName == null || repoName.equals(event.getRepositoryId())) &&
+			if(repoNames.contains(event.getRepositoryId()) &&
 				(actor == null || actor.equals(event.getActorLogin())) &&
 				(eventTypes == null || eventTypes.contains(event.type)))
 			{

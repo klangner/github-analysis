@@ -35,9 +35,11 @@ public class RepoUserCmd implements ICommand{
 	 */
 	private IEventReader createEventReader(Configuration params) {
 		IEventReader eventReader = new EventReader(params.getMonthFolders());
-		if(params.getRepositoryName() != null){
+		if(params.getRepositories().size() > 0){
 			FilteredEventReader filteredEventReader = new FilteredEventReader(eventReader);
-			filteredEventReader.setRepoName(params.getRepositoryName());
+			for(String repo : params.getRepositories()){
+				filteredEventReader.addRepoFilter(repo);
+			}
 			eventReader = filteredEventReader;
 		}
 		return eventReader;

@@ -60,7 +60,18 @@ public class ConfigurationTest {
 		InputStream inputStream = getClass().getResourceAsStream("testdata/config1.yaml");
 		Configuration parser = new Configuration(inputStream);
 		
-		assertEquals("rails/rails", parser.getRepositoryName());
+		assertEquals("rails/rails", parser.getRepositories().get(0));
+	}
+
+
+	@Test
+	public void testMultiRepo() {
+		InputStream inputStream = getClass().getResourceAsStream("testdata/config2.yaml");
+		Configuration parser = new Configuration(inputStream);
+
+		assertEquals(2, parser.getRepositories().size());
+		assertEquals("rails/rails", parser.getRepositories().get(0));
+		assertEquals("klangner/matrobot", parser.getRepositories().get(1));
 	}
 
 

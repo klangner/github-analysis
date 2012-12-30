@@ -28,8 +28,8 @@ public class FindEventsCmd implements ICommand{
 
 		outputStream = params.getOutputStream();
 		eventReader = new FilteredEventReader(new EventReader(params.getMonthFolders()));
-		if(params.getRepositoryName() != null){
-			eventReader.setRepoName(params.getRepositoryName());
+		for(String repo : params.getRepositories()){
+			eventReader.addRepoFilter(repo);
 		}
 		if(params.getActor() != null){
 			eventReader.setActor(params.getActor());

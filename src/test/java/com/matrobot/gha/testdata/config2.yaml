@@ -2,7 +2,9 @@
 
 command: find_events
 
-repository: rails/rails
+repository: 
+  - rails/rails
+  - klangner/matrobot
 
 date:
   from: 2011-3

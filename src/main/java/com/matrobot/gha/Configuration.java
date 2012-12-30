@@ -16,7 +16,7 @@ public class Configuration {
 
 	private String command;
 	private String dataPath;
-	private String repositoryName;
+	private List<String> repositories = new ArrayList<String>();
 	private String actor;
 	private String startDate;
 	private String endDate;
@@ -54,9 +54,7 @@ public class Configuration {
 		Map<String, Object> config = (Map<String, Object>) yaml.load(inputStream);
 		command = config.get("command").toString();
 		setDatapath(config.get("datapath").toString());
-		if(config.get("repository") != null){
-			repositoryName = config.get("repository").toString();
-		}
+		loadRepoFilter(config.get("repository"));
 		if(config.get("actor") != null){
 			actor = config.get("actor").toString();
 		}
@@ -71,6 +69,21 @@ public class Configuration {
 		}
 		outputFilename = config.get("output").toString();
 		parseDate((Map<String, String>) config.get("date"));
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	private void loadRepoFilter(Object repositoryKey) {
+		
+		if(repositoryKey instanceof List<?>){
+			List<String> repos = (List<String>) repositoryKey;
+			for(String repo : repos){
+				repositories.add(repo);
+			}
+		}
+		else if(repositoryKey != null){
+			repositories.add(repositoryKey.toString());
+		}
 	}
 
 	
@@ -158,8 +171,8 @@ public class Configuration {
 	/**
 	 * @return -repo=
 	 */
-	public String getRepositoryName() {
-		return repositoryName;
+	public List<String> getRepositories() {
+		return repositories;
 	}
 	
 	

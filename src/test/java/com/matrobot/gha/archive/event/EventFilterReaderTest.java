@@ -14,7 +14,7 @@ public class EventFilterReaderTest {
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		FilteredEventReader filterReader = new FilteredEventReader(reader);
-		filterReader.setRepoName("rails/rails");
+		filterReader.addRepoFilter("rails/rails");
 
 		int count = 0;
 		while(filterReader.next() != null){
@@ -25,12 +25,29 @@ public class EventFilterReaderTest {
 	}
 
 	@Test
+	public void testEventCount2() {
+		
+		URL url = getClass().getResource("../testdata");
+		EventReader reader = new EventReader(url.getPath());
+		FilteredEventReader filterReader = new FilteredEventReader(reader);
+		filterReader.addRepoFilter("rails/rails");
+		filterReader.addRepoFilter("constantology/Templ8");
+
+		int count = 0;
+		while(filterReader.next() != null){
+			count ++;
+		}
+		
+		assertEquals(214, count);
+	}
+
+	@Test
 	public void testActorFilter() {
 		
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		FilteredEventReader filterReader = new FilteredEventReader(reader);
-		filterReader.setRepoName("rails/rails");
+		filterReader.addRepoFilter("rails/rails");
 		filterReader.setActor("kylev");
 
 		int count = 0;
@@ -47,7 +64,7 @@ public class EventFilterReaderTest {
 		URL url = getClass().getResource("../testdata");
 		EventReader reader = new EventReader(url.getPath());
 		FilteredEventReader filterReader = new FilteredEventReader(reader);
-		filterReader.setRepoName("rails/rails");
+		filterReader.addRepoFilter("rails/rails");
 		filterReader.addEventType("PullRequestEvent");
 
 		int count = 0;

@@ -1,3 +1,9 @@
+Version 0.5 2012-12-
+----------------------
+
+- event_type filter accept multiple repositories
+
+
 Version 0.4 2012-12-29
 ----------------------
 
