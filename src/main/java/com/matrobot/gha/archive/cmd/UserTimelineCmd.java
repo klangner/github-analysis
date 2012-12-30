@@ -74,7 +74,7 @@ public class UserTimelineCmd implements ICommand{
 
 	private void prepareCurrentRecord(EventRecord event) {
 
-		String date = event.created_at.substring(0, 7);
+		String date = event.getCreatedAt().substring(0, 7);
 		
 		if(currentDate == null){
 			System.out.println(date);

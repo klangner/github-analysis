@@ -79,7 +79,7 @@ public class TimelineCmd implements ICommand{
 
 	private void prepareCurrentRecord(EventRecord event) {
 
-		String date = event.created_at.substring(0, dateLength);
+		String date = event.getCreatedAt().substring(0, dateLength);
 		
 		if(currentRecord == null){
 			currentRecord = new Record();

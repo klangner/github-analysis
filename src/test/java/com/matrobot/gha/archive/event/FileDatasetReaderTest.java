@@ -23,7 +23,7 @@ public class FileDatasetReaderTest {
 		FileArchiveReader reader = new FileArchiveReader(gzipStream);
 		
 		EventRecord data = reader.next();
-		assertEquals("2012-04-01T00:00:00Z", data.created_at);
+		assertEquals("2012-04-01T00:00:00Z", data.getCreatedAt());
 	}
 
 
@@ -173,6 +173,19 @@ public class FileDatasetReaderTest {
 		assertNotNull(event);
 		
 		assertEquals("2012-04-26T04:29:32-07:00", event.repository.created_at);
+	}
+
+
+	@Test
+	public void testCreatedAtSlash() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream("../testdata/pull_event-2.json");
+		FileArchiveReader reader = new FileArchiveReader(inputStream);
+		
+		EventRecord event = reader.next();
+		
+		assertNotNull(event);
+		
+		assertEquals("2012-11-01T00:01:05-07:00", event.getCreatedAt());
 	}
 
 }

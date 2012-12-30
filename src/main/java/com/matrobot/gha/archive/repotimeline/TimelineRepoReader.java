@@ -52,7 +52,7 @@ public class TimelineRepoReader implements ITimelineRepoReader{
 		repoData = new HashMap<String, RepoTimeline>();
 		EventRecord	event;
 		while((event = eventReader.next()) != null){
-			String label = getLabelFromDate(event.created_at);
+			String label = getLabelFromDate(event.getCreatedAt());
 			if(!label.equals(lastDate)){
 				updateLabel(label);
 			}

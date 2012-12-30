@@ -65,7 +65,7 @@ public class EventRecord {
         String login;
     }
 	
-	public String created_at;
+	private String created_at;
 	public Repo repo;
 	public String type;
 	public Payload payload;
@@ -97,6 +97,11 @@ public class EventRecord {
 		}
 		
 		return id;
+	}
+	
+	
+	public String getCreatedAt(){
+		return created_at.replace('/', '-');
 	}
 	
 	

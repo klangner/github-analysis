@@ -18,7 +18,7 @@ public class FolderDatasetReaderTest {
 		FolderArchiveReader reader = new FolderArchiveReader(url.getPath());
 		
 		EventRecord data = reader.readNextRecord();
-		assertEquals("2012-04-01T00:00:00Z", data.created_at);
+		assertEquals("2012-04-01T00:00:00Z", data.getCreatedAt());
 	}
 
 

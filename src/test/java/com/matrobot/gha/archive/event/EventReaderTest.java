@@ -15,6 +15,6 @@ public class EventReaderTest {
 		EventReader reader = new EventReader(url.getPath());
 
 		EventRecord data = reader.next();
-		assertEquals("2012-04-01T00:00:00Z", data.created_at);
+		assertEquals("2012-04-01T00:00:00Z", data.getCreatedAt());
 	}
 }
