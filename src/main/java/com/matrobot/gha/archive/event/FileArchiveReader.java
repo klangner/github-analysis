@@ -1,5 +1,6 @@
 package com.matrobot.gha.archive.event;
 
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,6 +69,10 @@ public class FileArchiveReader implements Iterator<EventRecord>{
 	    	else{
 	    		System.out.println(records.get(records.size()-1));
 	    	}
+	    	System.err.println(e);
+	    }
+	    catch(EOFException e){
+	    	System.out.println("EOF in : " + filename);
 	    	System.err.println(e);
 	    }
 	    

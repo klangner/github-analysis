@@ -78,9 +78,11 @@ public class RepositoryRecord {
 	 * @return CSV
 	 */
 	public String toCSV(){
+		
+		String hp = homepage.replace("\"", "");
 		return repoName + "," + pushEventCount + "," + eventCount + "," + committers.size() + "," +
 				forkEventCount + "," + community.size() + "," + openedPullCount + "," + 
-				closedPullCount + "," + language + ",\"" + homepage + "\"," + createdAt; 
+				closedPullCount + "," + language + ",\"" + hp + "\"," + createdAt; 
 	}
 
 	
