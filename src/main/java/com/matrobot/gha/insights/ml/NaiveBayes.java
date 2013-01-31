@@ -68,44 +68,38 @@ public class NaiveBayes {
 
 	private double calculateNegativeScore(double[] features) {
 		
-		double score = getNegativeProb();
-		double value;
-		double sum = 0;
+		double hipothesisProb = getNegativeProb();
+		double evidenceProb = 1;
 		
-		for(int i = 0; i < negativeEvidenceCount.length; i++){
-			sum += negativeEvidenceCount[i];
-		}
-		
-		for(int i = 0; i < negativeEvidenceCount.length; i++){
-			value = negativeEvidenceCount[i]/sum;
-			if(features[i] == 0){
-				value = 1-value;
+		for(int i = 0; i < features.length; i++){
+			if(features[i] > 0){
+				evidenceProb *= negativeEvidenceCount[i]/negativeCount;
 			}
-			score *= value;
+			else{
+				evidenceProb *= (negativeCount-negativeEvidenceCount[i])/negativeCount;
+			}
 		}
 		
+		double score = hipothesisProb * evidenceProb;
 		return score;
 	}
 
 
 	private double calculatePositiveScore(double[] features) {
 		
-		double score = getPositiveProb();
-		double value;
-		double sum = 0;
+		double hipothesisProb = getPositiveProb();
+		double evidenceProb = 1;
 		
-		for(int i = 0; i < positiveEvidenceCount.length; i++){
-			sum += positiveEvidenceCount[i];
-		}
-		
-		for(int i = 0; i < positiveEvidenceCount.length; i++){
-			value = positiveEvidenceCount[i]/sum;
-			if(features[i] == 0){
-				value = 1-value;
+		for(int i = 0; i < features.length; i++){
+			if(features[i] > 0){
+				evidenceProb *= positiveEvidenceCount[i]/positiveCount;
 			}
-			score *= value;
+			else{
+				evidenceProb *= (positiveCount-positiveEvidenceCount[i])/positiveCount;
+			}
 		}
 		
+		double score = hipothesisProb * evidenceProb;
 		return score;
 	}
 
